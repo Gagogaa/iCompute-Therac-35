@@ -1,6 +1,6 @@
-from flask Flask, render_template, request, session
+from flask import Flask, render_template, request, session
 from database import database_session, init_db
-from database.models import User
+#from database.models import User
 
 app = Flask(__name__)
 
@@ -8,13 +8,13 @@ app.secret_key = b'dev' # We need to change this in the production env
 
 # Import each of the pages
 from admin import admin
-app.register_blueprint(admin, util_prefix='/admin')
+app.register_blueprint(admin, url_prefix='/admin')
 
 from grader import grader
-app.register_blueprint(grader, util_prefix='/grader')
+app.register_blueprint(grader, url_prefix='/grader')
 
 from student_team import student_team
-app.register_blueprint(student_team, util_prefix='/student_team')
+app.register_blueprint(student_team, url_prefix='/student_team')
 
 # Initialize the database... This might need to move to someplace else later on
 init_db()
@@ -29,4 +29,3 @@ def index():
 def shutdown_session(exception=None):
     """Shutdown the database!"""
     database_session.remove()
-
