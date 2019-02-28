@@ -1,7 +1,3 @@
 venv/
-admin/__pycache__/
-database/__pycache__/
-grader/__pycache__/
-logon/__pycache__/
-student_team/__pycache__/
+__pycache__/
 iCompute.db
