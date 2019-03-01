@@ -22,10 +22,9 @@ class StudentAnswer(Base):
 
     team_name = Column(String, primary_key=True)
     team_year = Column(Date, primary_key=True)
-    # TODO do we need to add in a section number to know what section this is from?
-    # section = Column(Integer, nullable=False)
+    section = Column(Integer, nullable=False)
     question = Column(String, primary_key=True)
-    answer = Column(String, nullable=False)
+    answer = Column(String)
 
     __table_args__ = (
         ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.name', 'StudentTeams.year']),
