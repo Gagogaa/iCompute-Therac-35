@@ -1,10 +1,11 @@
 <!doctype html>
 <html>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <head>
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %} - iCompute</title>
   <link rel="stylesheet" href="../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="jquery-3.3.1.min.js"></script>
 </head>
 
 <body class="container">
@@ -78,3 +79,6 @@
       alert("The user is logging out");
     }
   </script>
+{% block content %} {% endblock %}
+</body>
+</html>
