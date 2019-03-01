@@ -8,14 +8,14 @@ from database import Base
 
 
 class SectionOneQnA(Base):
-    __tablename__ = 'SectionOneQnA'
+    __tablename__ = 'SectionOneQnAs'
 
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
     is_correct = Column(Boolean, nullable=False)
 
 
-class SectionTwoAndThreeQuestions(Base):
+class SectionTwoAndThreeQuestion(Base):
     __tablename__ = 'SectionTwoAndThreeQuestions'
 
     question = Column(String, primary_key=True)
