@@ -1,6 +1,33 @@
 {% extends 'header.html' %}
 {% block title %}Student Team{% endblock %}
-<p>Placeholder</p>
+{% block content %}
+  <section id="content">
+    <form role="form" id="multChoice" action="">
+      <input type="button" name="btn" value="Submit" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
+    </form>
+  </section>
 
-</body>
-</html>
+<!--Modal for the submit button-->
+  <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="color:red;">
+                Confirm Submission
+            </div>
+            <div class="modal-body">
+              Are you sure you want to submit this section? You will NOT be able to return to this section later.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="#" id="submit" class="btn btn-success success">Submit</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  $('#submit').click(function(){
+      $('#multChoice').submit();
+  });
+</script>
+{% endblock %}
