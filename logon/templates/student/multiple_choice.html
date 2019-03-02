@@ -11,8 +11,8 @@
   <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                Confirm Submit
+            <div class="modal-header" style="color:red;">
+                Confirm Submission
             </div>
             <div class="modal-body">
               Are you sure you want to submit this section? You will NOT be able to return to this section later.
@@ -27,7 +27,6 @@
 </div>
 <script>
   $('#submit').click(function(){
-      alert('Submitting');
       $('#multChoice').submit();
   });
 </script>
