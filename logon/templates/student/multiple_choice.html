@@ -29,25 +29,39 @@
 </div>
 <br><br>
 <!-- Questions table example -->
-<table class = "table table-striped">
-    <tr>
-        <h2> Question 1 </h2>
-    </tr>
-    <tr>
-        <h3> what is 1 + 1? </h3>
-    </tr>
-    <tr>
-      <div class="radio">
-        <label><input type="radio" name="optradio" checked>Option 1</label>
-      </div>
-      <div class="radio">
-        <label><input type="radio" name="optradio">Option 2</label>
-      </div>
-      <div class="radio disabled">
-        <label><input type="radio" name="optradio">Option 3</label>
-      </div>
-    </tr>
+<div class="container">
+	<h2>Question 1</h2>
+	<table class = "table">
+		<thead>
+    		<tr>
+    			<th>What is 1+1?</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td><div class="radio">
+        			<label><input type="radio" name="optradio" checked>Option 1</label>
+     			 </div></td>
+  			</tr>
+  			<tr>
+      			<td><div class="radio">
+       	 			<label><input type="radio" name="optradio" checked>Option 1123213</label>
+      			</div></td>
+  			</tr>
+  			<tr>
+     		 	<td><div class="radio">
+        			<label><input type="radio" name="optradio" checked>Option 4</label>
+      			</div></td>
+    		</tr>
+    		<tr>
+     		 	<td><div class="radio">
+        			<label><input type="radio" name="optradio" checked>Cats</label>
+      			</div></td>
+    		</tr>
+    	</tbody>
 </table>
+</div>
+
 <script>
   $('#submit').click(function(){
       $('#multChoice').submit();
