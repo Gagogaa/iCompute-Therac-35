@@ -22,9 +22,32 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <a href="#" id="submit" class="btn btn-success success">Submit</a>
             </div>
+
+
         </div>
     </div>
 </div>
+<br><br>
+<!-- Questions table example -->
+<table class = "table table-striped">
+    <tr>
+        <h2> Question 1 </h2>
+    </tr>
+    <tr>
+        <h3> what is 1 + 1? </h3>
+    </tr>
+    <tr>
+      <div class="radio">
+        <label><input type="radio" name="optradio" checked>Option 1</label>
+      </div>
+      <div class="radio">
+        <label><input type="radio" name="optradio">Option 2</label>
+      </div>
+      <div class="radio disabled">
+        <label><input type="radio" name="optradio">Option 3</label>
+      </div>
+    </tr>
+</table>
 <script>
   $('#submit').click(function(){
       $('#multChoice').submit();
