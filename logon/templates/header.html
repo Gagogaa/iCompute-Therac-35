@@ -20,7 +20,7 @@
     </div>
 
     <div>
-      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Bach Team</span>
+      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Team Name</span>
       <a class="nav-link" id="logout-link" href="#" style="float: left" onclick="logoutAlert()">Logout</a>
     </div>
   </nav>
@@ -74,7 +74,7 @@
     }
 
     function setTeamName() {
-      navbarTeamName.innerHTML = teamNameTextBox.value + " Team";
+      navbarTeamName.innerHTML = "Team " + teamNameTextBox.value;
     }
 
     function logoutAlert() {
