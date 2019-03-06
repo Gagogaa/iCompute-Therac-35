@@ -30,8 +30,8 @@
 <br><br>
 <!-- Questions table example -->
 <div class="container">
-	<h2>Question 1</h2>
-	<table class = "table">
+	<h2 id="questionHead">Question 1</h2>
+	<table class = "table table-hover table-bordered">
 		<thead>
     		<tr>
     			<th id ="question1"></th>
@@ -62,9 +62,12 @@
 </table>
 </div>
 
+
 <script>
   $(function getQuestions() {
-    //var x = document.getElementById("question1");
+    var quesNum = "1";
+    var quesHead = "Question " + quesNum;
+    document.getElementById("questionHead").textContent = quesHead;
     var question = "1+1=?";
     document.getElementById("question1").innerHTML = question;
     var ans1 = "dog";
@@ -75,10 +78,8 @@
     document.getElementById("answer2").textContent = ans2;
     document.getElementById("answer3").textContent = ans3;
     document.getElementById("answer4").textContent = ans4;
-    //x = question;
   });
 
-  //getQuestions();
   $('#submit').click(function(){
       $('#multChoice').submit();
   });
