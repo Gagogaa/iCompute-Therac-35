@@ -15,29 +15,29 @@
               <tbody>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1"><label>&nbsp{{question['answer1']}}</label>
                    </div></td>
                 </tr>
                 <tr>
                     <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2"><label>&nbsp{{question['answer2']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3"><label>&nbsp{{question['answer3']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4"><label>&nbsp{{question['answer4']}}</label>
                     </div></td>
                 </tr>
               </tbody>
         </table>
         </div>
       {% endfor %}
-      <input type="button" name="btn" value="Submit" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
+      <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
     </form>
   </section>
 
@@ -48,7 +48,7 @@
             <div class="modal-header" style="color:red;">
                 Confirm Submission
             </div>
-            <div class="modal-body">
+            <div id="modal-body" class="modal-body">
               Are you sure you want to submit this section? You will NOT be able to return to this section later.
             </div>
 
@@ -64,6 +64,23 @@
 <br><br>
 
 <script>
+  function checkRadioButtons() {
+    var active = false;
+    for(let i = 0; i < {{questions|length}}; i++) {
+      for(let j = 0; j < 4; j++) {
+        var id = 'q' + (i+1) + 'a' + (j+1);
+        if(document.getElementById(id).checked) {
+          active = true;
+        }
+      }
+      if(active === false) {
+         document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
+      } else {
+        active = false;
+      }
+    }
+  }
+
   $('#submit').click(function(){
       $('#multChoice').submit();
   });
