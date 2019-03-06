@@ -3,6 +3,40 @@
 {% block content %}
   <section id="content">
     <form role="form" id="multChoice" action="">
+      {% for question in questions %}
+        <div class="container">
+          <h2 id="questionHead">Question {{question['id']}}</h2>
+          <table class = "table table-hover table-bordered">
+            <thead>
+                <tr style="background-color:#cccccc">
+                  <th id ="question{{question['id']}}">{{question['question']}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><div class="radio">
+                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
+                   </div></td>
+                </tr>
+                <tr>
+                    <td><div class="radio">
+                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
+                    </div></td>
+                </tr>
+                <tr>
+                  <td><div class="radio">
+                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
+                    </div></td>
+                </tr>
+                <tr>
+                  <td><div class="radio">
+                      <input type="radio" name="optradio{{question['id']}}"><label id="q{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
+                    </div></td>
+                </tr>
+              </tbody>
+        </table>
+        </div>
+      {% endfor %}
       <input type="button" name="btn" value="Submit" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
     </form>
   </section>
@@ -28,57 +62,23 @@
     </div>
 </div>
 <br><br>
-<!-- Questions table example -->
-<div class="container">
-	<h2 id="questionHead">Question 1</h2>
-	<table class = "table table-hover table-bordered">
-		<thead>
-    		<tr style="background-color:#cccccc">
-    			<th id ="question1"></th>
-    		</tr>
-    	</thead>
-    	<tbody>
-    		<tr>
-    			<td><div class="radio">
-        			<input type="radio" name="optradio"><label id="answer1">Option 1</label>
-     			 </div></td>
-  			</tr>
-  			<tr>
-      			<td><div class="radio">
-       	 			<input type="radio" name="optradio"><label id="answer2">Option 2</label>
-      			</div></td>
-  			</tr>
-  			<tr>
-     		 	<td><div class="radio">
-        			<input type="radio" name="optradio"><label id="answer3">Option 3</label>
-      			</div></td>
-    		</tr>
-    		<tr>
-     		 	<td><div class="radio">
-        			<input type="radio" name="optradio"><label id="answer4">Option 4</label>
-      			</div></td>
-    		</tr>
-    	</tbody>
-</table>
-</div>
-
 
 <script>
-  $(function getQuestions() {
-    var quesNum = "1";
-    var quesHead = "Question " + quesNum;
-    document.getElementById("questionHead").textContent = quesHead;
-    var question = "1+1=?";
-    document.getElementById("question1").innerHTML = question;
-    var ans1 = "dog";
-    var ans2 = "cat";
-    var ans3 = "hamster";
-    var ans4 = "dawg";
-    document.getElementById("answer1").textContent = ans1;
-    document.getElementById("answer2").textContent = ans2;
-    document.getElementById("answer3").textContent = ans3;
-    document.getElementById("answer4").textContent = ans4;
-  });
+  // $(function getQuestions() {
+  //   var quesNum = "1";
+  //   var quesHead = "Question " + quesNum;
+  //   document.getElementById("questionHead").textContent = quesHead;
+  //   var question = "1+1=?";
+  //   document.getElementById("question1").innerHTML = question;
+  //   var ans1 = "dog";
+  //   var ans2 = "cat";
+  //   var ans3 = "hamster";
+  //   var ans4 = "dawg";
+  //   document.getElementById("answer1").textContent = ans1;
+  //   document.getElementById("answer2").textContent = ans2;
+  //   document.getElementById("answer3").textContent = ans3;
+  //   document.getElementById("answer4").textContent = ans4;
+  // });
 
   $('#submit').click(function(){
       $('#multChoice').submit();
