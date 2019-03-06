@@ -34,28 +34,28 @@
 	<table class = "table">
 		<thead>
     		<tr>
-    			<th>What is 1+1?</th>
+    			<th id ="question1"></th>
     		</tr>
     	</thead>
     	<tbody>
     		<tr>
     			<td><div class="radio">
-        			<label><input type="radio" name="optradio" checked>Option 1</label>
+        			<input type="radio" name="optradio"><label id="answer1">Option 1</label>
      			 </div></td>
   			</tr>
   			<tr>
       			<td><div class="radio">
-       	 			<label><input type="radio" name="optradio" checked>Option 1123213</label>
+       	 			<input type="radio" name="optradio"><label id="answer2">Option 2</label>
       			</div></td>
   			</tr>
   			<tr>
      		 	<td><div class="radio">
-        			<label><input type="radio" name="optradio" checked>Option 4</label>
+        			<input type="radio" name="optradio"><label id="answer3">Option 3</label>
       			</div></td>
     		</tr>
     		<tr>
      		 	<td><div class="radio">
-        			<label><input type="radio" name="optradio" checked>Cats</label>
+        			<input type="radio" name="optradio"><label id="answer4">Option 4</label>
       			</div></td>
     		</tr>
     	</tbody>
@@ -63,6 +63,22 @@
 </div>
 
 <script>
+  $(function getQuestions() {
+    //var x = document.getElementById("question1");
+    var question = "1+1=?";
+    document.getElementById("question1").innerHTML = question;
+    var ans1 = "dog";
+    var ans2 = "cat";
+    var ans3 = "hamster";
+    var ans4 = "dawg";
+    document.getElementById("answer1").textContent = ans1;
+    document.getElementById("answer2").textContent = ans2;
+    document.getElementById("answer3").textContent = ans3;
+    document.getElementById("answer4").textContent = ans4;
+    //x = question;
+  });
+
+  //getQuestions();
   $('#submit').click(function(){
       $('#multChoice').submit();
   });
