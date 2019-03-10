@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session
-from database import database_session, init_db
+from database import database_session, init_db, create_section_questions
 #from database.models import User
 
 app = Flask(__name__)
@@ -18,6 +18,7 @@ app.register_blueprint(student_team, url_prefix='/student_team', template_folder
 
 # Initialize the database... This might need to move to someplace else later on
 init_db()
+create_section_questions();
 
 
 @app.route('/')
