@@ -31,25 +31,33 @@ class StudentAnswer(Base):
     )
 
 
-class SectionOneQnA(Base):
-    __tablename__ = 'SectionOneQnAs'
+#class SectionOneQnA(Base):
+#    __tablename__ = 'SectionOneQnAs'
+#
+#    question = Column(String, primary_key=True)
+#    answer = Column(String, primary_key=True)
+#    is_correct = Column(Boolean, nullable=False)
 
-    question = Column(String, primary_key=True)
-    answer = Column(String, primary_key=True)
-    is_correct = Column(Boolean, nullable=False)
 
-
-class SectionTwoAndThreeQuestion(Base):
-    __tablename__ = 'SectionTwoAndThreeQuestions'
-
-    question = Column(String, primary_key=True)
-    section = Column(Integer, nullable=False)
+#class SectionTwoAndThreeQuestion(Base):
+#    __tablename__ = 'SectionTwoAndThreeQuestions'
+#
+#    question = Column(String, primary_key=True)
+#    section = Column(Integer, nullable=False)
 
 class iComputeTest(Base):
     __tablename__ = 'iComputeTest'
 
-    id = Column(Integer, primary_key=True)
-    SecOneQuestion = Column(String)
-    SecTwoNThreeQuestion =Column(String)
+    orderId = Column(Integer)
+    question = Column(String, primary_key=True)
+    section = Column(Integer, nullable=False)
     year = Column(Date)
     studentGrade = Column(String)
+
+Class Questions(Base):
+    __tablename__ = 'Questions'
+
+    question = Column(String, primary_key=True)
+    answer = Column(String, primary_key=True)
+    is_Correct = Column(boolean, nullable=False)
+    sction = Column(Integer, nullable=False)
