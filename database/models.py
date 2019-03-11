@@ -54,7 +54,7 @@ class iComputeTest(Base):
     year = Column(Date)
     studentGrade = Column(String)
 
-Class Questions(Base):
+class Questions(Base):
     __tablename__ = 'Questions'
 
     question = Column(String, primary_key=True)
