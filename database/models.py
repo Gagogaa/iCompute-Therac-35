@@ -47,3 +47,11 @@ class Questions(Base):
     answer = Column(String, primary_key=True)
     is_Correct = Column(Boolean, nullable=False)
     sction = Column(Integer, nullable=False)
+    
+class Users(Base):
+    __tablename__ = 'Users'
+
+    Username = Column(String, primary_key=True)
+    Password = Column(String, nullable=False)
+    UserType = Column(String, nullable=False)
+    #UserTypes Student, Grader, Supervisor.
