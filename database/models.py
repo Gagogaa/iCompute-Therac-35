@@ -1,6 +1,7 @@
 """
 Contains the database classes for the application
 """
+<<<<<<< HEAD
 
 
 from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
@@ -46,3 +47,13 @@ class SectionTwoAndThreeQuestion(Base):
     section = Column(Integer, nullable=False)
 
 
+=======
+class iComputeTest(Base):
+    __tablename__ = 'iComputeTest'
+
+    id = Column(Integer, primary_key=True)
+    SecOneQuestion = Column(String)
+    SecTwoNThreeQuestion =Column(String)
+    year = Column(Date)
+    studentGrade = Column(String)
+>>>>>>> 17df38207cb43230141871056239b6063e659704
