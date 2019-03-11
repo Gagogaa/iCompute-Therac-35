@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 student_team = Blueprint('student_team', __name__, template_folder='templates')
 
@@ -31,4 +32,11 @@ def student_team_index():
             "answer4": "Binary"
         }
     ]
+
+    # fake dictionary for submition push into database
+    from modals import StudentAnswer
+    temp = StudentAnswer('__name__', '2019', '1', 'id', 'answer')
+    db.session.add(temp)
+    db.session.commit()
+
     return render_template('multiple_choice.html', questions=questions)
