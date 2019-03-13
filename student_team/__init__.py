@@ -1,11 +1,12 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
+from database.models import *
 from flask_sqlalchemy import SQLAlchemy
 
 student_team = Blueprint('student_team', __name__, template_folder='templates')
 
-@student_team.route('/')
+@student_team.route('/', methods=('GET', 'POST'))
 def student_team_index():
-    # fake dictionary for question generation to match info retrieved from DB
+    # Build Dictionary for questions pulled from the db
     questions = [
         {
             "id": 1,
@@ -33,10 +34,14 @@ def student_team_index():
         }
     ]
 
-    # fake dictionary for submition push into database
-    from modals import StudentAnswer
-    temp = StudentAnswer('__name__', '2019', '1', 'id', 'answer')
-    db.session.add(temp)
-    db.session.commit()
+    #grab the Student submitted answers off the form and submit to database
+    if request.method == 'POST':
+        year = '2019'
+        for i in range(1, len(questions)):
+            questionName = "question" + str(i)
+            valueName =  "optradio" + str(i)
+            temp = StudentAnswer(request.form['team_name'], '2019', '1', request.form[question], request.form[valueName])
+            db.session.add(temp)
+            db.session.commit()
 
     return render_template('multiple_choice.html', questions=questions)

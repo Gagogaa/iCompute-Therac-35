@@ -2,7 +2,7 @@
 {% block title %}Student Team{% endblock %}
 {% block content %}
   <section id="content">
-    <form role="form" id="multChoice" action="">
+    <form role="form" id="multChoice" action="" method="post">
       {% for question in questions %}
         <div class="container">
           <h2 id="questionHead">Question {{question['id']}}</h2>
@@ -15,28 +15,30 @@
               <tbody>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1"><label>&nbsp{{question['answer1']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
                    </div></td>
                 </tr>
                 <tr>
                     <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2"><label>&nbsp{{question['answer2']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}"><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3"><label>&nbsp{{question['answer3']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}"><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4"><label>&nbsp{{question['answer4']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}"><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
                     </div></td>
                 </tr>
               </tbody>
         </table>
+        <input type="hidden" name="question{{question['id']}}" id="trueq{{question['id']}}">
         </div>
       {% endfor %}
+      <input type="hidden" name="team_name">
       <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
     </form>
   </section>
@@ -72,6 +74,9 @@
         if(document.getElementById(id).checked) {
           active = true;
         }
+        var qinputid = 'trueq' + i;
+        var qid = 'question' + i;
+        document.getElementById(qinputid).value = document.getElementById(qid).innerHTML;
       }
       if(active === false) {
          document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
