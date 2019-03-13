@@ -46,8 +46,8 @@ class Questions(Base):
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
     is_Correct = Column(boolean, nullable=False)
-    sction = Column(Integer, nullable=False)
-    
+    section = Column(Integer, nullable=False)
+
 class Users(Base):
     __tablename__ = 'Users'
 
