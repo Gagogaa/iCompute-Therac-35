@@ -40,7 +40,7 @@ def student_team_index():
         for i in range(1, len(questions)):
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
-            temp = StudentAnswer(request.form['team_name'], '2019', '1', request.form[question], request.form[valueName])
+            temp = StudentAnswer(request.form['team_name'], '2019', 1, request.form[question], request.form[valueName])
             db.session.add(temp)
             db.session.commit()
 

@@ -35,10 +35,10 @@
                 </tr>
               </tbody>
         </table>
-        <input type="hidden" name="question{{question['id']}}" id="trueq{{question['id']}}">
+        <input type="hidden" name="question{{question['id']}}" value="{{question['question']}}">
         </div>
       {% endfor %}
-      <input type="hidden" name="team_name">
+      <input type="hidden" name="team_name" id="teamNameForInput">
       <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
     </form>
   </section>
@@ -67,6 +67,7 @@
 
 <script>
   function checkRadioButtons() {
+    document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
     var active = false;
     for(let i = 0; i < {{questions|length}}; i++) {
       for(let j = 0; j < 4; j++) {
