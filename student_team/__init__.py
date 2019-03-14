@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import datetime
 
 engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
 database_session = scoped_session(sessionmaker(autocommit=False,
@@ -48,7 +49,7 @@ def student_team_index():
         for i in range(1, len(questions)):
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
-            temp = StudentAnswer(team_name=request.form['team_name'], team_year='2019', section=1, question=request.form[questionName], answer=request.form[valueName])
+            temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
             database_session.add(temp)
             database_session.commit()
 
