@@ -31,18 +31,27 @@ class StudentAnswer(Base):
     )
 
 
-class SectionOneQnA(Base):
-    __tablename__ = 'SectionOneQnAs'
+class iComputeTest(Base):
+    __tablename__ = 'iComputeTest'
+
+    orderId = Column(Integer)
+    question = Column(String, primary_key=True)
+    section = Column(Integer, nullable=False)
+    year = Column(Date)
+    studentGrade = Column(String)
+
+class Questions(Base):
+    __tablename__ = 'Questions'
 
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
-    is_correct = Column(Boolean, nullable=False)
+    is_Correct = Column(Boolean, nullable=False)
+    sction = Column(Integer, nullable=False)
+    
+class Users(Base):
+    __tablename__ = 'Users'
 
-
-class SectionTwoAndThreeQuestion(Base):
-    __tablename__ = 'SectionTwoAndThreeQuestions'
-
-    question = Column(String, primary_key=True)
-    section = Column(Integer, nullable=False)
-
-
+    Username = Column(String, primary_key=True)
+    Password = Column(String, nullable=False)
+    UserType = Column(String, nullable=False)
+    #UserTypes Student, Grader, Supervisor.
