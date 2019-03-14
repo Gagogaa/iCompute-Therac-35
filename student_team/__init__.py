@@ -1,6 +1,14 @@
 from flask import Blueprint, render_template, request
 from database.models import *
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
+engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
+database_session = scoped_session(sessionmaker(autocommit=False,
+                                               autoflush=False,
+                                               bind=engine))
 
 student_team = Blueprint('student_team', __name__, template_folder='templates')
 
@@ -40,8 +48,8 @@ def student_team_index():
         for i in range(1, len(questions)):
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
-            temp = StudentAnswer(request.form['team_name'], '2019', 1, request.form[question], request.form[valueName])
-            db.session.add(temp)
-            db.session.commit()
+            temp = StudentAnswer(team_name=request.form['team_name'], team_year='2019', section=1, question=request.form[questionName], answer=request.form[valueName])
+            database_session.add(temp)
+            database_session.commit()
 
     return render_template('multiple_choice.html', questions=questions)
