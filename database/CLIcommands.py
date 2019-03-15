@@ -14,7 +14,14 @@ def init_app(app):
 @click.command('add-testing-data')
 @with_appcontext
 def testing_data():
-    questions =[
+    data =[
+
+    #  Here is the format to use to add Data
+    #  TableName(columnName = Data to add,
+    #             colName2 = more data,
+    #             colName3 =final data,) put comma at end and repeat to add more data
+
+
      Questions(question = 'This provides a step-by-step procedure for performing a task.',
                                 answer = 'Keyboard',
                                 is_Correct = False,
@@ -56,6 +63,6 @@ def testing_data():
                                 section = 1)
                                 ]
 
-    database_session.add_all(questions)
+    database_session.add_all(data)
     database_session.commit()
     database_session.flush()
