@@ -75,9 +75,6 @@
         if(document.getElementById(id).checked) {
           active = true;
         }
-        var qinputid = 'trueq' + i;
-        var qid = 'question' + i;
-        document.getElementById(qinputid).value = document.getElementById(qid).innerHTML;
       }
       if(active === false) {
          document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
