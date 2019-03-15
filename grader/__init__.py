@@ -1,8 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 
-grader = Blueprint('grader', __name__)
+grader = Blueprint('grader', __name__, template_folder='templates')
 
 @grader.route('/')
 def grader_index():
-    return 'Hello grader'
-
+    return render_template('index.html')

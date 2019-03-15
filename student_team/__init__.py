@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request
 from database.models import *
+<<<<<<< HEAD
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
@@ -21,6 +22,24 @@ def student_team_index():
     #     questions.append(question)
 
         # fake dictionary for question generation to match info retrieved from DB
+=======
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+import datetime
+
+engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
+database_session = scoped_session(sessionmaker(autocommit=False,
+                                               autoflush=False,
+                                               bind=engine))
+
+student_team = Blueprint('student_team', __name__, template_folder='templates')
+
+@student_team.route('/', methods=('GET', 'POST'))
+def student_team_index():
+    # Build Dictionary for questions pulled from the db
+>>>>>>> A.2.3
     questions = [
         {
             "id": 1,
@@ -48,8 +67,20 @@ def student_team_index():
         }
     ]
 
+<<<<<<< HEAD
     if request.method == 'POST':
         return request.form['optradio1']
+=======
+    #grab the Student submitted answers off the form and submit to database
+    if request.method == 'POST':
+        year = '2019'
+        for i in range(1, len(questions)):
+            questionName = "question" + str(i)
+            valueName =  "optradio" + str(i)
+            temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
+            database_session.add(temp)
+            database_session.commit()
+>>>>>>> A.2.3
 
     return render_template('multiple_choice.html', questions=questions)
 

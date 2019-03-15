@@ -15,28 +15,30 @@
               <tbody>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1"><label>&nbsp{{question['answer1']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
                    </div></td>
                 </tr>
                 <tr>
                     <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2"><label>&nbsp{{question['answer2']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}"><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3"><label>&nbsp{{question['answer3']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}"><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
                     </div></td>
                 </tr>
                 <tr>
                   <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4"><label>&nbsp{{question['answer4']}}</label>
+                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}"><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
                     </div></td>
                 </tr>
               </tbody>
         </table>
+        <input type="hidden" name="question{{question['id']}}" value="{{question['question']}}">
         </div>
       {% endfor %}
+      <input type="hidden" name="team_name" id="teamNameForInput">
       <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
     </form>
   </section>
@@ -65,6 +67,7 @@
 
 <script>
   function checkRadioButtons() {
+    document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
     var active = false;
     for(let i = 0; i < {{questions|length}}; i++) {
       for(let j = 0; j < 4; j++) {
