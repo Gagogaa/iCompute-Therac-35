@@ -40,6 +40,7 @@ class iComputeTest(Base):
     year = Column(Date)
     studentGrade = Column(String)
 
+    
 class Questions(Base):
     __tablename__ = 'Questions'
 
@@ -48,6 +49,7 @@ class Questions(Base):
     is_Correct = Column(Boolean, nullable=False)
     section = Column(Integer, nullable=False)
 
+    
 class Users(Base):
     __tablename__ = 'Users'
 
@@ -55,3 +57,16 @@ class Users(Base):
     Password = Column(String, nullable=False)
     UserType = Column(String, nullable=False)
     #UserTypes Student, Grader, Supervisor.
+
+    
+class StudentScore(Base):
+    __tablename__ = 'StudentScores'
+
+    team_name = Column(String, primary_key=True)
+    team_year = Column(String, primary_key=True)
+    score = Column(Integer, nullable=False)
+    
+    __table_args__ = (
+        ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.name', 'StudentTeams.year']),
+    )
+
