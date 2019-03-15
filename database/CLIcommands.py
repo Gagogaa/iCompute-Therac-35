@@ -30,4 +30,5 @@ def testing_data():
                                 ]
 
     database_session.add_all(questions)
+    database_session.commit()
     database_session.flush()
