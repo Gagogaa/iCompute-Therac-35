@@ -16,6 +16,8 @@ app.register_blueprint(grader, url_prefix='/grader')
 from student_team import student_team
 app.register_blueprint(student_team, url_prefix='/student_team')
 
+from database import CLIcommands
+CLIcommands.init_app(app)
 # Initialize the database... This might need to move to someplace else later on
 init_db()
 

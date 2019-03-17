@@ -1,8 +1,7 @@
 from flask import Blueprint
 
-admin = Blueprint('admin', __name__)
+admin = Blueprint('admin', __name__, template_folder='templates')
 
-@admin.route('/')
+@admin.route('/', methods=('GET', 'POST'))
 def admin_index():
     return 'Hello admin'
-
