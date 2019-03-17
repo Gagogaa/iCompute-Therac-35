@@ -1,7 +1,7 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
 
-admin = Blueprint('admin', __name__, template_folder='templates')
+admin = Blueprint('admin', __name__)
 
-@admin.route('/', methods=('GET', 'POST'))
+@admin.route('/')
 def admin_index():
-    return 'Hello admin'
+    return render_template('header.html')

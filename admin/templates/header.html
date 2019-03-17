@@ -9,78 +9,23 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="../static/styles.css">
 </head>
+  <!--Actual question area (Variables needed)-->
+  <table class="table" style="width:100% ; padding:8px">
 
-<body class="container">
+      <div>
+        <tr>
+          <div>
+            <button type="button" class="btn btn-outline-primary outline"
+             style="width: 100%; border-color:#337ab7; padding:14px 24px">Create New Test</button>
+             <button type="button" class="btn btn-outline-primary outline"
+              style="width: 100%; border-color:#337ab7; padding:14px 24px">View Test Version</button>
+              <button type="button" class="btn btn-outline-primary outline"
+               style="width: 100%; border-color:#337ab7; padding:14px 24px">Edit Test Version</button>
+          </div>
+        </tr>
+      </div>
+  </table>
 
-  <nav class="navbar sticky-top navbar-light bg-light">
-    <a class="navbar-brand" href="#" style="padding-right: 10px">iCompute</a>
-
-    <div class="progress flex-fill">
-      <div class="progress-bar progress-bar-striped" id="navbar-progress-bar" role="progressbar" style="width: 25%">Section 1</div>
-    </div>
-
-    <div>
-      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Team Name</span>
-      <a class="nav-link" id="logout-link" href="#" style="float: left" onclick="logoutAlert()">Logout</a>
-    </div>
-  </nav>
-
-<!--For Testing Purposes Only until backend logic is implemented-->
-  <form>
-    <div class="form-group">
-      <label for="current-section-selector">Select current section</label>
-      <select class="form-control" id="current-section-selector" onchange="setCurrentSection()">
-        <option>Initial</option>
-        <option selected="selected">Section 1</option>
-        <option>Section 2</option>
-        <option>Section 3</option>
-        <option>Complete</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="team-name-textbox">Set team name</label>
-      <input type="text" class="form-control" id="team-name-textbox" placeholder="Bach" onkeyup="setTeamName()" onchange="setTeamName()">
-    </div>
-  </form>
-
-  <script>
-    var sectionSelector = document.getElementById("current-section-selector");
-    var progressbar = document.getElementById("navbar-progress-bar");
-    var navbarTeamName = document.getElementById("navbar-team-name");
-    var teamNameTextBox = document.getElementById("team-name-textbox");
-
-    function setCurrentSection() {
-      var section = sectionSelector.options[sectionSelector.selectedIndex].text;
-      progressbar.innerHTML = section;
-
-      if(section === "Initial") {
-        progressbar.style.width = "0%";
-        progressbar.innerHTML = "";
-      } else if(section === "Section 1") {
-        progressbar.style.width = "25%";
-      } else if(section === "Section 2") {
-        progressbar.style.width = "50%";
-      } else if(section === "Section 3") {
-        progressbar.style.width = "75%";
-      } else if(section === "Complete") {
-        progressbar.style.width = "100%";
-      }
-
-      if(section === "Complete") {
-        progressbar.classList.add("bg-success");
-      } else {
-        progressbar.classList.remove("bg-success");
-      }
-    }
-
-    function setTeamName() {
-      navbarTeamName.innerHTML = "Team " + teamNameTextBox.value;
-    }
-
-    function logoutAlert() {
-      alert("The user is logging out");
-    }
-  </script>
-{% block content %} {% endblock %}
+{% block content %}{% endblock %}
 </body>
 </html>
