@@ -45,12 +45,16 @@ def student_team_index():
 
     #grab the Student submitted answers off the form and submit to database
     if request.method == 'POST':
-        year = '2019'
-        for i in range(1, len(questions)):
-            questionName = "question" + str(i)
-            valueName =  "optradio" + str(i)
-            temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
-            database_session.add(temp)
-            database_session.commit()
+        return render_template(str(request.form))
+        # year = '2019'
+        # for i in range(1, len(questions)):
+        #     questionName = "question" + str(i)
+        #     valueName =  "optradio" + str(i)
+        #     if request.form[valueName] == '':
+        #         temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=None)
+        #     else:
+        #         temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
+        #     database_session.add(temp)
+        #     database_session.commit()
 
     return render_template('multiple_choice.html', questions=questions)
