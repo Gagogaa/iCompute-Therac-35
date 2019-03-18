@@ -4,14 +4,6 @@ admin = Blueprint('admin', __name__, template_folder='templates')
 
 @admin.route('/')
 def admin_index():
-<<<<<<< HEAD
-    return 'Hello admin'
-
-
-@admin.route('/user_create', methods=('GET', 'POST'))
-def admin_index():
-    return render_template('user_create.html')
-=======
     return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user")
 
 @admin.route('/test')
@@ -25,4 +17,3 @@ def admin_edit_users():
 @admin.route('/question')
 def admin_edit_questions():
 	return render_template('questionEditUI.html', link="./")
->>>>>>> master
