@@ -46,10 +46,10 @@ def student_team_index():
     #grab the Student submitted answers off the form and submit to database
     if request.method == 'POST':
         year = '2019'
-        for i in range(1, len(questions)):
+        for i in range(1, (len(questions)+1)):
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
-            if request.form[valueName] == '':
+            if request.form[valueName] == 'not_answered':
                 temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now().year, section=1, question=request.form[questionName], answer=None)
             else:
                 temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now().year, section=1, question=request.form[questionName], answer=request.form[valueName])
