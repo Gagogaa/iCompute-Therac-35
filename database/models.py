@@ -14,7 +14,7 @@ class StudentTeam(Base):
     year = Column(Integer, primary_key=True)
     first_student = Column(String, nullable=False)
     second_student = Column(String)
-    password = Column(String, nullable=False)
+    
 
 
 class StudentAnswer(Base):
