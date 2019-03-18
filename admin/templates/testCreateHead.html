@@ -13,34 +13,12 @@
 <body class="container">
 
   <nav class="navbar sticky-top navbar-light bg-light">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#" style="padding-right: 10px">iCompute</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Add
-          <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-           <li><a href="#">Add New Question</a></li>
-           <li><a href="#">Add From Database</a></li>
-         </ul>
-      </li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Delete
-          <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Delete Selected Questions</a></li>
-            <li><a href="#">Delete Multiple</a></li>
-          </ul>
-      </li>
-      <li><a href="#">Edit</a></li>
-    </ul>
+    <a class="navbar-brand" href="{{link}}" style="padding-right: 10px">iCompute</a>
+
     <div>
       <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Supervisor</span>
       <a class="nav-link" id="logout-link" href="#" style="float: left" onclick="logoutAlert()">Logout</a>
     </div>
-  </div>
   </nav>
 
   <script>
