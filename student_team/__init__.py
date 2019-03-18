@@ -49,7 +49,10 @@ def student_team_index():
         for i in range(1, len(questions)):
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
-            temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
+            if request.form[valueName] == '':
+                temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=None)
+            else:
+                temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now(), section=1, question=request.form[questionName], answer=request.form[valueName])
             database_session.add(temp)
             database_session.commit()
 
