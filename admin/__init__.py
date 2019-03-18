@@ -4,7 +4,7 @@ admin = Blueprint('admin', __name__, template_folder='templates')
 
 @admin.route('/')
 def admin_index():
-    return render_template('index.html', link="#", link2="./test", link3="#", link4="./user")
+    return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user")
 
 @admin.route('/test')
 def admin_create_test():
@@ -13,3 +13,7 @@ def admin_create_test():
 @admin.route('/user')
 def admin_edit_users():
 	return render_template('userAddHead.html', link="./")
+
+@admin.route('/question')
+def admin_edit_questions():
+	return render_template('questionEditUI.html', link="./")
