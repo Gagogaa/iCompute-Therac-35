@@ -1,4 +1,4 @@
-# iCompute
+# Project Bible
 
 ## Setting Up the Testing Environment
 
