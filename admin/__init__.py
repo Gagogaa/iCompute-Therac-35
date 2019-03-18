@@ -12,7 +12,7 @@ def admin_create_test():
 
 @admin.route('/user')
 def admin_edit_users():
-	return render_template('userAddHead.html', link="./")
+	return render_template('userAdd.html', link="./")
 
 @admin.route('/question')
 def admin_edit_questions():
