@@ -1,19 +1,22 @@
-{% extends 'header.html' %}
+
+{% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
-<table class="table" style="width:100% ; padding:8px">
+  <!--Actual question area (Variables needed)-->
+  <table class="table" style="width:100% ; padding:8px">
 
       <div>
         <tr>
-          <div>
+          <div align="center">
             <button type="button" class="btn btn-outline-primary outline"
-             style="width: 80%; border-color:#337ab7; padding:14px 24px">Create New Test</button>
+             style="width: 90%; border-color:#337ab7; padding:14px 24px">Create New Test</button>
              <button type="button" class="btn btn-outline-primary outline"
-              style="width: 80%; border-color:#337ab7; padding:14px 24px">View Test Version</button>
+              style="width: 90%; border-color:#337ab7; padding:14px 24px">View Test Version</button>
               <button type="button" class="btn btn-outline-primary outline"
-               style="width: 80%; border-color:#337ab7; padding:14px 24px">Edit Test Version</button>
+               style="width: 90%; border-color:#337ab7; padding:14px 24px">Edit Test Version</button>
           </div>
         </tr>
       </div>
   </table>
+
 {% endblock %}
