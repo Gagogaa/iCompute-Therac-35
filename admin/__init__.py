@@ -9,3 +9,7 @@ def admin_index():
 @admin.route('/test')
 def admin_create_test():
     return render_template('test_create.html')
+
+@admin.route('/user')
+def admin_edit_users():
+	return render_template('userAddHead.html')
