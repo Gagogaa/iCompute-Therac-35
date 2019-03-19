@@ -1,4 +1,4 @@
-# iCompute
+# Project Bible
 
 ## Setting Up the Testing Environment
 
@@ -37,3 +37,12 @@ flask run
 ```
 
 Finally head over to [localhost:5000](http://127.0.0.1:5000) for testing!
+
+## Adding Test Data
+
+First access environment set up above. 
+Then use flask command.
+
+```bash
+flask add-testing-data
+```
