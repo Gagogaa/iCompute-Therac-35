@@ -1,16 +1,11 @@
 from flask import Blueprint, render_template, request
+from database import database_session
 from database.models import *
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 import datetime
 
-engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 student_team = Blueprint('student_team', __name__, template_folder='templates')
+
 
 @student_team.route('/', methods=('GET', 'POST'))
 def student_team_index():
@@ -21,10 +16,10 @@ def student_team_index():
     ansNum = 1
 
     # Build Dictionary for questions pulled from the db
-    for question in session.query(Questions.question).distinct():
+    for question in database_session.query(Questions.question).distinct():
         data['id'] = counter
         data['question'] = question.question
-        for answer in session.query(Questions.answer).filter(Questions.question == question.question):
+        for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
             ans = 'answer' + str(ansNum)
             data[ans] = answer.answer
             ansNum += 1
@@ -40,9 +35,17 @@ def student_team_index():
             questionName = "question" + str(i)
             valueName =  "optradio" + str(i)
             if request.form[valueName] == 'not_answered':
-                temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now().year, section=1, question=request.form[questionName], answer=None)
+                temp = StudentAnswer(team_name=request.form['team_name'],
+                                     team_year=datetime.datetime.now().year,
+                                     section=1,
+                                     question=request.form[questionName],
+                                     answer=None)
             else:
-                temp = StudentAnswer(team_name=request.form['team_name'], team_year=datetime.datetime.now().year, section=1, question=request.form[questionName], answer=request.form[valueName])
+                temp = StudentAnswer(team_name=request.form['team_name'],
+                                     team_year=datetime.datetime.now().year,
+                                     section=1,
+                                     question=request.form[questionName],
+                                     answer=request.form[valueName])
             database_session.add(temp)
             database_session.commit()
 
