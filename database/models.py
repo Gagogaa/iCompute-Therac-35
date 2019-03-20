@@ -10,10 +10,10 @@ from database import Base
 class StudentTeam(Base):
     __tablename__ = 'StudentTeams'
 
-    name = Column(String, primary_key=True)
-    year = Column(Integer, primary_key=True)
-    first_student = Column(String, nullable=False)
-    second_student = Column(String)
+    team_name = Column(String, primary_key=True)
+    team_year = Column(Integer, primary_key=True)
+    school_name = Column(String, nullable=False)
+
 
 
 class StudentAnswer(Base):
@@ -26,7 +26,7 @@ class StudentAnswer(Base):
     answer = Column(String)
 
     __table_args__ = (
-        ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.name', 'StudentTeams.year']),
+        ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.team_name', 'StudentTeams.team_year']),
     )
 
 
@@ -39,6 +39,9 @@ class iComputeTest(Base):
     year = Column(Integer)
     student_grade = Column(String)
 
+    __table_args__ = (
+        ForeignKeyConstraint(['question'], ['Questions.question']),
+    )
 
 class Questions(Base):
     __tablename__ = 'Questions'
@@ -63,8 +66,12 @@ class StudentScore(Base):
 
     team_name = Column(String, primary_key=True)
     team_year = Column(String, primary_key=True)
-    score = Column(Integer, nullable=False)
-
+    total_score = Column(Integer, nullable=False)
+    section_one_score = Column(Integer, nullable=False)
+    section_two_score = Column(Integer)
+    section_three_score = Column(Integer)
+    #Left section one and two as nullable to allow for
+    #full release at end of sprint 3 will update as necessary
     __table_args__ = (
-        ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.name', 'StudentTeams.year']),
+        ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.team_name', 'StudentTeams.team_year']),
     )
