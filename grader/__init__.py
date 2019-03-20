@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from database.models import *
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -16,5 +16,8 @@ def grader_index():
     teams = []
     for team in session.query(StudentTeam.name):
         teams.append(team.name)
+
+    if request.method == 'POST':
+        team = request.form['team_name']
 
     return render_template('grader_home.html', teams=teams)
