@@ -14,7 +14,6 @@ class StudentTeam(Base):
     year = Column(Integer, primary_key=True)
     first_student = Column(String, nullable=False)
     second_student = Column(String)
-    password = Column(String, nullable=False)
 
 
 class StudentAnswer(Base):
@@ -38,7 +37,7 @@ class iComputeTest(Base):
     question = Column(String, primary_key=True)
     section = Column(Integer, nullable=False)
     year = Column(Integer)
-    studentGrade = Column(String)
+    student_grade = Column(String)
 
 
 class Questions(Base):
@@ -46,16 +45,16 @@ class Questions(Base):
 
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
-    is_Correct = Column(Boolean, nullable=False)
+    is_correct = Column(Boolean, nullable=False)
     section = Column(Integer, nullable=False)
 
 
 class Users(Base):
     __tablename__ = 'Users'
 
-    Username = Column(String, primary_key=True)
-    Password = Column(String, nullable=False)
-    UserType = Column(String, nullable=False)
+    username = Column(String, primary_key=True)
+    password = Column(String, nullable=False)
+    user_type = Column(String, nullable=False)
     #UserTypes Student, Grader, Supervisor.
 
 
