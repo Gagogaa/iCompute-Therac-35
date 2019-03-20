@@ -100,7 +100,7 @@
           </div>
         </div>
 
-        <div class="question-edit-answers collapse">
+        <div class="question-edit-answers collapse is-collapsed">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
@@ -191,15 +191,14 @@
 
     function toggleCollapse(elem) {
       var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
-      if(collapse.classList.contains("collapse")) {
-        collapse.classList.remove("collapse");
-        collapse.classList.add("collapse.show");
-        elem.innerHTML = "<i class=\"fas fa-caret-down\"></i>"
+      if(collapse.classList.contains("is-collapsed")) {
+        collapse.classList.remove("is-collapsed");
+        elem.innerHTML = "<i class=\"fas fa-caret-down\"></i>";
       } else {
-        collapse.classList.remove("collapse.show");
-        collapse.classList.add("collapse");
-        elem.innerHTML = "<i class=\"fas fa-caret-right\"></i>"
+        collapse.classList.add("is-collapsed");
+        elem.innerHTML = "<i class=\"fas fa-caret-right\"></i>";
       }
+      $(collapse).collapse('toggle');
     }
 
     function deleteQuestion(elem) {
