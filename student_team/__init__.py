@@ -10,7 +10,7 @@ engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-student_team = Blueprint('student_team', __name__, template_folder='templates')
+student_team = Blueprint('student_team', __name__, template_folder='student_templates')
 
 @student_team.route('/', methods=('GET', 'POST'))
 def student_team_index():
@@ -21,33 +21,6 @@ def student_team_index():
     ansNum = 1
 
     # Build Dictionary for questions pulled from the db
-    questions = [
-        {
-            "id": 1,
-            "question": "What is the name of the unit that helps store data in a computer?",
-            "answer1": "CPU",
-            "answer2": "Input",
-            "answer3": "Memory",
-            "answer4": "Output"
-        },
-        {
-            "id": 2,
-            "question": "This provides a step-by-step procedure for performing a task.",
-            "answer1": "Keyboard",
-            "answer2": "Algorithm",
-            "answer3": "Internet",
-            "answer4": "Windows"
-        },
-        {
-            "id": 3,
-            "question": "Which one of the following is not a programming language?",
-            "answer1": "Java",
-            "answer2": "HTML",
-            "answer3": "C++",
-            "answer4": "Binary"
-        }
-    ]
-
     for question in session.query(Questions.question).distinct():
         data['id'] = counter
         data['question'] = question.question

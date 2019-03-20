@@ -1,0 +1,15 @@
+{% extends 'grader_header.html' %}
+{% block title %}Grader{% endblock %}
+{% block content %}
+<form action="" method="post">
+  <div class="form-group">
+    <label for="current-section-selector">Select Team to </label>
+    <select class="form-control" id="current-section-selector">
+      <option selected="selected">Select Student Team</option>
+      {% for team in teams %}
+        <option>{{team}}</option>
+      {% endfor %}
+    </select>
+  </div>
+</form>
+{% endblock %}
