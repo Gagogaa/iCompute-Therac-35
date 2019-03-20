@@ -31,27 +31,41 @@ def student_team_index():
 
     #grab the Student submitted answers off the form and submit to database
     if request.method == 'POST':
-        year = '2019'
+        #checking to make sure an empty form isn't being submitted so it doesn't break the app
+        is_validated = True
+        if 'team_name' not in request.form:
+            is_validated = False
+
         for i in range(1, (len(questions)+1)):
             questionName = "question" + str(i)
-            valueName =  "optradio" + str(i)
-            if request.form[valueName] == 'not_answered':
-                temp = StudentAnswer(team_name=request.form['team_name'],
-                                     team_year=datetime.datetime.now().year,
-                                     section=1,
-                                     question=request.form[questionName],
-                                     answer=None)
-            else:
-                temp = StudentAnswer(team_name=request.form['team_name'],
-                                     team_year=datetime.datetime.now().year,
-                                     section=1,
-                                     question=request.form[questionName],
-                                     answer=request.form[valueName])
-            database_session.add(temp)
-            database_session.commit()
+            valueName = "optradio" + str(i)
+            if questionName not in request.form or valueName not in request.form:
+                is_validated = False
+
+        if is_validated == True:
+            year = '2019'
+            for i in range(1, (len(questions)+1)):
+                questionName = "question" + str(i)
+                valueName =  "optradio" + str(i)
+                if request.form[valueName] == 'not_answered':
+                    temp = StudentAnswer(team_name=request.form['team_name'],
+                                         team_year=datetime.datetime.now().year,
+                                         section=1,
+                                         question=request.form[questionName],
+                                         answer=None)
+                else:
+                    temp = StudentAnswer(team_name=request.form['team_name'],
+                                         team_year=datetime.datetime.now().year,
+                                         section=1,
+                                         question=request.form[questionName],
+                                         answer=request.form[valueName])
+                database_session.add(temp)
+                database_session.commit()
+        else:
+            return render_template('multiple_choice.html', questions=questions)
 
     return render_template('multiple_choice.html', questions=questions)
 
-@student_team.route('/section-b')
+@student_team.route('/sectionb')
 def section_b():
     return render_template('short_answer.html')
