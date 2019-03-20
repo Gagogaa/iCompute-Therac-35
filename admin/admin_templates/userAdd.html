@@ -1,5 +1,87 @@
 {% extends 'head.html' %}
-{% block title %}Supervisor{% endblock %}
-{% block content %}
+{% block title %}Supervisor-User Creation{% endblock %}
 
+{% block content %}
+<div class="container">
+<br><br><br>
+
+<h3>Add a new User:</h3>
+<form class="form-inline" action="/action_page.php">
+  <label for="email" class="mr-sm-2" style="width: 10%">Username:</label>
+  <input type="email" class="form-control mb-2 mr-sm-2" id="user" style="width: 20%">
+  <label for="pwd" class="mr-sm-2" style="width: 10%">Password:</label>
+  <input type="password" class="form-control mb-2 mr-sm-2" id="pass" style="width: 20%">
+  <div class="form-group" style="width: 30%; margin-left: 20px">
+    <label for="UserType">Select User Type:</label>
+    <select class="form-control" id="UserType" name="sellist1" style="margin-left: 10px; width: 60%" >
+      <option>Supervisor</option>
+      <option>Grader</option>
+      <option>Student</option>
+    </select>
+  </div>
+</form>
+<button type="submit" class="btn btn-primary mb-2" style="width: 20%">Submit</button>
+<br>
+
+
+<br><br>
+<h3>View Users:</h3>
+<br>
+<div id="accordion">
+
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">
+        Supervisors
+      </a>
+    </div>
+    <div id="collapseOne" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+        Graders
+      </a>
+    </div>
+    <div id="collapseTwo" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+        Student Teams
+      </a>
+    </div>
+    <div id="collapseThree" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 {% endblock %}

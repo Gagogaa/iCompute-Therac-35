@@ -137,55 +137,5 @@
     </ul>
   </div>
 
-  <!-- temporary scripts until backend code is complete -->
-  <script>
-    function toggleEdit(elem) {
-      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      if(textField.disabled) {
-        textField.disabled = false;
-        elem.innerHTML = "<i class=\"fas fa-save\"></i>";
-        textField.focus();
-      } else {
-        elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
-        textField.disabled = true;
-        // to-do: add code to update the text in the database
-      }
-    }
 
-    function toggleCollapse(elem) {
-      var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
-      if(collapse.classList.contains("collapse")) {
-        collapse.classList.remove("collapse");
-        collapse.classList.add("collapse.show");
-        elem.innerHTML = "<i class=\"fas fa-caret-down\"></i>"
-      } else {
-        collapse.classList.remove("collapse.show");
-        collapse.classList.add("collapse");
-        elem.innerHTML = "<i class=\"fas fa-caret-right\"></i>"
-      }
-    }
-
-    function deleteQuestion(elem) {
-      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      // to-do: replace alert with delete confirmation, then delete from database
-      alert("User is attempting to delete the question \"" + textField.value + "\"");
-    }
-
-    function deleteAnswer(elem) {
-      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      // to-do: replace alert with delete confirmation, then delete from database
-      alert("User is attempting to delete the answer \"" + textField.value + "\"");
-    }
-
-    function addQuestion() {
-      // to-do: add new question, update database with new question
-      alert("User is attempting to add a new question");
-    }
-
-    function addAnswer(elem) {
-      // to-do: add new answer, update database with new answer
-      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      alert("User is attempting to add a new answer to the question \"" + textField.value + "\"");
-    }
-  </script>
 {% endblock %}
