@@ -2,135 +2,86 @@
 {% block title %}Supervisor-User Creation{% endblock %}
 
 {% block content %}
-<!-- replace hardcoded values with jinja once backend is complete -->
-<div class="card">
-  <ul class="list-group">
+<div class="container">
+<br><br><br>
 
-    <li class="list-group-item">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
-        </div>
-        <input class="form-control" type="text" value="This provides a step-by-step procedure for performing a task." disabled>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
-        </div>
+<h3>Add a new User:</h3>
+<form class="form-inline" action="/action_page.php">
+  <label for="email" class="mr-sm-2" style="width: 10%">Username:</label>
+  <input type="email" class="form-control mb-2 mr-sm-2" id="user" style="width: 20%">
+  <label for="pwd" class="mr-sm-2" style="width: 10%">Password:</label>
+  <input type="password" class="form-control mb-2 mr-sm-2" id="pass" style="width: 20%">
+  <div class="form-group" style="width: 30%; margin-left: 20px">
+    <label for="UserType">Select User Type:</label>
+    <select class="form-control" id="UserType" name="sellist1" style="margin-left: 10px; width: 60%" >
+      <option>Supervisor</option>
+      <option>Grader</option>
+      <option>Student</option>
+    </select>
+  </div>
+</form>
+<button type="submit" class="btn btn-primary mb-2" style="width: 20%">Submit</button>
+<br>
+
+
+<br><br>
+<h3>View Users:</h3>
+<br>
+<div id="accordion">
+
+  <div class="card">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#collapseOne">
+        Supervisors
+      </a>
+    </div>
+    <div id="collapseOne" class="collapse show" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
       </div>
+    </div>
+  </div>
 
-      <div class="question-edit-answers collapse">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Algorithm" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Keyboard" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Internet" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Windows" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswer(this)"><i class="fas fa-plus"></i></button>
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+        Graders
+      </a>
+    </div>
+    <div id="collapseTwo" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
       </div>
-    </li>
+    </div>
+  </div>
 
-    <li class="list-group-item">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
-        </div>
-        <input class="form-control" type="text" value="Which one of the following is not a programming language?" disabled>
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
-        </div>
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+        Student Teams
+      </a>
+    </div>
+    <div id="collapseThree" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+          <li class="list-group-item">First item</li>
+          <li class="list-group-item">Second item</li>
+          <li class="list-group-item">Third item</li>
+        </ul>
       </div>
-
-      <div class="question-edit-answers collapse">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Binary" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="Java" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="HTML" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-          </div>
-          <input class="form-control" type="text" value="C++" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswer(this)"><i class="fas fa-plus"></i></button>
-      </div>
-    </li>
-
-    <li class="list-group-item">
-      <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addQuestion()"><i class="fas fa-plus"></i></button>
-    </li>
-  </ul>
+    </div>
+  </div>
+</div>
 </div>
 {% endblock %}
