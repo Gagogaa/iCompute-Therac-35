@@ -36,7 +36,7 @@ def index():
 
             # If the Username is not in the database
             if current_user is None:
-                flash(f'Invalid Username')
+                flash('Invalid Username')
                 return redirect(url_for('index'))
             else:
                 if check_password_hash(current_user.password, request.form['Password']):
