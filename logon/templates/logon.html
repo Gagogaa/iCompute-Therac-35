@@ -1,0 +1,28 @@
+{% extends 'logon_header.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<form role="form" id="logon" action="" method="POST">
+    <div class="form-group">
+        <label for="Username">Username</label>
+        <input id="Username" name="Username" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" name="Password" class="form-control" id="Password" required />
+    </div>
+    <button type="submit" class="btn btn-primary" required >Log in</button>
+</form>
+{% endblock %}
