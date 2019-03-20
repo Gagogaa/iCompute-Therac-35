@@ -21,3 +21,4 @@ def admin_edit_questions():
 @admin.route('/results')
 def admin_view_results():
 	return render_template('testResults.html', link="./")
+
