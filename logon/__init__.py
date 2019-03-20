@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 
-app.secret_key = b'dev' # We need to change this in the production env
+app.secret_key = 'dev' # We need to change this in the production env
 
 # Import each of the pages
 from admin import admin
