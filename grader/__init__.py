@@ -12,12 +12,16 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def grade_section_one(team):
+    results = {}
     correct_answers = 0
+    total_questions = session.query(iComputeTest).count()
     for answer in session.query.filter(StudentAnswer.team_name == team):
+        results[answer.question] = answer.answer
         correct_answer = session.query.filter(_and(Questions.question == answer.question, Questions.is_correct == True))
         if correct_answer.answer == answer.answer:
             correct_answers += 1
 
+    return ((correct_answers/total_questions), results)
 
 
 @grader.route('/')
@@ -28,7 +32,7 @@ def grader_index():
 
     if request.method == 'POST':
         team = request.form['team_name']
-        score = grade_section_one(team)
+        (score, results) = grade_section_one(team)
+        return render_template('grader_home.html', teams=teams, score=score, results=results)
 
-
-    return render_template('grader_home.html', teams=teams)
+    return render_template('grader_home.html', teams=teams, score=None, results=None)
