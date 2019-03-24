@@ -11,16 +11,22 @@ engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+#Function for grading all students answers to section 1
 def grade_section_one(team):
+    #to display the results of the first part of the test
     results = {}
     correct_answers = 0
     total_questions = session.query(iComputeTest).count()
+    #grab all student answers that were for the chosen team
     for answer in session.query.filter(StudentAnswer.team_name == team):
         results[answer.question] = answer.answer
+        #grab the correct answer for the given question
         correct_answer = session.query.filter(_and(Questions.question == answer.question, Questions.is_correct == True))
+        #if they got it right, increment the number of correct answers
         if correct_answer.answer == answer.answer:
             correct_answers += 1
 
+    #return both the test score and the results of the test
     return ((correct_answers/total_questions), results)
 
 
@@ -30,6 +36,7 @@ def grader_index():
     for team in session.query(StudentTeam.name):
         teams.append(team.name)
 
+    #If the grader chose a team, display team info
     if request.method == 'POST':
         team = request.form['team_name']
         (score, results) = grade_section_one(team)
