@@ -16,7 +16,7 @@ def student_team_index():
     ansNum = 1
 
     # Build Dictionary for questions pulled from the db
-    for question in database_session.query(Questions.question).distinct():
+    for question in database_session.query(iComputeTest.question):
         data['id'] = counter
         data['question'] = question.question
         for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
