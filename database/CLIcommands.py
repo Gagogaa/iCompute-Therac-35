@@ -198,12 +198,16 @@ def testing_data():
         StudentScore(team_name = 'teamM8s',
                      team_year = '2019',
                      total_score = 100,
-                     section_one_score = 100
+                     section_one_score = 30,
+                     section_two_score = 30,
+                     section_three_score = 40
                      ),
         StudentScore(team_name = 'teamL8',
                      team_year = '2019',
-                     total_score = 0,
-                     section_one_score = 0
+                     total_score = 52,
+                     section_one_score = 0,
+                     section_two_score = 20,
+                     section_three_score = 32
                      )
     ]
 
