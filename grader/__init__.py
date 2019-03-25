@@ -18,10 +18,10 @@ def grade_section_one(team):
     correct_answers = 0
     total_questions = session.query(iComputeTest).count()
     #grab all student answers that were for the chosen team
-    for answer in session.query.filter(StudentAnswer.team_name == team):
+    for answer in session.query(StudentAnswer).filter(StudentAnswer.team_name == team):
         results[answer.question] = answer.answer
         #grab the correct answer for the given question
-        correct_answer = session.query.filter(_and(Questions.question == answer.question, Questions.is_correct == True))
+        correct_answer = session.query(Questions).filter(_and(Questions.question == answer.question, Questions.is_correct == True))
         #if they got it right, increment the number of correct answers
         if correct_answer.answer == answer.answer:
             correct_answers += 1
@@ -30,16 +30,16 @@ def grade_section_one(team):
     return ((correct_answers/total_questions), results)
 
 
-@grader.route('/')
+@grader.route('/', methods=('GET','POST'))
 def grader_index():
     teams = []
-    for team in session.query(StudentTeam.name):
-        teams.append(team.name)
+    for team in session.query(StudentTeam.team_name):
+        teams.append(team.team_name)
 
     #If the grader chose a team, display team info
     if request.method == 'POST':
         team = request.form['team_name']
-        (score, results) = grade_section_one(team)
-        return render_template('grader_home.html', teams=teams, score=score, results=results)
+        (sec_A_score, results) = grade_section_one(team)
+        return render_template('grader_home.html', teams=teams, sec_A_score=sec_A_score, results=results)
 
-    return render_template('grader_home.html', teams=teams, score=None, results=None)
+    return render_template('grader_home.html', teams=teams, sec_A_score=None, results=None)

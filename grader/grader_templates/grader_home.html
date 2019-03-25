@@ -11,7 +11,10 @@
       {% endfor %}
     </select>
   </div>
+  {% if sec_A_score != None %}
+    <h2>Section A Score:</h2>
+    <p>{{sec_A_score}}</p>
+  {% endif %}
   <input type="submit" value="submit" class="btn btn-primary btn-lg btn-block" />
 </form>
-<h2>Section 1 Grade</h2>
 {% endblock %}
