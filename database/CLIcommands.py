@@ -4,12 +4,13 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 from database.models import *
 from database.__init__ import *
+from sqlalchemy import *
 
 def init_app(app):
     #app.teardown_appcontext(close_db)
     app.cli.add_command(testing_data)
-
-
+    app.cli.add_command(deletion_test)
+    app.cli.add_command(update_testing)
 
 @click.command('add-testing-data')
 @with_appcontext
@@ -66,3 +67,19 @@ def testing_data():
     database_session.add_all(data)
     database_session.commit()
     database_session.flush()
+
+
+@click.command('delete-test')
+@with_appcontext
+def deletion_test():
+    del_query = database_session.query(Questions).filter(Questions.question=='Which one of the following is not a programming language?')
+    del_query.delete()
+    database_session.commit()
+
+@click.command('update-test')
+@with_appcontext
+def update_testing():
+    rows_to_update = database_session.query(Questions).filter(Questions.question == 'This provides a step-by-step procedure for performing a task.')
+    for row in rows_to_update:
+        row.question = "this is a new question"
+    database_session.commit()

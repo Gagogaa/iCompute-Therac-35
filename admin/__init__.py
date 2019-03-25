@@ -24,7 +24,7 @@ def admin_view_results():
 
 def add_question():
     section = 1
-    if section =1:
+    if section == 1:
         question = [Questions(question = request.form['question'],
                                    answer = request.form['answer'],
                                    is_Correct = True,
@@ -32,14 +32,14 @@ def add_question():
                                    ]
         database_session.add(question)
         database_session.commit()
-    elif section = 2:
+    elif section == 2:
         question = [Questions(question = request.form['question'],
                                     answer = "this is a section 2 question",
                                     is_Correct = True,
                                     section = 2)]
         database_session.add(question)
         database_session.commit()
-    elif section = 3:
+    elif section == 3:
         question = [Questions(question = request.form['question'],
                                     answer = "this is a section 3 question",
                                     is_Correct = True,
@@ -58,23 +58,28 @@ def add_answer():
     database_session.commit()
 
 def delete_question():
-    question = Questions.query.filter(question = request.form['question'])
-    database_session.delete(question)
+    del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
+    del_query.delete()
     database_session.commit()
 
 def delete_answer():
-    answer = Questions.query.filter(and_(question = request.form['question'], answer = request.form['answer']))
-    database_session.delete(answer)
+    del_query = database_session.query(Questions).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
+    del_query.delete()
     database_session.commit()
 
+
 def edit_question():
-    Questions.update().values(question = request.form['new_question']).where(Questions.c.question = request.form['question'])
+    rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
+    for row in rows_to_update:
+        row.question = request.form['new_question']
     database_session.commit()
 
 def edit_answer():
-    Questions.update()values(answer = request.form['new_answer']).where(Questions.c.question = request.form['question']).and(Questions.c.answer = request.form['answer'])
+    rows_to_update = database_session.query(Questions).filter(and_(Questions.question == request.form['question'] , Questions.answer == request.form['answer']))
+        rows_to_update.answer=request.form['new_answer']
     database_session.commit()
 
 def clear_student_answers():
-    StudentAnswer.query().delete()
+    del_query = database_session.query(StudentAnswers)
+    del_query.delete()
     database_session.commit()
