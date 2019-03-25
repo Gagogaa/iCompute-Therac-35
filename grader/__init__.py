@@ -29,7 +29,6 @@ def grade_section_one(team):
     #return both the test score and the results of the test
     return ((correct_answers/total_questions), results)
 
-
 @grader.route('/', methods=('GET','POST'))
 def grader_index():
     teams = []
