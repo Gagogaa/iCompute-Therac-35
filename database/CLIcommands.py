@@ -221,6 +221,42 @@ def testing_data():
                      section_two_score = 20,
                      section_three_score = 32
 
+                     ),
+        StudentScore(team_name = 'teamT8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 72,
+                     section_one_score = 20,
+                     section_two_score = 20,
+                     section_three_score = 32
+
+                     ),
+        StudentScore(team_name = 'teamK8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 36,
+                     section_one_score = 0,
+                     section_two_score = 20,
+                     section_three_score = 16
+
+                     ),
+        StudentScore(team_name = 'teamGr8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 93,
+                     section_one_score = 41,
+                     section_two_score = 20,
+                     section_three_score = 32
+
+                     ),
+        StudentScore(team_name = 'teamSt8',
+                     team_year = '2019',
+                     test_name = 'Test Two',
+                     total_score = 66,
+                     section_one_score = 14,
+                     section_two_score = 20,
+                     section_three_score = 32
+
                      )
     ]
 

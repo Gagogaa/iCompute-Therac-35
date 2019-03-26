@@ -25,21 +25,41 @@ def admin_view_results():
 
 	theScores = []
 	data = {}
-	counter = 1
+	counter = 0
 
-	# Build Dictionary for questions pulled from the db
-	for testResult in database_session.query(StudentScore).distinct():
+	# Build Dictionary for test names pulled from the db
+	for testName in database_session.query(StudentScore.test_name).distinct().order_by(StudentScore.test_name):
 		data['id'] = counter
-		data['teamName'] = testResult.team_name
-		data['teamYear'] = testResult.team_year
-		data['section1Score'] = testResult.section_one_score
-		data['section2Score'] = testResult.section_two_score
-		data['section3Score'] = testResult.section_three_score
-		data['section4Score'] = testResult.total_score
+		data['theTestName'] = testName.test_name
+		theTestTakers = []
+		data['testTakers'] = theTestTakers
 
+		#details = {}
+		#for testResult in database_session.query(StudentScore).filter(StudentScore.test_name == testName.theTestName):
+		#	details['teamName'] = testResult.team_name
+		#	details['teamYear'] = testResult.team_year
+		#	details['section1Score'] = testResult.section_one_score
+		#	details['section2Score'] = testResult.section_two_score
+		#	details['section3Score'] = testResult.section_three_score
+		#	details['section4Score'] = testResult.total_score
+
+		#data['theDetails'] = details
 		theScores.append(data)
 		counter += 1
 		data = {}
+
+	details = {}
+	for i in range(0, counter):
+		for testResult in database_session.query(StudentScore).filter(StudentScore.test_name == theScores[i]['theTestName']).order_by(StudentScore.total_score.desc()):
+			details['teamName'] = testResult.team_name
+			details['teamYear'] = testResult.team_year
+			details['section1Score'] = testResult.section_one_score
+			details['section2Score'] = testResult.section_two_score
+			details['section3Score'] = testResult.section_three_score
+			details['section4Score'] = testResult.total_score
+
+			theScores[i]['testTakers'].append(details)
+			details = {}
 
 
 	return render_template('testResults.html', link="./", theScores=theScores)
