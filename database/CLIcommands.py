@@ -117,11 +117,27 @@ def testing_data():
                   is_correct = False,
                   section = 1
                   ),
-        StudentTeam(team_name = 'TeamM8s',
+        StudentTeam(team_name = 'teamM8s',
                     team_year = datetime.datetime.now(),
                     school_name= 'School of Rock'
                     ),
-        StudentTeam(team_name = 'TeamL8',
+        StudentTeam(team_name = 'teamGr8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'Patchin Elementary'
+                    ),
+        StudentTeam(team_name = 'teamT8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'John Glenn Elementary'
+                    ),
+        StudentTeam(team_name = 'teamK8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'Third Street Elementary'
+                    ),
+        StudentTeam(team_name = 'teamSt8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'U.A. High'
+                    ),
+        StudentTeam(team_name = 'teamL8',
                     team_year = datetime.datetime.now(),
                     school_name = 'School of Hard Knocks'
                     ),

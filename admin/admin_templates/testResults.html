@@ -4,16 +4,17 @@
 <br><br>
 <h3>Test Results by Test</h3>
 <br>
+<!-- The entire accordian begins here-->
 <div id="accordion">
 
 {% for theTest in theScores %}
   <div class="card">
     <div class="card-header">
-      <a class="collapsed card-link" data-toggle="collapse" href="#collapseOne">
+      <a class="collapsed card-link" data-toggle="collapse" href={{theTest['accord1']}}>
         {{theTest['theTestName']}}
       </a>
     </div>
-    <div id="collapseOne" class="collapse" data-parent="#accordion">
+    <div id={{theTest['accord2']}} class="collapse" data-parent="#accordion">
       <table class="table table-hover">
       <thead>
           <tr>
@@ -29,7 +30,7 @@
       	{% for teamName in theTest['testTakers'] %}
       	  <tr>
             <td>{{teamName['teamName']}}</td>
-            <td>Patchin Elementary</td>
+            <td>{{teamName['theSchoolName']}}</td>
             <td>{{teamName['section1Score']}}</td>
             <td>{{teamName['section2Score']}}</td>
             <td>{{teamName['section3Score']}}</td>
