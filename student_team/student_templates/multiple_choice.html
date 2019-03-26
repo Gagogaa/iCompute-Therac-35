@@ -3,45 +3,23 @@
 {% block content %}
   <section id="content" style="margin-bottom: 2em">
     <form role="form" id="multChoice" action="" method="post">
-    <script>
-      function checkClicked(event) {
-        target = getEventTarget(event)
-        if (target.tagName == "LI")
-          getEventTarget(event).children[0].checked=true;
-        else if (target.tagName == "LABEL")
-          getEventTarget(event).previousElementSibling.checked=true;
-      }
-    </script>
-      {% for question in questions %}
-
-      <!-- TODO make this dynamic so it makes all the answers for the questions and not just four of them -->
-      <!-- TODO fetch images as well -->
+      {% for question in exam_questions %}
+      <!-- TODO fetch images -->
+      <!-- TODO fetch questions in order -->
       <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
         <div class="card-header bg-light">
           {{question['id']}}. {{question['question']}}
         </div>
-        <ul class="list-group list-group-flush">
-          <input type="radio" style="position:fixed; opacity:0;" name="optradio{{question['id']}}" value="not_answered" checked="checked">
+        <ul class="list-group list-group-flush" id="q{{question['id']}}">
+          {% for answer in question['answers'] %}
           <li class="list-group-item" onclick="checkClicked()">
-            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}">
-            <label id="labelq{{question['id']}}a1">{{question['answer1']}}</label>
+            <input type="radio" name="{{question['id']}}" value="{{answer}}">
+            <label>{{answer}}</label>
           </li>
-          <li class="list-group-item" onclick="checkClicked()">
-            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}">
-            <label id="labelq{{question['id']}}a2">{{question['answer2']}}</label>
-          </li>
-          <li class="list-group-item" onclick="checkClicked()">
-            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}">
-            <label id="labelq{{question['id']}}a3">{{question['answer3']}}</label>
-          </li>
-          <li class="list-group-item" onclick="checkClicked()">
-            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}">
-            <label id="labelq{{question['id']}}a4">{{question['answer4']}}</label>
-          </li>
+          {% endfor %}
         </ul>
       </div>
       {% endfor %}
-      <input type="hidden" name="team_name" id="teamNameForInput">
       <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
     </form>
   </section>
@@ -67,22 +45,27 @@
   </div>
 
   <script>
-    // TODO This function is a little weird when you click the submit button a second time after going back to answer the questions
     function checkRadioButtons() {
-      document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
-      var active = false;
-      for(let i = 0; i < {{questions|length}}; i++) {
-        for(let j = 0; j < 4; j++) {
-          var id = 'q' + (i+1) + 'a' + (j+1);
-          if(document.getElementById(id).checked) {
-            active = true;
+      var hasUnansweredQuestions = true;
+
+      for(let i = 1; i < {{exam_questions|length}}+1; i++) {
+        var ul_id = 'q' + i;
+        var list = document.getElementById(ul_id);
+
+        for (j = 0; j < list.children.length; j++) {
+          if (list.children[j].children[0].checked) {
+            hasUnansweredQuestions = false;
           }
         }
-        if(active === false) {
+
+        if(hasUnansweredQuestions) {
            document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div class='text-danger'>You have unanswered Questions in this Section.</div>";
+           break;
         } else {
-          active = false;
+           document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.";
         }
+
+        hasUnansweredQuestions = true;
       }
     }
 
@@ -94,5 +77,14 @@
     $('#submit').click(function(){
       $('#multChoice').submit();
     });
+
+    function checkClicked(event) {
+      target = getEventTarget(event)
+      if (target.tagName == "LI")
+        target.children[0].checked=true;
+      else if (target.tagName == "LABEL")
+        target.previousElementSibling.checked=true;
+    }
+
   </script>
 {% endblock %}
