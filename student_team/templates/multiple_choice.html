@@ -3,54 +3,42 @@
 {% block content %}
   <section id="content" style="margin-bottom: 2em">
     <form role="form" id="multChoice" action="" method="post">
+    <script>
+      function checkClicked(event) {
+        console.log(getEventTarget(event));
+        getEventTarget(event).children[0].checked=true;
+      }
+    </script>
       {% for question in questions %}
-        <div class="container">
-          <!-- TODO Why is this an H2? -->
-          <h2 id="questionHead">Question {{question['id']}}</h2>
-          <table class = "table table-hover table-bordered">
-            <thead>
-              <tr class="thead-dark">
-                <th id ="question{{question['id']}}">{{question['question']}}</th>
-              </tr>
-            </thead>
-            <!-- TODO make this dynamic so it makes all the answers for the questions and not just four of them -->
-            <!-- TODO fetch images as well -->
-            <tbody>
-              <tr onclick="document.getElementById('q{{question['id']}}a1').checked = true;">
-                <td>
-                  <div class="radio">
-                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
-                  </div>
-                </td>
-              </tr>
-              <tr onclick="document.getElementById('q{{question['id']}}a2').checked = true;">
-                <td>
-                  <div class="radio">
-                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}"><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
-                  </div>
-                </td>
-              </tr>
-              <tr onclick="document.getElementById('q{{question['id']}}a3').checked = true;">
-                <td>
-                  <div class="radio">
-                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}"><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
-                  </div>
-                </td>
-              </tr>
-              <tr onclick="document.getElementById('q{{question['id']}}a4').checked = true;">
-                <td>
-                  <div class="radio">
-                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}"><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <input type="hidden" name="question{{question['id']}}" value="{{question['question']}}">
+
+      <!-- TODO make this dynamic so it makes all the answers for the questions and not just four of them -->
+      <!-- TODO fetch images as well -->
+      <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
+        <div class="card-header bg-light">
+          {{question['id']}}. {{question['question']}}
         </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" onclick="checkClicked()">
+            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}">
+            <label id="labelq{{question['id']}}a1">{{question['answer1']}}</label>
+          </li>
+          <li class="list-group-item" onclick="checkClicked()">
+            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}">
+            <label id="labelq{{question['id']}}a2">{{question['answer2']}}</label>
+          </li>
+          <li class="list-group-item" onclick="checkClicked()">
+            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}">
+            <label id="labelq{{question['id']}}a3">{{question['answer3']}}</label>
+          </li>
+          <li class="list-group-item" onclick="checkClicked()">
+            <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}">
+            <label id="labelq{{question['id']}}a4">{{question['answer4']}}</label>
+          </li>
+        </ul>
+      </div>
       {% endfor %}
       <input type="hidden" name="team_name" id="teamNameForInput">
-      <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block" />
+      <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
     </form>
   </section>
 
@@ -58,7 +46,7 @@
   <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header" style="color:red;">
+        <div class="modal-header text-danger">
           Confirm Submission
         </div>
 
@@ -91,6 +79,11 @@
           active = false;
         }
       }
+    }
+
+    function getEventTarget(e) {
+      e = e || window.event;
+      return e.target || e.srcElement;
     }
 
     $('#submit').click(function(){
