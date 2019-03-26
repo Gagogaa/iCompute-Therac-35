@@ -73,30 +73,16 @@
          </tr>
       </thead>
       <tbody>
-          <tr>
-            <td>The Overacheivers</td>
+      	{% for teamName in theScores %}
+      	  <tr>
+            <td>{{teamName['teamName']}}</td>
             <td>Patchin Elementary</td>
-            <td>98</td>
-            <td>82</td>
-            <td>82</td>
-            <td>82</td>
+            <td>{{teamName['section1Score']}}</td>
+            <td>{{teamName['section2Score']}}</td>
+            <td>{{teamName['section3Score']}}</td>
+            <td>{{teamName['section4Score']}}</td>
           </tr>
-          <tr>
-            <td>Cross Out</td>
-            <td>John Glenn Elementary</td>
-            <td>76</td>
-            <td>82</td>
-            <td>82</td>
-            <td>82</td>
-          </tr>
-          <tr>
-            <td>The Avengers</td>
-            <td>Stevenson Elementary</td>
-            <td>82</td>
-            <td>82</td>
-            <td>82</td>
-            <td>82</td>
-          </tr>
+      	{% endfor %}
         </tbody>
       </table>
     </div>
