@@ -14,6 +14,7 @@
               </thead>
               <tbody>
                 <tr>
+                  <input type="radio" style="position:fixed; opacity:0;" name="optradio{{question['id']}}" value="not_answered" checked="checked">
                   <td><div class="radio">
                       <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
                    </div></td>
@@ -67,6 +68,8 @@
 
 <script>
   function checkRadioButtons() {
+    console.log('called checkRadioButtons');
+    document.getElementById('modal-body').innerHTML = 'Are you sure you want to submit this section? You will NOT be able to return to this section later.';
     document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
     var active = false;
     for(let i = 0; i < {{questions|length}}; i++) {
