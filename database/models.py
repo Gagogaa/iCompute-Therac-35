@@ -37,6 +37,7 @@ class iComputeTest(Base):
     orderId = Column(Integer)
     question = Column(String, primary_key=True)
     section = Column(Integer, nullable=False)
+    test_name = Column(String)
     year = Column(Integer)
     student_grade = Column(String)
 
@@ -71,6 +72,7 @@ class StudentScore(Base):
 
     team_name = Column(String, primary_key=True)
     team_year = Column(String, primary_key=True)
+    test_name = Column(String)
     total_score = Column(Integer, nullable=False)
     section_one_score = Column(Integer, nullable=False)
     section_two_score = Column(Integer)
