@@ -5,6 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import datetime
+from logon import required_user_type
+from flask_login import login_required
 
 engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
 database_session = scoped_session(sessionmaker(autocommit=False,
@@ -14,6 +16,8 @@ database_session = scoped_session(sessionmaker(autocommit=False,
 student_team = Blueprint('student_team', __name__, template_folder='templates')
 
 @student_team.route('/', methods=('GET', 'POST'))
+@login_required
+@required_user_type('Student')
 def student_team_index():
     # Build Dictionary for questions pulled from the db
     questions = [

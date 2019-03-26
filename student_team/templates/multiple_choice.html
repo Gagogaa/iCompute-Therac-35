@@ -1,41 +1,52 @@
 {% extends 'header.html' %}
 {% block title %}Student Team{% endblock %}
 {% block content %}
-  <section id="content">
+  <section id="content" style="margin-bottom: 2em">
     <form role="form" id="multChoice" action="" method="post">
       {% for question in questions %}
         <div class="container">
+          <!-- TODO Why is this an H2? -->
           <h2 id="questionHead">Question {{question['id']}}</h2>
           <table class = "table table-hover table-bordered">
             <thead>
-                <tr style="background-color:#cccccc">
-                  <th id ="question{{question['id']}}">{{question['question']}}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
-                   </div></td>
-                </tr>
-                <tr>
-                    <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}"><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
-                    </div></td>
-                </tr>
-                <tr>
-                  <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}"><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
-                    </div></td>
-                </tr>
-                <tr>
-                  <td><div class="radio">
-                      <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}"><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
-                    </div></td>
-                </tr>
-              </tbody>
-        </table>
-        <input type="hidden" name="question{{question['id']}}" value="{{question['question']}}">
+              <tr class="thead-dark">
+                <th id ="question{{question['id']}}">{{question['question']}}</th>
+              </tr>
+            </thead>
+            <!-- TODO make this dynamic so it makes all the answers for the questions and not just four of them -->
+            <!-- TODO fetch images as well -->
+            <tbody>
+              <tr onclick="document.getElementById('q{{question['id']}}a1').checked = true;">
+                <td>
+                  <div class="radio">
+                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}"><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="document.getElementById('q{{question['id']}}a2').checked = true;">
+                <td>
+                  <div class="radio">
+                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}"><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="document.getElementById('q{{question['id']}}a3').checked = true;">
+                <td>
+                  <div class="radio">
+                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}"><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="document.getElementById('q{{question['id']}}a4').checked = true;">
+                <td>
+                  <div class="radio">
+                    <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}"><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <input type="hidden" name="question{{question['id']}}" value="{{question['question']}}">
         </div>
       {% endfor %}
       <input type="hidden" name="team_name" id="teamNameForInput">
@@ -46,46 +57,44 @@
 <!--Modal for the submit button-->
   <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" style="color:red;">
-                Confirm Submission
-            </div>
-            <div id="modal-body" class="modal-body">
-              Are you sure you want to submit this section? You will NOT be able to return to this section later.
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <a href="#" id="submit" class="btn btn-success success">Submit</a>
-            </div>
-
-
+      <div class="modal-content">
+        <div class="modal-header" style="color:red;">
+          Confirm Submission
         </div>
-    </div>
-</div>
-<br><br>
 
-<script>
-  function checkRadioButtons() {
-    document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
-    var active = false;
-    for(let i = 0; i < {{questions|length}}; i++) {
-      for(let j = 0; j < 4; j++) {
-        var id = 'q' + (i+1) + 'a' + (j+1);
-        if(document.getElementById(id).checked) {
-          active = true;
+        <div id="modal-body" class="modal-body">
+          Are you sure you want to submit this section? You will NOT be able to return to this section later.
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <a href="#" id="submit" class="btn btn-success success">Submit</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkRadioButtons() {
+      document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
+      var active = false;
+      for(let i = 0; i < {{questions|length}}; i++) {
+        for(let j = 0; j < 4; j++) {
+          var id = 'q' + (i+1) + 'a' + (j+1);
+          if(document.getElementById(id).checked) {
+            active = true;
+          }
+        }
+        if(active === false) {
+           document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
+        } else {
+          active = false;
         }
       }
-      if(active === false) {
-         document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
-      } else {
-        active = false;
-      }
     }
-  }
 
-  $('#submit').click(function(){
+    $('#submit').click(function(){
       $('#multChoice').submit();
-  });
-</script>
+    });
+  </script>
 {% endblock %}

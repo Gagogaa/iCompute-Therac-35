@@ -5,6 +5,7 @@ Contains the database classes for the application
 
 from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
 from database import Base
+from flask_login import UserMixin
 
 
 class StudentTeam(Base):
@@ -49,13 +50,17 @@ class Questions(Base):
     section = Column(Integer, nullable=False)
 
 
-class Users(Base):
+class Users(UserMixin, Base):
     __tablename__ = 'Users'
 
     username = Column(String, primary_key=True)
     password = Column(String, nullable=False)
     user_type = Column(String, nullable=False)
     #UserTypes Student, Grader, Supervisor.
+
+    def get_id(user):
+        print(user)
+        return user.username
 
 
 class StudentScore(Base):

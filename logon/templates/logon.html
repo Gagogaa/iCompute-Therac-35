@@ -1,6 +1,7 @@
 {% extends 'logon_header.html' %}
 {% block title %}Log in{% endblock %}
 {% block content %}
+<!-- TODO not all flash messages are bad so don't color all messages with the danger color -->
 {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for message in messages %}
@@ -13,7 +14,7 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
-<form role="form" id="logon" action="" method="POST">
+<form role="form" id="logon" action="" method="POST" style="margin-top: 1em">
     <div class="form-group">
         <label for="Username">Username</label>
         <input id="Username" name="Username" class="form-control" required />
