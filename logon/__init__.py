@@ -1,18 +1,21 @@
-from flask import Flask, render_template, request, session, redirect, url_for, abort, flash, current_app
+from flask import Flask, render_template, request, session, redirect, url_for, abort, flash, current_app, send_from_directory
 from database import database_session, init_db
 from database.models import Users
 from werkzeug.security import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, current_user
 from flask_login import login_required
 from functools import wraps
+import os
 
 app = Flask(__name__)
 
-app.secret_key = b'dev' # We need to change this in the production env
+app.secret_key = 'dev' # We need to change this in the production env
 
 # Register the login page with flask-login
 login_manager = LoginManager()
 login_manager.login_view = 'index'
+# Set the flashed message category so they show up with the right color
+login_manager.login_message_category = 'error'
 
 login_manager.init_app(app)
 
@@ -84,7 +87,7 @@ def index():
 
             # If the Username is not in the database
             if user is None:
-                flash(f'Invalid Username')
+                flash('Invalid Username', 'error')
                 return redirect(url_for('index'))
             else:
                 if check_password_hash(user.password, request.form['Password']):
@@ -101,7 +104,7 @@ def index():
                         abort(500)
 
                 else: # If the user did not use the correct password
-                    flash('Invalid Password')
+                    flash('Invalid Password', 'error')
                     return redirect(url_for('index'))
 
         else: # If the form did not contain a username or password submission
@@ -118,6 +121,12 @@ def shutdown_session(exception=None):
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'info')
     return redirect(url_for('index'))
+
+
+@app.route('/favicon.ico')
+def favicon():
+    print('fetching favicon')
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 

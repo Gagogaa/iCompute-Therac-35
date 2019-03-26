@@ -57,15 +57,73 @@ def testing_data():
                   is_correct = True,
                   section = 1
                   ),
-        StudentTeam(name = 'TeamM8s',
-                    year = datetime.datetime.now(),
-                    first_student = 'Anthony',
-                    second_student = 'Greg'
+        Questions(question = 'This is a third test question.',
+                  answer = 'Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a third test question.',
+                  answer = 'Correct',
+                  is_correct = True,
+                  section = 1
+                  ),
+        Questions(question = 'This is a third test question.',
+                  answer = 'Double Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a third test question.',
+                  answer = 'Triple Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fourth test question.',
+                  answer = 'Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fourth test question.',
+                  answer = 'Double wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fourth test question.',
+                  answer = 'Correct',
+                  is_correct = True,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fourth test question.',
+                  answer = 'Triple Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Correct',
+                  is_correct = True,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Double wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Triple Wrong',
+                  is_correct = False,
+                  section = 1
+                  ),
+        StudentTeam(team_name = 'TeamM8s',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'School of Rock'
                     ),
-        StudentTeam(name = 'TeamL8',
-                    year = datetime.datetime.now(),
-                    first_student = 'Jake',
-                    second_student = 'Zane'
+        StudentTeam(team_name = 'TeamL8',
+                    team_year = datetime.datetime.now(),
+                    school_name = 'School of Hard Knocks'
                     ),
         StudentAnswer(team_name = 'teamM8s',
                       team_year = datetime.datetime.now(),
@@ -94,14 +152,42 @@ def testing_data():
         iComputeTest(orderId = 1,
                      question = 'This provides a step-by-step procedure for performing a task.',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
-                     student_grade = 'Fourth'
+                     student_grade = 'Fourth',
+
                      ),
         iComputeTest(orderId = 2,
                      question = 'Which one of the following is not a programming language?',
                      section = 1,
+                     test_name = 'Test One',
+                     year = datetime.datetime.now(),
+                     student_grade = 'Fourth',
+
+                     ),
+        iComputeTest(orderId = 3,
+                     question = 'This is a third test question.',
+                     section = 1,
+                     test_name = 'Test One',
+                     year = datetime.datetime.now(),
+                     student_grade = 'Fourth',
+
+                     ),
+        iComputeTest(orderId = 4,
+                     question = 'This is a fourth test question.',
+                     section = 1,
+                     test_name = 'Test One',
+                     year = datetime.datetime.now(),
+                     student_grade = 'Fourth',
+
+                     ),
+        iComputeTest(orderId = 5,
+                     question = 'This is a fifth test question.',
+                     section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
                      student_grade = 'Fourth'
+
                      ),
         Users(username = 'teamM8s',
               password = generate_password_hash('password'),
@@ -121,11 +207,15 @@ def testing_data():
               ),
         StudentScore(team_name = 'teamM8s',
                      team_year = '2019',
-                     score = 100
+                     test_name = 'Test One',
+                     total_score = 100,
+                     section_one_score = 100
                      ),
         StudentScore(team_name = 'teamL8',
                      team_year = '2019',
-                     score = 0
+                     test_name = 'Test One',
+                     total_score = 0,
+                     section_one_score = 0
                      )
     ]
 
