@@ -5,7 +5,7 @@
     <form role="form" id="multChoice" action="" method="post">
     <script>
       function checkClicked(event) {
-        console.log(getEventTarget(event));
+        // TODO this has a bug where we cannot click on the label to select the radio that needs to be fixed
         getEventTarget(event).children[0].checked=true;
       }
     </script>
