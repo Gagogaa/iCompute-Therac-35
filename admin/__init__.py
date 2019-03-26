@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from database import database_session
 from database.models import *
 
-admin = Blueprint('admin', __name__, template_folder='templates')
+admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
 @admin.route('/')
 def admin_index():
