@@ -7,8 +7,8 @@ def admin_index():
     return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results")
 
 @admin.route('/test')
-def admin_create_test():
-    return render_template('test_create.html', link="./")
+def admin_modify_test():
+    return render_template('test_modify.html', link="./")
 
 @admin.route('/user')
 def admin_edit_users():
