@@ -84,7 +84,7 @@ def index():
 
             # If the Username is not in the database
             if user is None:
-                flash('Invalid Username')
+                flash('Invalid Username', 'error')
                 return redirect(url_for('index'))
             else:
                 if check_password_hash(user.password, request.form['Password']):
@@ -101,11 +101,12 @@ def index():
                         abort(500)
 
                 else: # If the user did not use the correct password
-                    flash('Invalid Password')
+                    flash('Invalid Password', 'error')
                     return redirect(url_for('index'))
 
         else: # If the form did not contain a username or password submission
             return render_template('logon.html')
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -117,6 +118,6 @@ def shutdown_session(exception=None):
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
+    flash('You have been logged out.', 'info')
     return redirect(url_for('index'))
 
