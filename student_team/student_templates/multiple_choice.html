@@ -18,6 +18,7 @@
           {{question['id']}}. {{question['question']}}
         </div>
         <ul class="list-group list-group-flush">
+          <input type="radio" style="position:fixed; opacity:0;" name="optradio{{question['id']}}" value="not_answered" checked="checked">
           <li class="list-group-item" onclick="checkClicked()">
             <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}">
             <label id="labelq{{question['id']}}a1">{{question['answer1']}}</label>
@@ -63,6 +64,7 @@
   </div>
 
   <script>
+    // TODO This function is a little weird when you click the submit button a second time after going back to answer the questions
     function checkRadioButtons() {
       document.getElementById('teamNameForInput').value = document.getElementById('navbar-team-name').innerHTML;
       var active = false;
@@ -74,7 +76,7 @@
           }
         }
         if(active === false) {
-           document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div style='color: red;'>You have unanswered Questions in this Section.</div>";
+           document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.\n<div class='text-danger'>You have unanswered Questions in this Section.</div>";
         } else {
           active = false;
         }

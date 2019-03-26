@@ -8,7 +8,7 @@ from functools import wraps
 
 app = Flask(__name__)
 
-app.secret_key = b'dev' # We need to change this in the production env
+app.secret_key = 'dev' # We need to change this in the production env
 
 # Register the login page with flask-login
 login_manager = LoginManager()
@@ -84,7 +84,7 @@ def index():
 
             # If the Username is not in the database
             if user is None:
-                flash(f'Invalid Username')
+                flash('Invalid Username')
                 return redirect(url_for('index'))
             else:
                 if check_password_hash(user.password, request.form['Password']):
@@ -106,7 +106,6 @@ def index():
 
         else: # If the form did not contain a username or password submission
             return render_template('logon.html')
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
