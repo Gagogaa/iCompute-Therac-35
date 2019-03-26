@@ -13,6 +13,8 @@ app.secret_key = 'dev' # We need to change this in the production env
 # Register the login page with flask-login
 login_manager = LoginManager()
 login_manager.login_view = 'index'
+# Set the flashed message category so they show up with the right color
+login_manager.login_message_category = 'error'
 
 login_manager.init_app(app)
 
