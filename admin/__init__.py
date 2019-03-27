@@ -53,8 +53,8 @@ def add_question():
 @admin.route('/addAnswer', methods=['POST'])
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
-        question = [Questions(question = request.form['question'],
-                                answer = request.form['answer'],
+        question = [Questions(question = request.form.get['question'],
+                                answer = request.form.get['answer'],
                                 is_Correct = False,
                                 section = 1)
                                 ]
