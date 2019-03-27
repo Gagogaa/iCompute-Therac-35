@@ -6,7 +6,7 @@
     var counter = 2;
     $(document).ready(function(){
       $("#add_new").on("click",function(){
-        $("br:last").after('<h4>Question ' + counter + '</h4><div class="dropdown show"><select class="btn btn-secondary dropdown-toggle">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select></div><br />');
+        $("br:last").after('<h4>Question ' + counter + '</h4><div class="dropdown show" style="display: flex;"><select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div><br />');
         counter += 1;
       })
     })
@@ -20,12 +20,13 @@
   <br />
   <form>
     <h4>Question 1</h4>
-    <div class="dropdown show">
-      <select class="btn btn-secondary dropdown-toggle">
+    <div class="dropdown show" style="display: flex;">
+      <select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">
         {% for question in questions %}
           <option class="dropdown-item" value='{{question}}'>{{question}}</option>
         {% endfor %}
       </select>
+      <button type="button" id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
     </div>
     <br />
   </form>
