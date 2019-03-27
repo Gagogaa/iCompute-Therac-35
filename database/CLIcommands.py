@@ -117,11 +117,27 @@ def testing_data():
                   is_correct = False,
                   section = 1
                   ),
-        StudentTeam(team_name = 'TeamM8s',
+        StudentTeam(team_name = 'teamM8s',
                     team_year = datetime.datetime.now(),
                     school_name= 'School of Rock'
                     ),
-        StudentTeam(team_name = 'TeamL8',
+        StudentTeam(team_name = 'teamGr8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'Patchin Elementary'
+                    ),
+        StudentTeam(team_name = 'teamT8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'John Glenn Elementary'
+                    ),
+        StudentTeam(team_name = 'teamK8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'Third Street Elementary'
+                    ),
+        StudentTeam(team_name = 'teamSt8',
+                    team_year = datetime.datetime.now(),
+                    school_name= 'U.A. High'
+                    ),
+        StudentTeam(team_name = 'teamL8',
                     team_year = datetime.datetime.now(),
                     school_name = 'School of Hard Knocks'
                     ),
@@ -209,13 +225,54 @@ def testing_data():
                      team_year = '2019',
                      test_name = 'Test One',
                      total_score = 100,
-                     section_one_score = 100
+                     section_one_score = 30,
+                     section_two_score = 30,
+                     section_three_score = 40
                      ),
         StudentScore(team_name = 'teamL8',
                      team_year = '2019',
                      test_name = 'Test One',
-                     total_score = 0,
-                     section_one_score = 0
+                     total_score = 52,
+                     section_one_score = 0,
+                     section_two_score = 20,
+                     section_three_score = 32
+
+                     ),
+        StudentScore(team_name = 'teamT8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 72,
+                     section_one_score = 20,
+                     section_two_score = 20,
+                     section_three_score = 32
+
+                     ),
+        StudentScore(team_name = 'teamK8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 36,
+                     section_one_score = 0,
+                     section_two_score = 20,
+                     section_three_score = 16
+
+                     ),
+        StudentScore(team_name = 'teamGr8',
+                     team_year = '2018',
+                     test_name = 'Test Three',
+                     total_score = 93,
+                     section_one_score = 41,
+                     section_two_score = 20,
+                     section_three_score = 32
+
+                     ),
+        StudentScore(team_name = 'teamSt8',
+                     team_year = '2019',
+                     test_name = 'Test Two',
+                     total_score = 66,
+                     section_one_score = 14,
+                     section_two_score = 20,
+                     section_three_score = 32
+
                      )
     ]
 
