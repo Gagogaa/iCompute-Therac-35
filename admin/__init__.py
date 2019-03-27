@@ -1,4 +1,6 @@
 from flask import *
+from database import database_session
+from database.models import *
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -12,7 +14,11 @@ def admin_modify_test():
 
 @admin.route('test/test_create')
 def admin_create_test():
-    return render_template('test_create.html')
+    questions = []
+    for question in database_session.query(Questions.question).distinct():
+        questions.append(question.question)
+
+    return render_template('test_create.html', questions=questions)
 
 @admin.route('test/test_edit')
 def admin_edit_test():

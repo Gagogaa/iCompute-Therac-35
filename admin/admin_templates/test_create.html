@@ -3,10 +3,11 @@
 {% block content %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>
-    var newQuestion = '<div class="dropdown show"><select class="btn btn-secondary dropdown-toggle"><option class="dropdown-item">Question1</option><option class="dropdown-item">Question2</option><option class="dropdown-item">Question3</option></select></div><br />';
+    var counter = 2;
     $(document).ready(function(){
       $("#add_new").on("click",function(){
-        $("br:last").after(newQuestion);
+        $("br:last").after('<h4>Question ' + counter + '</h4><div class="dropdown show"><select class="btn btn-secondary dropdown-toggle">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select></div><br />');
+        counter += 1;
       })
     })
   </script>
@@ -18,11 +19,12 @@
   </button>
   <br />
   <form>
+    <h4>Question 1</h4>
     <div class="dropdown show">
       <select class="btn btn-secondary dropdown-toggle">
-        <option class="dropdown-item">Question1</option>
-        <option class="dropdown-item">Question2</option>
-        <option class="dropdown-item">Question3</option>
+        {% for question in questions %}
+          <option class="dropdown-item" value='{{question}}'>{{question}}</option>
+        {% endfor %}
       </select>
     </div>
     <br />
