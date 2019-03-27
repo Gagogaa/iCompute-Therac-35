@@ -6,34 +6,48 @@
     var counter = 2;
     $(document).ready(function(){
       $("#add_new").on("click",function(){
-        $("br:last").after('<div id="question"' + counter + '><h4>Question ' + counter + '</h4><div class="dropdown show" style="display: flex;"><select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
+        $("br:last").after('<div id="question' + counter + '"><h4 class="qtitle">Question ' + counter + '</h4><div class="dropdown show" style="display: flex;"><select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
         counter += 1;
       });
-
-      for(var i = 0; i < counter; i++) {
-        $('#delete' + i).on("click", function(){
-          $('#question' + i).remove();
-        });
-      }
     });
+
+    function removeQuestion(qid) {
+      $('#question' + qid).remove();
+      reorderQuestions();
+    }
+
+    function reorderQuestions(){
+      $('.qtitle').each(function(i, obj) {
+        var counter = i+1;
+        obj.innerHTML = 'Question ' + counter;
+      });
+    }
   </script>
-  <h2>Section A</h2>
-  <button id="add_new" class="btn btn-primary btn-lg btn-block">
-      <div class="question">
-      <p>Add Another Question</p>
-  </div>
-  </button>
-  <br />
   <form>
+    <h1 style="text-align: center;"><strong>Create a New Test</strong></h1>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+    </div>
+    <hr />
+    <h2><strong>Section A</strong></h2>
+    <button id="add_new" class="btn btn-primary btn-lg btn-block" type="button" onclick='reorderQuestions();'>
+        <div class="question">
+        <p>Add Another Question</p>
+    </div>
+    </button>
+    <br />
     <div id="question1">
-      <h4>Question 1</h4>
+      <h4 class="qtitle">Question 1</h4>
       <div class="dropdown show" style="display: flex;">
         <select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">
           {% for question in questions %}
             <option class="dropdown-item" value='{{question}}'>{{question}}</option>
           {% endfor %}
         </select>
-        <button type="button" id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
+        <button type="button" onclick='removeQuestion(1);' id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
       </div>
     </div>
     <br />
