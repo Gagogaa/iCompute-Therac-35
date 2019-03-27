@@ -13,8 +13,11 @@ def grade_section_one(team):
     #to display the results of the first part of the test
     results = {}
     correct_answers = 0
+    # TODO I don't think this is doing what we want it to because this will count all of the questions from all of the tests
+    # we just want the count from the current test
     total_questions = database_session.query(iComputeTest).count()
     #grab all student answers that were for the chosen team
+    # TODO we also need to grab team year (this is just in case schools have teams with the same name consecutive years)
     for answer in database_session.query(StudentAnswer).filter(StudentAnswer.team_name == team):
         results[answer.question] = answer.answer
         #grab the correct answer for the given question
