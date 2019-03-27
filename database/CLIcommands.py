@@ -11,7 +11,8 @@ from werkzeug.security import generate_password_hash
 def init_app(app):
     #app.teardown_appcontext(close_db)
     app.cli.add_command(testing_data)
-
+    app.cli.add_command(deletion_test)
+    app.cli.add_command(update_testing)
 
 @click.command('add-testing-data')
 @with_appcontext
@@ -152,32 +153,42 @@ def testing_data():
         iComputeTest(orderId = 1,
                      question = 'This provides a step-by-step procedure for performing a task.',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
-                     student_grade = 'Fourth'
+                     student_grade = 'Fourth',
+
                      ),
         iComputeTest(orderId = 2,
                      question = 'Which one of the following is not a programming language?',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
-                     student_grade = 'Fourth'
+                     student_grade = 'Fourth',
+
                      ),
         iComputeTest(orderId = 3,
                      question = 'This is a third test question.',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
-                     student_grade = 'Fourth'
+                     student_grade = 'Fourth',
+
                      ),
         iComputeTest(orderId = 4,
                      question = 'This is a fourth test question.',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
-                     student_grade = 'Fourth'
+                     student_grade = 'Fourth',
+
                      ),
         iComputeTest(orderId = 5,
                      question = 'This is a fifth test question.',
                      section = 1,
+                     test_name = 'Test One',
                      year = datetime.datetime.now(),
                      student_grade = 'Fourth'
+
                      ),
         Users(username = 'teamM8s',
               password = generate_password_hash('password'),
@@ -197,15 +208,32 @@ def testing_data():
               ),
         StudentScore(team_name = 'teamM8s',
                      team_year = '2019',
+                     test_name = 'Test One',
                      total_score = 100,
                      section_one_score = 100
                      ),
         StudentScore(team_name = 'teamL8',
                      team_year = '2019',
+                     test_name = 'Test One',
                      total_score = 0,
                      section_one_score = 0
                      )
     ]
 
     database_session.add_all(AddData)
+    database_session.commit()
+
+@click.command('delete-test')
+@with_appcontext
+def deletion_test():
+    del_query = database_session.query(Questions).filter(Questions.question=='Which one of the following is not a programming language?')
+    del_query.delete()
+    database_session.commit()
+
+@click.command('update-test')
+@with_appcontext
+def update_testing():
+    rows_to_update = database_session.query(Questions).filter(Questions.question == 'This provides a step-by-step procedure for performing a task.')
+    for row in rows_to_update:
+        row.question = "this is a new question"
     database_session.commit()
