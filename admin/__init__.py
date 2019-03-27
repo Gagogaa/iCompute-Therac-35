@@ -50,7 +50,7 @@ def add_question():
             database_session.add(question)
             database_session.commit()
 
-
+@admin.route('/addAnswer', methods=['POST'])
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
         question = [Questions(question = request.form['question'],
@@ -84,7 +84,7 @@ def edit_question():
 def edit_answer():
     if 'question' in request.form and 'answer' in request.form and 'new_answer' in request.form:
         rows_to_update = database_session.query(Questions).filter(and_(Questions.question == request.form['question'] , Questions.answer == request.form['answer']))
-            rows_to_update.answer=request.form['new_answer']
+        rows_to_update.answer=request.form['new_answer']
         database_session.commit()
 
 def clear_student_answers():
