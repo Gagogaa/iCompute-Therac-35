@@ -1,5 +1,30 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
-
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    var newQuestion = '<div class="dropdown show"><select class="btn btn-secondary dropdown-toggle"><option class="dropdown-item">Question1</option><option class="dropdown-item">Question2</option><option class="dropdown-item">Question3</option></select></div><br />';
+    $(document).ready(function(){
+      $("#add_new").on("click",function(){
+        $("br:last").after(newQuestion);
+      })
+    })
+  </script>
+  <h2>Section A</h2>
+  <button id="add_new" class="btn btn-primary btn-lg btn-block">
+      <div class="question">
+      <p>Add Another Question</p>
+  </div>
+  </button>
+  <br />
+  <form>
+    <div class="dropdown show">
+      <select class="btn btn-secondary dropdown-toggle">
+        <option class="dropdown-item">Question1</option>
+        <option class="dropdown-item">Question2</option>
+        <option class="dropdown-item">Question3</option>
+      </select>
+    </div>
+    <br />
+  </form>
 {% endblock %}
