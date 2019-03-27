@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 from flask import *
-=======
-from flask import Blueprint, render_template
->>>>>>> origin/master
 from database import database_session
 from database.models import *
 
@@ -60,7 +56,7 @@ def admin_view_results():
 		theTestTakers = []
 		data['testTakers'] = theTestTakers
 
-		
+
 		theScores.append(data)
 		counter += 1
 		data = {}
