@@ -36,6 +36,7 @@ def student_team_index():
                 team_name=current_user.username,
                 team_year=datetime.datetime.now().year,
                 section=1,
+                # TODO since the question was escaped we may need to unescape it here
                 question=question['question'],
                 answer=form_response))
 
