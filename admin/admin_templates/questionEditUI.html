@@ -172,7 +172,7 @@
           <label for="new-question-question-textbox" class="col-form-label">Question text:</label>
           <input type="text" class="form-control" id="new-question-question-textbox">
           <label for="new-question-answer-textbox" class="col-form-label">Correct answer:</label>
-          <input type="text" class="form-control" id="new-question-answer-textbox" onkeyup="updateQuestionTextbox()">
+          <input type="text" class="form-control" id="new-question-answer-textbox">
           <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
           <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
         </div>
@@ -189,7 +189,7 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="answer-modal-label"></h5>
+      <h5 class="modal-title" id="answer-modal-label" data-question="question"></h5>
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -203,7 +203,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-primary" id="new-answer-submit" data-question-type="multiple-choice">Submit</button>
+      <button type="button" class="btn btn-primary" id="new-answer-submit" data-question="question">Submit</button>
     </div>
   </div>
 </div>
@@ -311,48 +311,50 @@
       $("#new-answer-answer-textbox").removeClass("is-invalid");
       $("#new-answer-submit").attr("disabled", false);
       // get the question  from the calling button and save it to the submit button for later
-      var question = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      $("#answer-modal-label").text(question.value)
-      $("#new-answer-submit").data("question", question.value);
+      var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      var question = $(elem).data("question");
+      $("#answer-modal-label").text(questionVal.value);
+      $("#new-answer-submit").data("question", questionVal.value);
       // show or hide the answer field, depending on the question type
         $("label #new-answer-answer-textbox").show();
       // finally, show the modal
       $("#new-answer-modal").modal("show");
+
     }
     // add new answer to a question
     $(function addAnswer() {
       // to-do: add new answer, update database with new answer
       $('#new-answer-submit').click(function(){
       var question = $("#new-answer-submit").data("question");
+
       var answerText = $("#new-answer-answer-textbox").val();
       var errorText = "";
-
+      
       console.log(answerText);
       if(answerText === "") {
         errorText = "Answer cannot be blank";
         alert(errorText);
       } else {
         $.ajax({
-          url: '/addAnswer',
+          url: '/add_answer',
           data: {question:question,answer:answerText},
           type: 'POST',
           traditional: true,
           success: function(response){
             console.log(response);
+
           },
           error: function(error){
             console.log(error);
+
           }
         });
-        alert(question.value);
+
 
       }
     });
-    });
-    });
+  });
 
-    }
-}
   // check to make sure the question text is good (not blank, not a duplicate)
   // TODO: add validation serverside to make sure the question text is good
   function checkQuestionText(text) {

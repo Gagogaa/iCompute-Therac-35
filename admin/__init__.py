@@ -1,3 +1,6 @@
+import database
+from database.models import *
+from database.__init__ import *
 from flask import Blueprint, render_template
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -50,16 +53,22 @@ def add_question():
             database_session.add(question)
             database_session.commit()
 
-@admin.route('/addAnswer', methods=['POST'])
+@admin.route('/add_answer', methods=['POST'])
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
-        question = [Questions(question = request.form.get['question'],
-                                answer = request.form.get['answer'],
+        currentQuestion = request.form.get['question'];
+        answerToAdd = request.form.get['answer'];
+
+        print (currentQuestion);
+        print (answerToAdd);
+        new_answer = [Questions(question = currentQuestion,
+                                answer = answerToAdd,
                                 is_Correct = False,
                                 section = 1)
                                 ]
-        database_session.add(question)
-        database_session.commit()
+        database_session.add_all(new_answer);
+        database_session.commit();
+        return json.dumps({'question':currentQuestion,'answer':answerToAdd});
 
 def delete_question():
     if 'question' in request.form:
