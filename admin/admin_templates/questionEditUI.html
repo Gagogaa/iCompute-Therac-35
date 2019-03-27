@@ -9,6 +9,7 @@
   <div class="card">
     <ul class="list-group">
 
+      <!-- example multiple choice -->
       <li class="list-group-item">
         <div class="input-group">
           <div class="input-group-prepend">
@@ -21,7 +22,7 @@
           </div>
         </div>
 
-        <div class="question-edit-answers collapse">
+        <div class="question-edit-answers collapse is-collapsed">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
@@ -70,6 +71,7 @@
         </div>
       </li>
 
+      <!-- another example multiple choice -->
       <li class="list-group-item">
         <div class="input-group">
           <div class="input-group-prepend">
@@ -82,7 +84,7 @@
           </div>
         </div>
 
-        <div class="question-edit-answers collapse">
+        <div class="question-edit-answers collapse is-collapsed">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
@@ -131,11 +133,87 @@
         </div>
       </li>
 
+      <!-- example short answer -->
       <li class="list-group-item">
-        <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addQuestion()"><i class="fas fa-plus"></i></button>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
+          </div>
+          <input class="form-control" type="text" value="Convert 11011001 to decimal (show your work)." disabled>
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+      </li>
+
+      <!-- button for adding/removing questions -->
+      <li class="list-group-item">
+        <button class="btn btn-outline-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> <i class="fas fa-caret-down"></i></button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#" onclick="addQuestion(&quot;multiple-choice&quot;)">Add new multiple choice</a>
+          <a class="dropdown-item" href="#" onclick="addQuestion(&quot;short-answer&quot;)">Add new short answer</a>
+        </div>
       </li>
     </ul>
   </div>
 
+  <!-- demonstration scripts until backend code is complete -->
+  <script>
+    function toggleEdit(elem) {
+      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      if(textField.disabled) {
+        textField.disabled = false;
+        elem.innerHTML = "<i class=\"fas fa-save\"></i>";
+        textField.focus();
+      } else {
+        elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+        textField.disabled = true;
+        // to-do: add code to update the text in the database
+      }
+    }
+
+    function toggleCollapse(elem) {
+      var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
+      if(collapse.classList.contains("is-collapsed")) {
+        collapse.classList.remove("is-collapsed");
+        elem.innerHTML = "<i class=\"fas fa-caret-down\"></i>";
+      } else {
+        collapse.classList.add("is-collapsed");
+        elem.innerHTML = "<i class=\"fas fa-caret-right\"></i>";
+      }
+      $(collapse).collapse('toggle');
+    }
+
+    function deleteQuestion(elem) {
+      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      // to-do: replace alert with delete confirmation, then delete from database
+      alert("User is attempting to delete the question \"" + textField.value + "\"");
+    }
+
+    function deleteAnswer(elem) {
+      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      // to-do: replace alert with delete confirmation, then delete from database
+      alert("User is attempting to delete the answer \"" + textField.value + "\"");
+    }
+
+    function addQuestion(type) {
+      // to-do: add new question, update database with new question
+      if(type === "multiple-choice") {
+        alert("User is attempting to add a new multiple choice question");
+      } else if(type === "short-answer") {
+        alert("User is attempting to add a new short answer question");
+      }
+    }
+
+    function addAnswer(elem) {
+      // to-do: add new answer, update database with new answer
+      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      alert("User is attempting to add a new answer to the question \"" + textField.value + "\"");
+    }
+  </script>
+
+</body>
+</html>
 
 {% endblock %}
