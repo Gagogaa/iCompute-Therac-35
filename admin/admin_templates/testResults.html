@@ -10,10 +10,12 @@
 {% for theTest in theScores %}
   <div class="card">
     <div class="card-header">
-      <a class="collapsed card-link" data-toggle="collapse" href={{theTest['accord1']}}>
+      <a class="collapsed card-link align-middle" data-toggle="collapse" href={{theTest['accord1']}}>
         {{theTest['theTestName']}}
       </a>
+      <button type="button" class="btn btn-primary float-right align-middle">Download Test Results</button>
     </div>
+
     <div id={{theTest['accord2']}} class="collapse" data-parent="#accordion">
       <table class="table table-hover">
       <thead>
