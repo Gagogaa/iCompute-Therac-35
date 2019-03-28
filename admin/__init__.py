@@ -18,6 +18,19 @@ def admin_create_test():
     for question in database_session.query(Questions.question).distinct():
         questions.append(question.question)
 
+    if request.method == 'POST':
+        is_validated = True
+        if 'test_name' not in request.form:
+            is_validated = False
+
+        for i in range(0, len(request.form)-1):
+            if ('question' + str(i)) not in request.form:
+                is_validated = False
+
+        if is_validated:
+            if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
+                
+
     return render_template('test_create.html', questions=questions)
 
 @admin.route('test/test_edit')

@@ -6,7 +6,7 @@
     var counter = 2;
     $(document).ready(function(){
       $("#add_new").on("click",function(){
-        $("br:last").after('<div id="question' + counter + '"><hr /><div class="dropdown show" style="display: flex;"><select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
+        $("br:last").after('<div id="question' + counter + '"><hr /><div class="dropdown show" style="display: flex;"><select name="question' + counter + '" class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
         counter += 1;
       });
     });
@@ -22,7 +22,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
       </div>
-      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" name="test_name" required>
     </div>
     <hr />
     <h2><strong>Section A</strong></h2>
@@ -35,7 +35,7 @@
     <div id="question1">
       <hr />
       <div class="dropdown show" style="display: flex;">
-        <select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">
+        <select name='question1' class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>
           {% for question in questions %}
             <option class="dropdown-item" value='{{question}}'>{{question}}</option>
           {% endfor %}
