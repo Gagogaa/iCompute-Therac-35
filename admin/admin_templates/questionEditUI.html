@@ -224,7 +224,6 @@
         // TODO: add code to update the text in the database
       }
     }
-
     // toggle the collapsable answers fields
     function toggleCollapse(elem) {
       var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
@@ -237,21 +236,18 @@
       }
       $(collapse).collapse('toggle');
     }
-
     // delete a question from the database
     function deleteQuestion(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       // to-do: replace alert with delete confirmation, then delete from database
       alert("User is attempting to delete the question \"" + textField.value + "\"");
     }
-
     // delete an answer from the database
     function deleteAnswer(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       // TODO: replace alert with delete confirmation, then delete from database
       alert("User is attempting to delete the answer \"" + textField.value + "\"");
     }
-
     // open the new question modal and save what type of question it is
     function addQuestionDialog(elem) {
       // clear existing text from the textboxes
@@ -277,7 +273,8 @@
 
     // get the question and answer text from the dialog boxes and add new question to database
     $(function addQuestion() {
-      // get the question and answer text and the question type
+      // get the question and answer text and the question type blocks multiple choice if there is no question or answers
+      // blocks scratch and short answer if there is no question
       $('#new-question-submit').click(function(){
       var questionText = $("#new-question-question-textbox").val();
       var answerText = $("#new-question-answer-textbox").val();
@@ -296,7 +293,7 @@
         errorText = "Question cannot be duplicate";
         alert(errorText);
       } else {
-      // TODO: add new question, update database with new question
+      // checks question type and sends appropriate data to python
       if(type === "multiple-choice") {
         $.ajax({
           url: '/admin/addQuestion',
@@ -305,11 +302,9 @@
           traditional: true,
           success: function(response){
             console.log(response);
-
           },
           error: function(error){
             console.log(error);
-
           }
         });
       } else if(type === "short-answer") {
@@ -320,11 +315,9 @@
           traditional: true,
           success: function(response){
             console.log(response);
-
           },
           error: function(error){
             console.log(error);
-
           }
         });
       } else if(type === "scratch-answer"){
@@ -335,18 +328,15 @@
           traditional: true,
           success: function(response){
             console.log(response);
-
           },
           error: function(error){
             console.log(error);
-
           }
         });
       } else {
         // ideally this should never appear
         alert("Error: unknown question type: \"" + type + "\"");
       }
-
       // hide the modal
       alert("New " + type + " question added!")
       $("#new-question-modal").modal("hide");
@@ -369,7 +359,6 @@
         $("label #new-answer-answer-textbox").show();
       // finally, show the modal
       $("#new-answer-modal").modal("show");
-
     }
     // add new answer to a question
     $(function addAnswer() {
@@ -378,7 +367,6 @@
       var question = $("#new-answer-submit").data("question");
       var answerText = $("#new-answer-answer-textbox").val();
       var errorText = "";
-
       console.log(answerText);
       if(answerText === "") {
         errorText = "Answer cannot be blank";
@@ -391,15 +379,11 @@
           traditional: true,
           success: function(response){
             console.log(response);
-
           },
           error: function(error){
             console.log(error);
-
           }
         });
-
-
       }
     });
   });
@@ -410,7 +394,6 @@
     if(text === "") {
       return false;
     }
-
     var textboxes = document.getElementsByClassName("question-textbox");
     for(var i = 0; i < textboxes.length; i++) {
       console.log(textboxes[i].value);
@@ -418,13 +401,9 @@
         return false;
       }
     }
-
     return true;
   }
-
-
   </script>
-
 </body>
 </html>
 
