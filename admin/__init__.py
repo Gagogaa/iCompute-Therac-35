@@ -19,11 +19,30 @@ def admin_edit_users():
 
 @admin.route('/question')
 def admin_edit_questions():
-	return render_template('questionEditUI.html', link="./")
+
+            questions = []
+            data = {}
+            counter = 1
+            ansNum = 1
+
+            # Build Dictionary for questions pulled from the db
+            for question in database_session.query(Questions.question):
+                data['id'] = counter
+                data['question'] = question.question
+                for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
+                    ans = 'answer' + str(ansNum)
+                    data[ans] = answer.answer
+                    ansNum += 1
+                questions.append(data)
+                ansNum = 1
+                counter += 1
+                data = {}
+                return render_template('questionEditUI.html', questions=questions)
 
 @admin.route('/results')
 def admin_view_results():
 	return render_template('testResults.html', link="./")
+
 
 @admin.route('/addQuestion', methods=['POST'])
 def add_question():

@@ -6,16 +6,18 @@
 <body class="container">
 
   <!-- replace hardcoded values with jinja once backend is complete -->
+  {% for question in questions %}
   <div class="card">
     <ul class="list-group">
 
       <!-- example multiple choice -->
+
       <li class="list-group-item">
         <div class="input-group">
           <div class="input-group-prepend">
             <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
           </div>
-          <input class="form-control question-textbox" type="text" value="This provides a step-by-step procedure for performing a task." disabled>
+          <input class="form-control question-textbox" id="question{{question['id']}}" type="text" value="{{question['question']}}" disabled>
           <div class="input-group-append">
             <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
             <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
@@ -27,7 +29,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
             </div>
-            <input class="form-control" type="text" value="Algorithm" disabled>
+            <input class="form-control" type="text" id="q{{question['id']}}a1" value="{{question['answer1']}}" disabled>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
@@ -38,7 +40,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
             </div>
-            <input class="form-control" type="text" value="Keyboard" disabled>
+            <input class="form-control" type="text" id="q{{question['id']}}a2" value="{{question['answer2']}}" disabled>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
@@ -49,7 +51,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
             </div>
-            <input class="form-control" type="text" value="Internet" disabled>
+            <input class="form-control" type="text" id="q{{question['id']}}a3" value="{{question['answer3']}}" disabled>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
@@ -60,7 +62,7 @@
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
             </div>
-            <input class="form-control" type="text" value="Windows" disabled>
+            <input class="form-control" type="text" id="q{{question['id']}}a4" value="{{question['answer4']}}" disabled>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
@@ -70,82 +72,7 @@
           <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
       </li>
-
-      <!-- another example multiple choice -->
-      <li class="list-group-item">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
-          </div>
-          <input class="form-control question-textbox" type="text" value="Which one of the following is not a programming language?" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="question-edit-answers collapse is-collapsed">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Binary" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Java" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="HTML" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="C++" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
-        </div>
-      </li>
-
-      <!-- example short answer -->
-      <li class="list-group-item">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
-          </div>
-          <input class="form-control question-textbox" type="text" value="Convert 11011001 to decimal (show your work)." disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-      </li>
+      {% endfor %}
 
       <!-- button for adding/removing questions -->
       <li class="list-group-item">
