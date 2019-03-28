@@ -2,11 +2,11 @@
 {% block title %}Supervisor{% endblock %}
 {% block content %}
 
-
+{% for question in questions %}
 <body class="container">
 
   <!-- replace hardcoded values with jinja once backend is complete -->
-  {% for question in questions %}
+
   <div class="card">
     <ul class="list-group">
 
@@ -72,7 +72,7 @@
           <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
       </li>
-      {% endfor %}
+  {% endfor %}
 
       <!-- button for adding/removing questions -->
       <li class="list-group-item">
