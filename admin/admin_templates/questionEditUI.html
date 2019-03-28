@@ -151,8 +151,9 @@
       <li class="list-group-item">
         <button class="btn btn-outline-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> <i class="fas fa-caret-down"></i></button>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" onclick="addQuestionDialog(this)" data-question-type="multiple-choice">Add new multiple choice</a>
-          <a class="dropdown-item" href="#" onclick="addQuestionDialog(this)" data-question-type="short-answer">Add new short answer</a>
+          <a class="dropdown-item" href="#" id="new-multiple-choice" onclick="addQuestionDialog(this)" data-question-type="multiple-choice">Add new multiple choice</a>
+          <a class="dropdown-item" href="#" id="new-short-answer" onclick="addQuestionDialog(this)" data-question-type="short-answer">Add new short answer</a>
+          <a class="dropdown-item" href="#" id="new-scratch-answer" onclick="addQuestionDialog(this)" data-question-type="scratch-answer">Add new scratch question</a>
         </div>
       </li>
     </ul>
@@ -179,7 +180,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="new-question-submit" data-question-type="multiple-choice" onclick="addQuestion()">Submit</button>
+        <button type="button" class="btn btn-primary" id="new-question-submit">Submit</button>
       </div>
     </div>
   </div>
@@ -267,42 +268,91 @@
         $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").show();
       } else if (questionType === "short-answer") {
         $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+      } else if (questionType === "scratch-answer") {
+        $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
       }
       // finally, show the modal
       $("#new-question-modal").modal("show");
     }
 
     // get the question and answer text from the dialog boxes and add new question to database
-    function addQuestion() {
+    $(function addQuestion() {
       // get the question and answer text and the question type
+      $('#new-question-submit').click(function(){
       var questionText = $("#new-question-question-textbox").val();
       var answerText = $("#new-question-answer-textbox").val();
       var type = $("#new-question-submit").data("question-type");
+      var section;
       var errorText = "";
       console.log(questionText);
       console.log(answerText);
+      if(type != 'multiple-choice'){
+        answerText = "not a multiple choice question"
+      }
       if(questionText === "" || answerText === "") {
-        errorText = "Question and answer cannot be blank";
+        errorText = "Question and/or answer cannot be blank";
         alert(errorText);
       } else if(!checkQuestionText(questionText)) {
         errorText = "Question cannot be duplicate";
         alert(errorText);
       } else {
-
       // TODO: add new question, update database with new question
       if(type === "multiple-choice") {
-        alert("User is attempting to add a new multiple choice question with the text \"" + questionText + "\" and the answer \"" + answerText + "\"");
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText,answer:answerText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            console.log(response);
+
+          },
+          error: function(error){
+            console.log(error);
+
+          }
+        });
       } else if(type === "short-answer") {
-        alert("User is attempting to add a new short answer question with the text \"" + questionText + "\"");
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            console.log(response);
+
+          },
+          error: function(error){
+            console.log(error);
+
+          }
+        });
+      } else if(type === "scratch-answer"){
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            console.log(response);
+
+          },
+          error: function(error){
+            console.log(error);
+
+          }
+        });
       } else {
         // ideally this should never appear
         alert("Error: unknown question type: \"" + type + "\"");
       }
 
       // hide the modal
+      alert("New " + type + " question added!")
       $("#new-question-modal").modal("hide");
     }
-  }
+  });
+});
     //add answer dialog modal
     function addAnswerDialog(elem) {
       // clear existing text from the textboxes
@@ -326,17 +376,16 @@
       // to-do: add new answer, update database with new answer
       $('#new-answer-submit').click(function(){
       var question = $("#new-answer-submit").data("question");
-
       var answerText = $("#new-answer-answer-textbox").val();
       var errorText = "";
-      
+
       console.log(answerText);
       if(answerText === "") {
         errorText = "Answer cannot be blank";
         alert(errorText);
       } else {
         $.ajax({
-          url: '/add_answer',
+          url: '/admin/addAnswer',
           data: {question:question,answer:answerText},
           type: 'POST',
           traditional: true,

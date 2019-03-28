@@ -1,7 +1,7 @@
 import database
 from database.models import *
 from database.__init__ import *
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -25,50 +25,58 @@ def admin_edit_questions():
 def admin_view_results():
 	return render_template('testResults.html', link="./")
 
+@admin.route('/addQuestion', methods=['POST'])
 def add_question():
-    section = 1
-    if section == 1:
-        if 'question' in request.form and 'answer' in request.form:
-            question = [Questions(question = request.form['question'],
-                                   answer = request.form['answer'],
-                                   is_Correct = True,
+    if 'section' in request.form:
+        mySection = request.form['section']
+        if mySection == "multiple-choice":
+            if 'question' in request.form and 'answer' in request.form:
+                myQuestion = request.form['question']
+                myAnswer = request.form['answer']
+                question = [Questions(question = myQuestion,
+                                   answer = myAnswer,
+                                   is_correct = True,
                                    section = 1)
                                    ]
-            database_session.add(question)
-            database_session.commit()
-    elif section == 2:
-        if 'question' in request.form and 'answer' in request.form:
-            question = [Questions(question = request.form['question'],
+                database_session.add_all(question)
+                database_session.commit()
+                return 'added section 1'
+        elif mySection == "short-answer":
+                if 'question' in request.form:
+                    myQuestion = request.form['question']
+                    question = [Questions(question = myQuestion,
                                     answer = "this is a section 2 question",
-                                    is_Correct = True,
+                                    is_correct = True,
                                     section = 2)]
-            database_session.add(question)
-            database_session.commit()
-    elif section == 3:
-        if 'question' in request.form and 'answer' in request.form:
-            question = [Questions(question = request.form['question'],
+                    database_session.add_all(question)
+                    database_session.commit()
+                    return 'Added Section Two'
+        elif mySection == "scratch-answer":
+            if 'question' in request.form:
+                myQuestion = request.form['question']
+                question = [Questions(question = myQuestion,
                                     answer = "this is a section 3 question",
-                                    is_Correct = True,
+                                    is_correct = True,
                                     section = 3)]
-            database_session.add(question)
-            database_session.commit()
+                database_session.add_all(question)
+                database_session.commit()
+                return 'Added Section Three'
+    return 'success'
 
-@admin.route('/add_answer', methods=['POST'])
+
+@admin.route('/addAnswer', methods=['POST'])
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
-        currentQuestion = request.form.get['question'];
-        answerToAdd = request.form.get['answer'];
-
-        print (currentQuestion);
-        print (answerToAdd);
+        currentQuestion = request.form['question'];
+        answerToAdd = request.form['answer'];
         new_answer = [Questions(question = currentQuestion,
                                 answer = answerToAdd,
-                                is_Correct = False,
+                                is_correct = False,
                                 section = 1)
                                 ]
         database_session.add_all(new_answer);
         database_session.commit();
-        return json.dumps({'question':currentQuestion,'answer':answerToAdd});
+        return 'success'
 
 def delete_question():
     if 'question' in request.form:
