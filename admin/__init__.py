@@ -29,15 +29,19 @@ def admin_edit_questions():
             ansNum = 1
 
             # Build Dictionary for questions pulled from the db
-            for question in database_session.query(Questions.question).distinct():
+            for question in database_session.query(Questions.question, Questions.section).distinct():
                 data['id'] = counter
-                data['question'] = question.question
+                currentQuestion = question.question
+                data['question'] = currentQuestion
+                section = question.section
+                data['section'] = section
 
-                for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
+                for answer in database_session.query(Questions.answer, Questions.is_correct).filter(Questions.question == question.question):
                     ansData = {}
                     ansData['ansCounter'] = counter
                     ansData['ans_id'] = ansNum
                     ansData['answer'] = answer.answer
+                    ansData['is_correct'] = answer.is_correct
                     answers.append(ansData)
                     ansNum += 1
 
