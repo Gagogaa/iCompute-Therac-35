@@ -2,6 +2,7 @@ import database
 from database.models import *
 from database.__init__ import *
 from flask import Blueprint, render_template, request
+from pprint import pprint
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -26,7 +27,7 @@ def admin_edit_questions():
             ansNum = 1
 
             # Build Dictionary for questions pulled from the db
-            for question in database_session.query(Questions.question):
+            for question in database_session.query(Questions.question).distinct():
                 data['id'] = counter
                 data['question'] = question.question
                 for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
@@ -37,7 +38,9 @@ def admin_edit_questions():
                 ansNum = 1
                 counter += 1
                 data = {}
-                return render_template('questionEditUI.html', questions=questions)
+
+
+            return render_template('questionEditUI.html', questions=questions)
 
 @admin.route('/results')
 def admin_view_results():

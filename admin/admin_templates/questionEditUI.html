@@ -2,7 +2,7 @@
 {% block title %}Supervisor{% endblock %}
 {% block content %}
 
-{% for question in questions %}
+
 <body class="container">
 
   <!-- replace hardcoded values with jinja once backend is complete -->
@@ -11,13 +11,13 @@
     <ul class="list-group">
 
       <!-- example multiple choice -->
-
-      <li class="list-group-item">
-        <div class="input-group">
+{% for question in questions %}
+      <li class="list-group-item" id ="question{{question['id']}}">
+        <div class="input-group" >
           <div class="input-group-prepend">
             <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
           </div>
-          <input class="form-control question-textbox" id="question{{question['id']}}" type="text" value="{{question['question']}}" disabled>
+          <input class="form-control question-textbox" id="question-name{{question['id']}}" type="text" value="{{question['question']}}" disabled>
           <div class="input-group-append">
             <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
             <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
@@ -71,8 +71,9 @@
 
           <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
+
       </li>
-  {% endfor %}
+{% endfor %}
 
       <!-- button for adding/removing questions -->
       <li class="list-group-item">
@@ -85,6 +86,7 @@
       </li>
     </ul>
   </div>
+
 <!-- question modal below -->
   <div class="modal fade" id="new-question-modal" tabindex="-1" role="dialog" aria-labelledby="new-question-modal-label" aria-hidden="true">
   <div class="modal-dialog" role="document">
