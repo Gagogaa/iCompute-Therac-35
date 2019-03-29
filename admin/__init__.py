@@ -34,7 +34,14 @@ def admin_edit_questions():
                 data['question'] = question.question
 
                 for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
+
+
+                    isCorrect = database_session.query(Questions.is_correct).filter(and_(Questions.question == question.question, Questions.answer == answer.answer))
                     ansData = {}
+                    if isCorrect:
+                        ansData['is_correct'] = True
+                    else:
+                        ansData['is_correct'] = False
                     ansData['ansCounter'] = counter
                     ansData['ans_id'] = ansNum
                     ansData['answer'] = answer.answer
