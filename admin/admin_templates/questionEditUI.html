@@ -10,8 +10,17 @@
   <div class="card">
     <ul class="list-group">
 
-      <!-- example multiple choice -->
+      <li class="list-group-item">
+        <button class="btn btn-outline-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> <i class="fas fa-caret-down"></i></button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#" id="new-multiple-choice" onclick="addQuestionDialog(this)" data-question-type="multiple-choice">Add new multiple choice</a>
+          <a class="dropdown-item" href="#" id="new-short-answer" onclick="addQuestionDialog(this)" data-question-type="short-answer">Add new short answer</a>
+          <a class="dropdown-item" href="#" id="new-scratch-answer" onclick="addQuestionDialog(this)" data-question-type="scratch-answer">Add new scratch question</a>
+        </div>
+      </li>
+
 {% for question in questions %}
+
       <li class="list-group-item" id ="question{{question['id']}}">
         <div class="input-group" >
           <div class="input-group-prepend">
@@ -25,65 +34,30 @@
         </div>
 
         <div class="question-edit-answers collapse is-collased">
+
+          {% for answer in answers %}
+            {% if answer['ansCounter'] == question['id'] %}
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
             </div>
-            <input class="form-control" type="text" id="q{{question['id']}}a1" value="{{question['answer1']}}" disabled>
+            <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
+          {% endif %}
+        {% endfor %}
 
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" id="q{{question['id']}}a2" value="{{question['answer2']}}" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" id="q{{question['id']}}a3" value="{{question['answer3']}}" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" id="q{{question['id']}}a4" value="{{question['answer4']}}" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
 
       </li>
+
 {% endfor %}
 
       <!-- button for adding/removing questions -->
-      <li class="list-group-item">
-        <button class="btn btn-outline-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> <i class="fas fa-caret-down"></i></button>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#" id="new-multiple-choice" onclick="addQuestionDialog(this)" data-question-type="multiple-choice">Add new multiple choice</a>
-          <a class="dropdown-item" href="#" id="new-short-answer" onclick="addQuestionDialog(this)" data-question-type="short-answer">Add new short answer</a>
-          <a class="dropdown-item" href="#" id="new-scratch-answer" onclick="addQuestionDialog(this)" data-question-type="scratch-answer">Add new scratch question</a>
-        </div>
-      </li>
+
     </ul>
   </div>
 
@@ -267,8 +241,10 @@
         alert("Error: unknown question type: \"" + type + "\"");
       }
       // hide the modal
-      alert("New " + type + " question added!")
+
       $("#new-question-modal").modal("hide");
+      alert("New " + type + " question added!")
+      location.reload();
     }
   });
 });
@@ -313,6 +289,9 @@
             console.log(error);
           }
         });
+        $("#new-answer-modal").modal("hide");
+        alert("New answer added!")
+        location.reload();
       }
     });
   });

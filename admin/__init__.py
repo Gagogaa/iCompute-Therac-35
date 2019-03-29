@@ -1,7 +1,7 @@
 import database
 from database.models import *
 from database.__init__ import *
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 from pprint import pprint
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -22,6 +22,8 @@ def admin_edit_users():
 def admin_edit_questions():
 
             questions = []
+            answers = []
+            ansData = {}
             data = {}
             counter = 1
             ansNum = 1
@@ -30,17 +32,24 @@ def admin_edit_questions():
             for question in database_session.query(Questions.question).distinct():
                 data['id'] = counter
                 data['question'] = question.question
+
                 for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
-                    ans = 'answer' + str(ansNum)
-                    data[ans] = answer.answer
+                    ansData = {}
+                    ansData['ansCounter'] = counter
+                    ansData['ans_id'] = ansNum
+                    ansData['answer'] = answer.answer
+                    answers.append(ansData)
                     ansNum += 1
+
                 questions.append(data)
                 ansNum = 1
                 counter += 1
                 data = {}
 
 
-            return render_template('questionEditUI.html', questions=questions)
+
+
+            return render_template('questionEditUI.html', questions=questions, answers=answers )
 
 @admin.route('/results')
 def admin_view_results():
@@ -62,7 +71,7 @@ def add_question():
                                    ]
                 database_session.add_all(question)
                 database_session.commit()
-                return 'added section 1'
+                return render_template('questionEditUI.html')
         elif mySection == "short-answer":
                 if 'question' in request.form:
                     myQuestion = request.form['question']
@@ -72,7 +81,7 @@ def add_question():
                                     section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-                    return 'Added Section Two'
+                    return render_template('questionEditUI.html')
         elif mySection == "scratch-answer":
             if 'question' in request.form:
                 myQuestion = request.form['question']
@@ -82,7 +91,7 @@ def add_question():
                                     section = 3)]
                 database_session.add_all(question)
                 database_session.commit()
-                return 'Added Section Three'
+                return render_template('questionEditUI.html')
     return 'success'
 
 
