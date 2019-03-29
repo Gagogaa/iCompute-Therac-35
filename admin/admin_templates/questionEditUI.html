@@ -27,8 +27,9 @@
             <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
           </div>
           <input class="form-control question-textbox" id="question-name{{question['id']}}" type="text" value="{{question['question']}}" disabled>
+          <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
             <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
           </div>
         </div>
@@ -43,8 +44,10 @@
                     <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
                   </div>
                   <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+                  <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
+                  <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
                   </div>
                 </div>
@@ -54,15 +57,17 @@
                     <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
                   </div>
                   <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+                  <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
+                  <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
                     <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
                   </div>
                 </div>
               {% endif %}
           {% endif %}
         {% endfor %}
-
+            <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
 
       </li>
@@ -73,8 +78,9 @@
           <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
         </div>
         <input class="form-control" type="text" id="question-name{{question['id']}}" value="{{question['question']}}" disabled>
+        <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+          <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
           <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
         </div>
       </div>
@@ -138,21 +144,78 @@
   </div>
 </div>
 </div>
+<!--added question Modal -->
+
+
   <!-- demonstration scripts until backend code is complete -->
   <script>
     // toggle a textfield to be edited or saved
-    function toggleEdit(elem) {
+    function toggleEditQuestion(elem) {
+      alert("I am in question");
+      var currentQuestion = elem.parentNode.parentNode.getElementsByClassName("hidden")[0].value;
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       if(textField.disabled) {
         textField.disabled = false;
         elem.innerHTML = "<i class=\"fas fa-save\"></i>";
         textField.focus();
       } else {
+
         elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
         textField.disabled = true;
+        var newQuestion = elem.parentNode.parentNode.getElementsByClassName("form-control")[0].value;
+
+        alert(newQuestion);
+        alert(currentQuestion);
         // TODO: add code to update the text in the database
+        $.ajax({
+          url: '/admin/editQuestion',
+          data: {question:currentQuestion,new_question:newQuestion},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            console.log(response);
+          },
+          error: function(error){
+            console.log(error);
+          }
+        });
       }
-    }
+
+      }
+
+      function toggleEditAnswer(elem) {
+        alert("i am in answer");
+        var currentAnswer = elem.parentNode.parentNode.getElementsByClassName("hidden")[0].value;
+        var currentQuestion = elem.parentNode.parentNode.getElementsByClassName("hidden2")[0].value;
+        var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+        alert(currentAnswer);
+        alert(currentQuestion);
+        if(textField.disabled) {
+          textField.disabled = false;
+          elem.innerHTML = "<i class=\"fas fa-save\"></i>";
+          textField.focus();
+        } else {
+          elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+          textField.disabled = true;
+          var newAnswer = elem.parentNode.parentNode.getElementsByClassName("form-control")[0].value;
+          alert(newAnswer);
+          // TODO: add code to update the text in the database
+          $.ajax({
+            url: '/admin/editAnswer',
+            data: {question:currentQuestion,answer:currentAnswer,new_answer:newAnswer},
+            type: 'POST',
+            traditional: true,
+            success: function(response){
+              console.log(response);
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        }
+
+        }
+
     // toggle the collapsable answers fields
     function toggleCollapse(elem) {
       var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
@@ -282,7 +345,6 @@
       $("#new-answer-answer-textbox").removeClass("is-invalid");
       $("#new-answer-submit").attr("disabled", false);
       // get the question  from the calling button and save it to the submit button for later
-      var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       var question = $(elem).data("question");
       $("#answer-modal-label").text(questionVal.value);
       $("#new-answer-submit").data("question", questionVal.value);

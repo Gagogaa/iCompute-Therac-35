@@ -125,20 +125,29 @@ def delete_answer():
         del_query.delete()
         database_session.commit()
 
-
+@admin.route('/editQuestion', methods=['POST'])
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
         rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
+    return "success"
 
+@admin.route('/editAnswer', methods=['POST'])
 def edit_answer():
     if 'question' in request.form and 'answer' in request.form and 'new_answer' in request.form:
-        rows_to_update = database_session.query(Questions).filter(and_(Questions.question == request.form['question'] , Questions.answer == request.form['answer']))
-        rows_to_update.answer=request.form['new_answer']
-        database_session.commit()
+        print(request.form['question'])
+        print(request.form['answer'])
+        print(request.form['new_answer'])
 
+        rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'] , Questions.answer == request.form['answer'])
+        print(rows_to_update)
+        for row in rows_to_update:
+            row.answer = request.form['new_answer']
+        print("supposedly updated")
+        database_session.commit()
+    return "success answer"
 def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
