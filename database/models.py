@@ -2,8 +2,8 @@
 Contains the database classes for the application
 """
 
-
-from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
+from sqlalchemy import *
+#from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
 from database import Base
 
 

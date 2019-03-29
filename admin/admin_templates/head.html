@@ -82,6 +82,20 @@
     }
 
     function addAnswer(elem) {
+    //  $('button').click(function addAnswer(){
+      //  $.ajax({
+        //  url: '/addAnswer'
+        //  data: $('form').serialize(),
+        //  type: 'POST',
+        //  success: function(response){
+          //  console.log(response);
+        //  },
+        //  error: function(error) {
+          //  console.log(error);
+        //  }
+        //});
+      //});
+    //});
       // to-do: add new answer, update database with new answer
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       alert("User is attempting to add a new answer to the question \"" + textField.value + "\"");
