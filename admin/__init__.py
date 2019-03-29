@@ -148,6 +148,8 @@ def edit_answer():
         print("supposedly updated")
         database_session.commit()
     return "success answer"
+
+    
 def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
