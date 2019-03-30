@@ -66,8 +66,9 @@
                 </div>
               {% endif %}
           {% endif %}
+
         {% endfor %}
-            <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
+        <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
         </div>
 
       </li>
@@ -81,14 +82,13 @@
         <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
         <div class="input-group-append">
           <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
-          <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
+          <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
         </div>
       </div>
     </li>
     {% endif %}
 {% endfor %}
 
-      <!-- button for adding/removing questions -->
 
     </ul>
   </div>
@@ -144,7 +144,29 @@
   </div>
 </div>
 </div>
-<!--added question Modal -->
+
+<!-- modal for question deletion confirmation -->
+<div class="modal fade" id="del-question-modal" tabindex="-1" role="dialog" aria-labelledby="del-question-modal-label" aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="del-question-modal-label">Are you sure you wish to remove question:</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <p id="del-question-question-text"></p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      <button type="button" class="btn btn-primary" id="del-question-submit">Confirm</button>
+    </div>
+  </div>
+</div>
+</div>
 
 
   <!-- demonstration scripts until backend code is complete -->
@@ -229,6 +251,18 @@
       $(collapse).collapse('toggle');
     }
     // delete a question from the database
+    function addDelQuestionDialog(elem) {
+
+      // get the question type from the calling button and save it to the submit button for later
+      var question = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      $("#new-question-submit").data("question-type", questionType);
+
+      $
+
+
+      // finally, show the modal
+      $("#new-question-modal").modal("show");
+    }
     function deleteQuestion(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       // to-do: replace alert with delete confirmation, then delete from database
@@ -346,8 +380,8 @@
       $("#new-answer-submit").attr("disabled", false);
       // get the question  from the calling button and save it to the submit button for later
       var question = $(elem).data("question");
-      $("#answer-modal-label").text(questionVal.value);
-      $("#new-answer-submit").data("question", questionVal.value);
+      $("#answer-modal-label").text(question.value);
+      $("#new-answer-submit").data("question", question.value);
       // show or hide the answer field, depending on the question type
         $("label #new-answer-answer-textbox").show();
       // finally, show the modal
