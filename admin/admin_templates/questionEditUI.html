@@ -30,7 +30,7 @@
           <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
           <div class="input-group-append">
             <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
+            <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
           </div>
         </div>
 
@@ -162,7 +162,7 @@
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      <button type="button" class="btn btn-primary" id="del-question-submit">Confirm</button>
+      <button type="button" class="btn btn-primary" id="del-question-submit" data-question="question">Confirm</button>
     </div>
   </div>
 </div>
@@ -254,14 +254,13 @@
     function addDelQuestionDialog(elem) {
 
       // get the question type from the calling button and save it to the submit button for later
-      var question = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
-      $("#new-question-submit").data("question-type", questionType);
-
-      $
-
+      var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      var question = = $(elem).data("question");
+      $("#del-question-question-text").text(questionVal.value);
+      $("#del-question-submit").data("question", questionVal.value);
 
       // finally, show the modal
-      $("#new-question-modal").modal("show");
+      $("#del-question-modal").modal("show");
     }
     function deleteQuestion(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
@@ -379,9 +378,10 @@
       $("#new-answer-answer-textbox").removeClass("is-invalid");
       $("#new-answer-submit").attr("disabled", false);
       // get the question  from the calling button and save it to the submit button for later
+      var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       var question = $(elem).data("question");
-      $("#answer-modal-label").text(question.value);
-      $("#new-answer-submit").data("question", question.value);
+      $("#answer-modal-label").text(questionVal.value);
+      $("#new-answer-submit").data("question", questionVal.value);
       // show or hide the answer field, depending on the question type
         $("label #new-answer-answer-textbox").show();
       // finally, show the modal
