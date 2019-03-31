@@ -113,18 +113,20 @@ def add_answer():
         database_session.commit();
         return 'success'
 
+@admin.route('/delQuestion', methods=['POST'])
 def delete_question():
     if 'question' in request.form:
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
 
+@admin.route('/delAnswer', methods=['POST'])
 def delete_answer():
     if 'question' in request.form and 'answer' in request.form:
-        del_query = database_session.query(Questions).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
+        del_query = database_session.query(Questions.answer).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
         del_query.delete()
         database_session.commit()
-
+    return"success"
 @admin.route('/editQuestion', methods=['POST'])
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
@@ -149,7 +151,7 @@ def edit_answer():
         database_session.commit()
     return "success answer"
 
-    
+
 def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
