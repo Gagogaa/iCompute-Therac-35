@@ -14,6 +14,16 @@ def admin_create_test():
 def admin_edit_users():
 	return render_template('userAdd.html', link="./")
 
+    def admin_view_users():
+
+        supervisor = []
+        data = {}
+        counter = 1
+
+    # Build Dictionary users
+    for supervisor in database_session.query(Users.supervisor).distinct():
+
+
 @admin.route('/question')
 def admin_edit_questions():
 	return render_template('questionEditUI.html', link="./")
