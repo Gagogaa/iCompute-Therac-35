@@ -29,7 +29,22 @@ def admin_create_test():
 
         if is_validated:
             if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
-                
+                for i in range(0, len(request.form)-1):
+                    temp = iComputeTest(orderId=i,
+                                        question=(request.form['question'] + str(i)),
+                                        section=1,
+                                        test_name=request.form['test_name'],
+                                        year=request.form['year'],
+                                        student_grade=request.form['grade'])
+                    database_session.add(temp)
+                database_session.commit()
+                return redirect(url_for('admin_view_test'), test_name=request.form['test_name'])
+            else:
+                flash('A test with this test name already exists. Please try again with a different name or edit a pre-existing test.')
+                return redirect(url_for('admin_create_test'))
+        else:
+            flash('Something went wrong with the data you tried to submit.')
+            return redirect(url_for('admin_create_test'))
 
     return render_template('test_create.html', questions=questions)
 
