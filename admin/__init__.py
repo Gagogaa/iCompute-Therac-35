@@ -45,14 +45,14 @@ def admin_edit_questions():
             ansNum = 1
 
             # Build Dictionary for questions pulled from the db
-            for question in database_session.query(Questions.question).distinct():
+            for question in database_session.query(Questions.question, Questions.section).distinct():
                 data['id'] = counter
-                data['question'] = question.question
+                currentQuestion = question.question
+                data['question'] = currentQuestion
+                section = question.section
+                data['section'] = section
 
-                for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
-
-
-                    isCorrect = database_session.query(Questions.is_correct).filter(and_(Questions.question == question.question, Questions.answer == answer.answer))
+                for answer in database_session.query(Questions.answer, Questions.is_correct).filter(Questions.question == question.question):
                     ansData = {}
                     if isCorrect:
                         ansData['is_correct'] = True
@@ -61,6 +61,7 @@ def admin_edit_questions():
                     ansData['ansCounter'] = counter
                     ansData['ans_id'] = ansNum
                     ansData['answer'] = answer.answer
+                    ansData['is_correct'] = answer.is_correct
                     answers.append(ansData)
                     ansNum += 1
 
@@ -76,7 +77,7 @@ def admin_edit_questions():
 
 @admin.route('/results')
 def admin_view_results():
-<<<<<<< HEAD
+
 
 	theScores = []
 	data = {}
@@ -119,8 +120,7 @@ def admin_view_results():
 
 
 	return render_template('testResults.html', link="./", theScores=theScores)
-=======
-	return render_template('testResults.html', link="./")
+
 
 
 @admin.route('/addQuestion', methods=['POST'])
@@ -176,34 +176,46 @@ def add_answer():
         database_session.commit();
         return 'success'
 
+@admin.route('/delQuestion', methods=['POST'])
 def delete_question():
     if 'question' in request.form:
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
 
+@admin.route('/delAnswer', methods=['POST'])
 def delete_answer():
     if 'question' in request.form and 'answer' in request.form:
-        del_query = database_session.query(Questions).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
+        del_query = database_session.query(Questions.answer).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
         del_query.delete()
         database_session.commit()
-
-
+    return"success"
+@admin.route('/editQuestion', methods=['POST'])
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
         rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
+    return "success"
 
+@admin.route('/editAnswer', methods=['POST'])
 def edit_answer():
     if 'question' in request.form and 'answer' in request.form and 'new_answer' in request.form:
-        rows_to_update = database_session.query(Questions).filter(and_(Questions.question == request.form['question'] , Questions.answer == request.form['answer']))
-        rows_to_update.answer=request.form['new_answer']
+        print(request.form['question'])
+        print(request.form['answer'])
+        print(request.form['new_answer'])
+
+        rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'] , Questions.answer == request.form['answer'])
+        print(rows_to_update)
+        for row in rows_to_update:
+            row.answer = request.form['new_answer']
+        print("supposedly updated")
         database_session.commit()
+    return "success answer"
+
 
 def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
     database_session.commit()
->>>>>>> A.6.1
