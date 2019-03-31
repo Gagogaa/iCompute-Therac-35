@@ -4,7 +4,6 @@ from database.models import *
 import datetime
 from logon import required_user_type
 from flask_login import login_required, current_user
-from sqlalchemy import func, over
 
 
 student_team = Blueprint('student_team', __name__, template_folder='student_templates')

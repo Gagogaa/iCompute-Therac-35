@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, session, redirect, url_for, abort, flash, current_app, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, abort, flash, send_from_directory
 from database import database_session, init_db
 from database.models import Users
 from werkzeug.security import check_password_hash
 from flask_login import LoginManager, login_user, logout_user, current_user
 from flask_login import login_required
 from functools import wraps
-import os
+
 
 app = Flask(__name__)
 
-app.secret_key = 'dev' # We need to change this in the production env
+app.secret_key = 'dev'  # We need to change this in the production env
 
 # Register the login page with flask-login
 login_manager = LoginManager()
@@ -24,14 +24,14 @@ def required_user_type(user_type='ANY'):
     def wrapper(func):
         @wraps(func)
         def decorated_view(*args, **kwargs):
-            if ((current_user.user_type != user_type) and (user_type != "ANY")):
+            if (current_user.user_type != user_type) and (user_type != "ANY"):
                 if current_user.user_type == 'Supervisor':
                     return redirect(url_for('admin.admin_index'))
                 elif current_user.user_type == 'Grader':
                     return redirect(url_for('grader.grader_index'))
                 elif current_user.user_type == 'Student':
                     return redirect(url_for('student_team.student_team_index'))
-                else: # The user type is some value we don't define here so this is some sort of server error
+                else:  # The user type is some value we don't define here so this is some sort of server error
                     abort(500)
 
                 # return current_app.login_manager.unauthorized()
@@ -74,7 +74,7 @@ def index():
             return redirect(url_for('grader.grader_index'))
         elif current_user.user_type == 'Student':
             return redirect(url_for('student_team.student_team_index'))
-        else: # The user type is some value we don't define here so this is some sort of server error
+        else:  # The user type is some value we don't define here so this is some sort of server error
             abort(500)
 
     if request.method == 'GET':
