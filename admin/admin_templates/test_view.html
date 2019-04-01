@@ -2,4 +2,69 @@
 {% block title %}Supervisor{% endblock %}
 {% block content %}
 
+<section id="content">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <h1 style="text-align: center;"><strong>Active Test</strong></h1>
+    </div>
+  </div>
+  <hr />
+  <div class="input-group input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+    </div>
+    <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled value="{{name}}">
+  </div>
+  <br />
+  <div class="input-group input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Test Year:</span>
+    </div>
+    <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled value="{{year}}">
+  </div>
+  <br />
+  <div class="input-group input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Student Grade:</span>
+    </div>
+    <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" disabled value="{{grade}}">
+  </div>
+  <hr />
+  <h2 style="text-align: center;"><strong>Section A</strong></h2>
+  {% for question in questions %}
+    <div class="container">
+      <h3 id="questionHead">Question {{question['id']}}</h3>
+      <table class = "table table-hover table-bordered">
+        <thead>
+            <tr style="background-color:#cccccc">
+              <th id ="question{{question['id']}}">{{question['question']}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <input type="radio" style="position:fixed; opacity:0;" name="optradio{{question['id']}}" value="not_answered" checked="checked">
+              <td><div class="radio">
+                  <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a1" value="{{question['answer1']}}" disabled><label id="labelq{{question['id']}}a1">&nbsp{{question['answer1']}}</label>
+               </div></td>
+            </tr>
+            <tr>
+                <td><div class="radio">
+                  <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a2" value="{{question['answer2']}}" disabled><label id="labelq{{question['id']}}a2">&nbsp{{question['answer2']}}</label>
+                </div></td>
+            </tr>
+            <tr>
+              <td><div class="radio">
+                  <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a3" value="{{question['answer3']}}" disabled><label id="labelq{{question['id']}}a3">&nbsp{{question['answer3']}}</label>
+                </div></td>
+            </tr>
+            <tr>
+              <td><div class="radio">
+                  <input type="radio" name="optradio{{question['id']}}" id="q{{question['id']}}a4" value="{{question['answer4']}}" disabled><label id="labelq{{question['id']}}a4">&nbsp{{question['answer4']}}</label>
+                </div></td>
+            </tr>
+          </tbody>
+    </table>
+    </div>
+  {% endfor %}
+</section>
 {% endblock %}
