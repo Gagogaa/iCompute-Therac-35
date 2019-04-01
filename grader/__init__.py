@@ -1,44 +1,63 @@
 from flask import Blueprint, render_template, request
 from database.models import *
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from flask_login import login_required
+from logon import required_user_type
+from database import database_session
+
 
 grader = Blueprint('grader', __name__, template_folder='grader_templates')
 
-engine = create_engine('sqlite:///iCompute.db', convert_unicode=True)
-Session = sessionmaker(bind=engine)
-session = Session()
 
-#Function for grading all students answers to section 1
+# Function for grading all students answers to section 1
 def grade_section_one(team):
-    #to display the results of the first part of the test
-    results = {}
+    # If the student answers are already graded don't try to regrade them
+    student_team = StudentScore.query.filter_by(team_name=team).first()
+
+    if student_team:
+        return student_team.section_one_score
+
     correct_answers = 0
-    total_questions = session.query(iComputeTest).count()
-    #grab all student answers that were for the chosen team
-    for answer in session.query(StudentAnswer).filter(StudentAnswer.team_name == team):
-        results[answer.question] = answer.answer
-        #grab the correct answer for the given question
-        correct_answer = session.query(Questions).filter(_and(Questions.question == answer.question, Questions.is_correct == True))
-        #if they got it right, increment the number of correct answers
-        if correct_answer.answer == answer.answer:
-            correct_answers += 1
+    # TODO make sure we are only getting the number of questions from this test
+    # right now we have no way to actually do that...
+    # so I think that we should add a field to student team for the test that they are suppose to take
+    total_questions = database_session.query(iComputeTest).count()
 
-    #return both the test score and the results of the test
-    return ((correct_answers/total_questions), results)
+    # TODO look at the grading break down to see what score really needs to be added to the database
+    for answer in StudentAnswer.query.filter_by(team_name=team).all():
+        correct_answer = Questions.query.filter_by(question=answer.question, is_correct=True).first()
+        if correct_answer:
+            if correct_answer.answer == answer.answer:
+                correct_answers += 1
 
-@grader.route('/', methods=('GET','POST'))
+    student_team = StudentTeam.query.filter_by(team_name=team).order_by(StudentTeam.team_year).first()
+
+    student_score = StudentScore(team_name=student_team.team_name,
+                                 team_year=student_team.team_year,
+                                 test_name=None,  # right now we have no idea what test the students were taking
+                                 total_score=0,  # This should probably be nullable but for now they get a 0 until the grader grades the exam
+                                 section_one_score=correct_answers,
+                                 section_two_score=0,
+                                 section_three_score=0)
+
+    database_session.add(student_score)
+    database_session.commit()
+
+    return correct_answers
+
+
+@grader.route('/', methods=('GET', 'POST'))
+@login_required
+@required_user_type('Grader')
 def grader_index():
     teams = []
-    for team in session.query(StudentTeam.team_name):
+    for team in database_session.query(StudentTeam.team_name):
         teams.append(team.team_name)
 
-    #If the grader chose a team, display team info
+    # If the grader chose a team, display team info
     if request.method == 'POST':
-        team = request.form['team_name']
-        (sec_A_score, results) = grade_section_one(team)
-        return render_template('grader_home.html', teams=teams, sec_A_score=sec_A_score, results=results)
+        if 'team_name' in request.form:
+            team = request.form['team_name']
+            sec_a_score = grade_section_one(team)
+            return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score)
 
-    return render_template('grader_home.html', teams=teams, sec_A_score=None, results=None)
+    return render_template('grader_home.html', teams=teams, sec_a_score=None)
