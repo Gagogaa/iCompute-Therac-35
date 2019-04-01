@@ -97,17 +97,24 @@ def admin_view_test():
 @login_required
 @required_user_type('Supervisor')
 def admin_edit_users():
-    return render_template('userAdd.html', link="./")
 
 
-    def admin_view_users():
-
-        supervisor = []
-        data = {}
-        counter = 1
+    supervisors = []
+    data = {}
+    counter = 1
 
     # Build Dictionary users
-    for supervisor in database_session.query(Users.supervisor).distinct():
+    for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
+        data['id'] = counter
+        currentSupervisor = supervisor.username
+        data['supervisor'] = currentSupervisor
+        print(currentSupervisor)
+        supervisors.append(data)
+
+        counter += 1
+        data = {}
+
+    return render_template('userAdd.html', supervisors=supervisors )
 
 
 @admin.route('/question')
