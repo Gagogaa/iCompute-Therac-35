@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, send_file, send_from_directory
 from database import database_session
 from database.models import *
 import csv
@@ -21,6 +21,11 @@ def admin_edit_users():
 @admin.route('/question')
 def admin_edit_questions():
 	return render_template('questionEditUI.html', link="./")
+
+@admin.route('./<path:filename>', methods=('GET', 'POST'))
+def theDownload(filepath):
+	#uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+	return send_from_directory(directory='/', filename=filepath)
 
 @admin.route('/results', methods=('GET', 'POST'))
 def admin_view_results():
@@ -64,15 +69,19 @@ def admin_view_results():
 			theScores[i]['testTakers'].append(details)
 			details = {}
 
+	#One of the Save Buttons was pressed, time to make the csv file
 	if request.method == 'POST':
 		theName = request.form["testForm"]
-		with open('person.csv', 'w') as csvFile:
-			writer = csv.writer(csvFile)
-			writer.writerow('Yo dawg')
-			for stuff in theScores[0]['testTakers']:
-				writer.writerow(theScores[0]['theTestName'])
-				writer.writerows(stuff.items())
+		for i in range(0, counter):
+			if (theScores[i]['theTestName'] == theName):
+				with open('./logon/' + theName + '.csv', 'w') as csvFile:
+					writer = csv.writer(csvFile)
+					writer.writerow([theName])
+					for stuff in theScores[i]['testTakers']:
+						writer.writerows(stuff.items())
 
-
+		#done writing, time to download
 		csvFile.close()
+		path = theName + '.csv'
+		return send_file(path, as_attachment=True)
 	return render_template('testResults.html', link="./", theScores=theScores)
