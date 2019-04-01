@@ -65,6 +65,7 @@ def admin_view_results():
 			details = {}
 
 	if request.method == 'POST':
+		theName = request.form["testForm"]
 		with open('person.csv', 'w') as csvFile:
 			writer = csv.writer(csvFile)
 			writer.writerow('Yo dawg')

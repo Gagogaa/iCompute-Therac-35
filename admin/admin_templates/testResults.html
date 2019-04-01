@@ -10,11 +10,11 @@
 {% for theTest in theScores %}
   <div class="card">
     <div class="card-header">
-      <a class="collapsed card-link align-middle" data-toggle="collapse" style= "font-size:22px" href={{theTest['accord1']}}>
+      <form action="" method="post">
+        <a class="collapsed card-link align-middle" data-toggle="collapse" style= "font-size:22px" href={{theTest['accord1']}}>
         {{theTest['theTestName']}}
-      </a>
-      <a href="#" id="submit" class="btn btn-primary float-right align-middle success"><i class="fas fa-download"></i></a>
-      <!--<button type="button" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button>-->
+        </a>
+      <input name="testForm" type="hidden" value="{{theTest['theTestName']}}"/><button type="submit" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button></form>
     </div>
 
     <div id={{theTest['accord2']}} class="collapse" data-parent="#accordion">
@@ -48,10 +48,5 @@
 
 </div>
 
-<script>
-	$('#submit').click(function(){
-      $('#accordian').submit();
-  });
-</script>
 
 {% endblock %}
