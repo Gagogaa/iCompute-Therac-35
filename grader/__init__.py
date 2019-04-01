@@ -3,7 +3,6 @@ from database.models import *
 from flask_login import login_required
 from logon import required_user_type
 from database import database_session
-from sqlalchemy import and_
 
 
 grader = Blueprint('grader', __name__, template_folder='grader_templates')
@@ -11,24 +10,39 @@ grader = Blueprint('grader', __name__, template_folder='grader_templates')
 
 # Function for grading all students answers to section 1
 def grade_section_one(team):
-    # to display the results of the first part of the test
-    results = {}
-    correct_answers = 0
-    # TODO I don't think this is doing what we want it to because this will count all of the questions from all of the tests
-    # we just want the count from the current test
-    total_questions = database_session.query(iComputeTest).count()
-    # grab all student answers that were for the chosen team
-    # TODO we also need to grab team year (this is just in case schools have teams with the same name consecutive years)
-    for answer in database_session.query(StudentAnswer).filter(StudentAnswer.team_name == team):
-        results[answer.question] = answer.answer
-        # grab the correct answer for the given question
-        correct_answer = database_session.query(Questions).filter(and_(Questions.question == answer.question, Questions.is_correct == True))
-        # if they got it right, increment the number of correct answers
-        if correct_answer.answer == answer.answer:
-            correct_answers += 1
+    # If the student answers are already graded don't try to regrade them
+    student_team = StudentScore.query.filter_by(team_name=team).first()
 
-    # return both the test score and the results of the test
-    return (correct_answers/total_questions), results
+    if student_team:
+        return student_team.section_one_score
+
+    correct_answers = 0
+    # TODO make sure we are only getting the number of questions from this test
+    # right now we have no way to actually do that...
+    # so I think that we should add a field to student team for the test that they are suppose to take
+    total_questions = database_session.query(iComputeTest).count()
+
+    # TODO look at the grading break down to see what score really needs to be added to the database
+    for answer in StudentAnswer.query.filter_by(team_name=team).all():
+        correct_answer = Questions.query.filter_by(question=answer.question, is_correct=True).first()
+        if correct_answer:
+            if correct_answer.answer == answer.answer:
+                correct_answers += 1
+
+    student_team = StudentTeam.query.filter_by(team_name=team).order_by(StudentTeam.team_year).first()
+
+    student_score = StudentScore(team_name=student_team.team_name,
+                                 team_year=student_team.team_year,
+                                 test_name=None,  # right now we have no idea what test the students were taking
+                                 total_score=0,  # This should probably be nullable but for now they get a 0 until the grader grades the exam
+                                 section_one_score=correct_answers,
+                                 section_two_score=0,
+                                 section_three_score=0)
+
+    database_session.add(student_score)
+    database_session.commit()
+
+    return correct_answers
 
 
 @grader.route('/', methods=('GET', 'POST'))
@@ -41,8 +55,9 @@ def grader_index():
 
     # If the grader chose a team, display team info
     if request.method == 'POST':
-        team = request.form['team_name']
-        sec_a_score, results = grade_section_one(team)
-        return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score, results=results)
+        if 'team_name' in request.form:
+            team = request.form['team_name']
+            sec_a_score = grade_section_one(team)
+            return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score)
 
-    return render_template('grader_home.html', teams=teams, sec_a_score=None, results=None)
+    return render_template('grader_home.html', teams=teams, sec_a_score=None)

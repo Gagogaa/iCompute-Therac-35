@@ -11,7 +11,8 @@ from werkzeug.security import generate_password_hash
 def init_app(app):
     #app.teardown_appcontext(close_db)
     app.cli.add_command(testing_data)
-
+    app.cli.add_command(deletion_test)
+    app.cli.add_command(update_testing)
 
 @click.command('add-testing-data')
 @with_appcontext
@@ -128,27 +129,27 @@ def testing_data():
                   section = 1
                   ),
         StudentTeam(team_name = 'teamM8s',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'School of Rock'
                     ),
         StudentTeam(team_name = 'teamGr8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'Patchin Elementary'
                     ),
         StudentTeam(team_name = 'teamT8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'John Glenn Elementary'
                     ),
         StudentTeam(team_name = 'teamK8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'Third Street Elementary'
                     ),
         StudentTeam(team_name = 'teamSt8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'U.A. High'
                     ),
         StudentTeam(team_name = 'teamL8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name = 'School of Hard Knocks'
                     ),
         StudentAnswer(team_name = 'teamM8s',
@@ -287,4 +288,19 @@ def testing_data():
     ]
 
     database_session.add_all(AddData)
+    database_session.commit()
+
+@click.command('delete-test')
+@with_appcontext
+def deletion_test():
+    del_query = database_session.query(Questions).filter(Questions.question=='Which one of the following is not a programming language?')
+    del_query.delete()
+    database_session.commit()
+
+@click.command('update-test')
+@with_appcontext
+def update_testing():
+    rows_to_update = database_session.query(Questions).filter(Questions.question == 'This provides a step-by-step procedure for performing a task.')
+    for row in rows_to_update:
+        row.question = "this is a new question"
     database_session.commit()

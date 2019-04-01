@@ -17,6 +17,7 @@ def student_team_index():
     question = {}
 
     # Build Dictionary for questions pulled from the db
+    # TODO grab the correct exam for this team!
     for counter, exam_question in enumerate(database_session.query(iComputeTest.question).order_by(iComputeTest.orderId), start=1):
         question['id'] = str(counter)
         question['question'] = exam_question.question
@@ -45,5 +46,7 @@ def student_team_index():
 
 
 @student_team.route('/sectionb')
+@login_required
+@required_user_type('Student')
 def section_b():
     return render_template('short_answer.html')

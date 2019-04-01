@@ -1,22 +1,48 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
-  <!--Actual question area (Variables needed)-->
-      <div>
-        <tr>
-          <div align="center">
-            <button type="button" class="btn btn-outline-primary outline"
-             style="width: 90%; border-color:#337ab7; padding:14px 24px">Create New Test</button>
-             <button type="button" class="btn btn-outline-primary outline"
-              style="width: 90%; border-color:#337ab7; padding:14px 24px">View Test Version</button>
-              <button type="button" class="btn btn-outline-primary outline"
-               style="width: 90%; border-color:#337ab7; padding:14px 24px">Edit Test Version</button>
-          </div>
-        </tr>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    var counter = 2;
+    $(document).ready(function(){
+      $("#add_new").on("click",function(){
+        $("br:last").after('<div id="question' + counter + '"><hr /><div class="dropdown show" style="display: flex;"><select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
+        counter += 1;
+      });
+    });
+
+    function removeQuestion(qid) {
+      $('#question' + qid).remove();
+      $("br:first").remove();
+    }
+  </script>
+  <form>
+    <h1 style="text-align: center;"><strong>Create a New Test</strong></h1>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
       </div>
-
-<table class="table" style="width:100%; padding: 8px">
-  <div>
-    </table>
-
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+    </div>
+    <hr />
+    <h2><strong>Section A</strong></h2>
+    <button id="add_new" class="btn btn-primary btn-lg btn-block" type="button">
+        <div class="question">
+        <p>Add Another Question</p>
+    </div>
+    </button>
+    <br />
+    <div id="question1">
+      <hr />
+      <div class="dropdown show" style="display: flex;">
+        <select class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;">
+          {% for question in questions %}
+            <option class="dropdown-item" value='{{question}}'>{{question}}</option>
+          {% endfor %}
+        </select>
+        <button type="button" onclick='removeQuestion(1);' id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
+      </div>
+    </div>
+    <br />
+  </form>
 {% endblock %}

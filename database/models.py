@@ -2,8 +2,8 @@
 Contains the database classes for the application
 """
 
-
-from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
+from sqlalchemy import *
+#from sqlalchemy import Column, Boolean, String, Integer, Date, ForeignKeyConstraint
 from database import Base
 from flask_login import UserMixin
 
@@ -14,7 +14,6 @@ class StudentTeam(Base):
     team_name = Column(String, primary_key=True)
     team_year = Column(Integer, primary_key=True)
     school_name = Column(String, nullable=False)
-
 
 
 class StudentAnswer(Base):
@@ -45,6 +44,7 @@ class iComputeTest(Base):
         ForeignKeyConstraint(['question'], ['Questions.question']),
     )
 
+
 class Questions(Base):
     __tablename__ = 'Questions'
 
@@ -59,8 +59,7 @@ class Users(UserMixin, Base):
 
     username = Column(String, primary_key=True)
     password = Column(String, nullable=False)
-    user_type = Column(String, nullable=False)
-    #UserTypes Student, Grader, Supervisor.
+    user_type = Column(String, nullable=False)  #UserTypes Student, Grader, Supervisor.
 
     def get_id(user):
         return user.username
