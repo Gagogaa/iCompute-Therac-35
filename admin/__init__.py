@@ -24,7 +24,11 @@ def admin_modify_test():
     return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
 
 
+<<<<<<< HEAD
 @admin.route('test/test_create', methods=('GET', 'POST'))
+=======
+@admin.route('test/test_create', methods=("GET", "POST"))
+>>>>>>> origin/A.4.3.5
 @login_required
 @required_user_type('Supervisor')
 def admin_create_test():
@@ -72,7 +76,25 @@ def admin_edit_test():
 @login_required
 @required_user_type('Supervisor')
 def admin_view_test():
-    return render_template('test_view.html')
+    questions = []
+    data = {}
+    counter = 1
+    ansNum = 1
+
+    # Build Dictionary for questions pulled from the db
+    for question in database_session.query(iComputeTest.question):
+        data['id'] = counter
+        data['question'] = question.question
+        for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
+            ans = 'answer' + str(ansNum)
+            data[ans] = answer.answer
+            ansNum += 1
+        questions.append(data)
+        ansNum = 1
+        counter += 1
+        data = {}
+        test = database_session.query(iComputeTest).first()
+    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade)
 
 
 @admin.route('/user')
