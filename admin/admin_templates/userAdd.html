@@ -38,7 +38,10 @@
     <div id="collapseOne" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">First item</li>
+          {% for supervisors in supervisor %}
+            {% if Users['user_type'] == "supervisor"}
+          <li class="list-group-item" id="supervisor{{Users['username']}}">First item</li>
+          {% endfor %}
           <li class="list-group-item">Second item</li>
           <li class="list-group-item">Third item</li>
         </ul>

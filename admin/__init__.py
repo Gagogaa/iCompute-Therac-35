@@ -32,6 +32,20 @@ def admin_view_test():
 
 @admin.route('/user')
 def admin_edit_users():
+
+    usernames = []
+    data = {}
+    counter = 1
+
+    for users in database_session.query(Users.username).distinct():
+        data['username'] = counter
+        currentUser = Users.username
+        data['Users'] = currentUser
+
+        users.append(data)
+        counter += 1
+        data = {}
+
 	return render_template('userAdd.html', link="./")
 
 @admin.route('/question')
