@@ -1,20 +1,22 @@
 {% extends 'grader_header.html' %}
 {% block title %}Grader{% endblock %}
 {% block content %}
-<form action="" method="post">
-  <div class="form-group">
-    <label for="current-section-selector">Select Team to Grade:</label>
-    <select class="form-control" id="current-section-selector" name="team_name">
-      <option selected="selected">Select Student Team</option>
-      {% for team in teams %}
-        <option>{{team}}</option>
-      {% endfor %}
-    </select>
-  </div>
-  {% if sec_A_score != None %}
-    <h2>Section A Score:</h2>
-    <p>{{sec_A_score}}</p>
-  {% endif %}
-  <input type="submit" value="submit" class="btn btn-primary btn-lg btn-block" />
-</form>
+<div class="container">
+  <form action="" method="post">
+    <div class="form-group">
+      <label for="current-section-selector">Select Team to Grade:</label>
+      <select class="form-control" id="current-section-selector" name="team_name">
+        <option selected="selected">Select Student Team</option>
+        {% for team in teams %}
+          <option>{{team}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if sec_a_score != None %}
+      <h2>Section A Score:</h2>
+      <p>{{sec_a_score}}</p>
+    {% endif %}
+    <input type="submit" value="submit" class="btn btn-primary btn-lg btn-block" />
+  </form>
+</div>
 {% endblock %}

@@ -118,50 +118,60 @@ def testing_data():
                   is_correct = False,
                   section = 1
                   ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Quadruple Wrong!',
+                  is_correct = False,
+                  section = 1
+                  ),
+        Questions(question = 'This is a fifth test question.',
+                  answer = 'Totes Wrong!',
+                  is_correct = False,
+                  section = 1
+                  ),
         StudentTeam(team_name = 'teamM8s',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'School of Rock'
                     ),
         StudentTeam(team_name = 'teamGr8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'Patchin Elementary'
                     ),
         StudentTeam(team_name = 'teamT8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'John Glenn Elementary'
                     ),
         StudentTeam(team_name = 'teamK8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'Third Street Elementary'
                     ),
         StudentTeam(team_name = 'teamSt8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name= 'U.A. High'
                     ),
         StudentTeam(team_name = 'teamL8',
-                    team_year = datetime.datetime.now(),
+                    team_year = datetime.datetime.now().year,
                     school_name = 'School of Hard Knocks'
                     ),
         StudentAnswer(team_name = 'teamM8s',
-                      team_year = datetime.datetime.now(),
+                      team_year = datetime.datetime.now().year,
                       section = 1,
                       question = 'This provides a step-by-step procedure for performing a task.',
                       answer = 'Algorithm'
                       ),
         StudentAnswer(team_name = 'teamM8s',
-                      team_year = datetime.datetime.now(),
+                      team_year = datetime.datetime.now().year,
                       section = 1,
                       question = 'Which one of the following is not a programming language?',
                       answer = 'Binary'
                       ),
         StudentAnswer(team_name = 'teamL8',
-                      team_year = datetime.datetime.now(),
+                      team_year = datetime.datetime.now().year,
                       section = 1,
                       question = 'This provides a step-by-step procedure for performing a task.',
                       answer = 'Keyboard'
                       ),
         StudentAnswer(team_name = 'teamL8',
-                      team_year = datetime.datetime.now(),
+                      team_year = datetime.datetime.now().year,
                       section = 1,
                       question = 'Which one of the following is not a programming language?',
                       answer = 'C++'
@@ -170,7 +180,7 @@ def testing_data():
                      question = 'This provides a step-by-step procedure for performing a task.',
                      section = 1,
                      test_name = 'Test One',
-                     year = datetime.datetime.now(),
+                     year = datetime.datetime.now().year,
                      student_grade = 'Fourth',
 
                      ),
@@ -178,7 +188,7 @@ def testing_data():
                      question = 'Which one of the following is not a programming language?',
                      section = 1,
                      test_name = 'Test One',
-                     year = datetime.datetime.now(),
+                     year = datetime.datetime.now().year,
                      student_grade = 'Fourth',
 
                      ),
@@ -186,7 +196,7 @@ def testing_data():
                      question = 'This is a third test question.',
                      section = 1,
                      test_name = 'Test One',
-                     year = datetime.datetime.now(),
+                     year = datetime.datetime.now().year,
                      student_grade = 'Fourth',
 
                      ),
@@ -194,7 +204,7 @@ def testing_data():
                      question = 'This is a fourth test question.',
                      section = 1,
                      test_name = 'Test One',
-                     year = datetime.datetime.now(),
+                     year = datetime.datetime.now().year,
                      student_grade = 'Fourth',
 
                      ),
@@ -202,7 +212,7 @@ def testing_data():
                      question = 'This is a fifth test question.',
                      section = 1,
                      test_name = 'Test One',
-                     year = datetime.datetime.now(),
+                     year = datetime.datetime.now().year,
                      student_grade = 'Fourth'
 
                      ),

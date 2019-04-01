@@ -1,4 +1,7 @@
-import database
+from flask import Blueprint, render_template, request, jsonify, url_for
+from flask_login import login_required
+from logon import required_user_type
+from database import database_session
 from database.models import *
 from database.__init__ import *
 from flask import *
@@ -6,15 +9,24 @@ from pprint import pprint
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
+
 @admin.route('/')
+@login_required
+@required_user_type('Supervisor')
 def admin_index():
     return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results")
 
+
 @admin.route('/test')
+@login_required
+@required_user_type('Supervisor')
 def admin_modify_test():
     return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
 
-@admin.route('test/test_create', methods=('GET', 'POST'))
+
+@admin.route('test/test_create', methods=("GET", "POST"))
+@login_required
+@required_user_type('Supervisor')
 def admin_create_test():
     questions = []
     for question in database_session.query(Questions.question).distinct():
@@ -48,11 +60,17 @@ def admin_create_test():
 
     return render_template('test_create.html', questions=questions)
 
+
 @admin.route('test/test_edit')
+@login_required
+@required_user_type('Supervisor')
 def admin_edit_test():
     return render_template('test_edit.html')
 
+
 @admin.route('test/test_view')
+@login_required
+@required_user_type('Supervisor')
 def admin_view_test():
     questions = []
     data = {}
@@ -74,100 +92,103 @@ def admin_view_test():
         test = database_session.query(iComputeTest).first()
     return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade)
 
+
 @admin.route('/user')
+@login_required
+@required_user_type('Supervisor')
 def admin_edit_users():
-	return render_template('userAdd.html', link="./")
+    return render_template('userAdd.html', link="./")
+
 
 @admin.route('/question')
+@login_required
+@required_user_type('Supervisor')
 def admin_edit_questions():
+    questions = []
+    answers = []
+    ansData = {}
+    data = {}
+    counter = 1
+    ansNum = 1
 
-            questions = []
-            answers = []
+    # Build Dictionary for questions pulled from the db
+    for question in database_session.query(Questions.question, Questions.section).distinct():
+        data['id'] = counter
+        currentQuestion = question.question
+        data['question'] = currentQuestion
+        section = question.section
+        data['section'] = section
+
+        for answer in database_session.query(Questions.answer, Questions.is_correct).filter(Questions.question == question.question):
             ansData = {}
-            data = {}
-            counter = 1
-            ansNum = 1
+            if answer.is_correct:
+                ansData['is_correct'] = True
+            else:
+                ansData['is_correct'] = False
+            ansData['ansCounter'] = counter
+            ansData['ans_id'] = ansNum
+            ansData['answer'] = answer.answer
+            ansData['is_correct'] = answer.is_correct
+            answers.append(ansData)
+            ansNum += 1
 
-            # Build Dictionary for questions pulled from the db
-            for question in database_session.query(Questions.question, Questions.section).distinct():
-                data['id'] = counter
-                currentQuestion = question.question
-                data['question'] = currentQuestion
-                section = question.section
-                data['section'] = section
+        questions.append(data)
+        ansNum = 1
+        counter += 1
+        data = {}
 
-                for answer in database_session.query(Questions.answer, Questions.is_correct).filter(Questions.question == question.question):
-                    ansData = {}
-                    if isCorrect:
-                        ansData['is_correct'] = True
-                    else:
-                        ansData['is_correct'] = False
-                    ansData['ansCounter'] = counter
-                    ansData['ans_id'] = ansNum
-                    ansData['answer'] = answer.answer
-                    ansData['is_correct'] = answer.is_correct
-                    answers.append(ansData)
-                    ansNum += 1
+    return render_template('questionEditUI.html', questions=questions, answers=answers )
 
-                questions.append(data)
-                ansNum = 1
-                counter += 1
-                data = {}
-
-
-
-
-            return render_template('questionEditUI.html', questions=questions, answers=answers )
 
 @admin.route('/results')
+@login_required
+@required_user_type('Supervisor')
 def admin_view_results():
+    exam_results = []
+    exam_data = {}
 
+    # Build Dictionary for test names pulled from the db
+    for counter, test_name in enumerate(database_session.query(StudentScore.test_name).distinct().order_by(StudentScore.test_name), start=1):
+        exam_data['id'] = counter
+        exam_data['test_name'] = test_name.test_name
 
-	theScores = []
-	data = {}
-	counter = 0
+        # Set up for different cards on the accordian html section
+        exam_data['accord1'] = "#collapse" + str(counter)
+        exam_data['accord2'] = "collapse" + str(counter)
 
-	# Build Dictionary for test names pulled from the db
-	for testName in database_session.query(StudentScore.test_name).distinct().order_by(StudentScore.test_name):
-		data['id'] = counter
-		data['theTestName'] = testName.test_name
+        # Set up for the rest of the data needed
+        exam_data['student_teams'] = []
 
-		# Set up for different cards on the accordian html section
-		data['accord1'] = "#collapse" + str(counter)
-		data['accord2'] = "collapse" + str(counter)
+        exam_results.append(exam_data)
+        exam_data = {}
 
-		#Set up for the rest of the data needed
-		theTestTakers = []
-		data['testTakers'] = theTestTakers
+    # Add the rest of the data in a sub Dictionary of each test
+    details = {}
+    for i in range(0, counter):
 
+        # for each test, grab all team results of that test
+        for test_result in database_session.query(StudentScore).filter(StudentScore.test_name == exam_results[i]['test_name']).order_by(StudentScore.total_score.desc()):
+            details['team_name'] = test_result.team_name
 
-		theScores.append(data)
-		counter += 1
-		data = {}
+            for team_info in database_session.query(StudentTeam).filter(StudentTeam.team_name == details['team_name']):
+                details['school_name'] = team_info.school_name
 
-	#Add the rest of the data in a sub Dictionary of each test
-	details = {}
-	for i in range(0, counter):
-		#for each test, grab all team results of that test
-		for testResult in database_session.query(StudentScore).filter(StudentScore.test_name == theScores[i]['theTestName']).order_by(StudentScore.total_score.desc()):
-			details['teamName'] = testResult.team_name
-			for schoolName in database_session.query(StudentTeam).filter(StudentTeam.team_name == details['teamName']):
-				details['theSchoolName'] = schoolName.school_name
-			details['teamYear'] = testResult.team_year
-			details['section1Score'] = testResult.section_one_score
-			details['section2Score'] = testResult.section_two_score
-			details['section3Score'] = testResult.section_three_score
-			details['section4Score'] = testResult.total_score
+            # TODO Why is team year in details because it's not used on the page?
+            details['team_year'] = test_result.team_year
+            details['section_one_score'] = test_result.section_one_score
+            details['section_two_score'] = test_result.section_two_score
+            details['section_three_score'] = test_result.section_three_score
+            details['total_score'] = test_result.total_score
 
-			theScores[i]['testTakers'].append(details)
-			details = {}
+            exam_results[i]['student_teams'].append(details)
+            details = {}
 
-
-	return render_template('testResults.html', link="./", theScores=theScores)
-
+    return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
 @admin.route('/addQuestion', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def add_question():
     if 'section' in request.form:
         mySection = request.form['section']
@@ -207,6 +228,8 @@ def add_question():
 
 
 @admin.route('/addAnswer', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
         currentQuestion = request.form['question'];
@@ -220,21 +243,33 @@ def add_answer():
         database_session.commit();
         return 'success'
 
+
+# TODO We also need to delete questions in tests
 @admin.route('/delQuestion', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def delete_question():
     if 'question' in request.form:
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
 
+
 @admin.route('/delAnswer', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def delete_answer():
     if 'question' in request.form and 'answer' in request.form:
-        del_query = database_session.query(Questions.answer).filter(and_(Questions.question==request.form['question'] , Questions.answer==request.form['answer']))
+        del_query = database_session.query(Questions.answer).filter(and_(Questions.question==request.form['question'], Questions.answer==request.form['answer']))
         del_query.delete()
         database_session.commit()
     return"success"
+
+
+# TODO When altering a question we also need to alter the questions in the Test table
 @admin.route('/editQuestion', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
         rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
@@ -243,22 +278,20 @@ def edit_question():
         database_session.commit()
     return "success"
 
+
 @admin.route('/editAnswer', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
 def edit_answer():
     if 'question' in request.form and 'answer' in request.form and 'new_answer' in request.form:
-        print(request.form['question'])
-        print(request.form['answer'])
-        print(request.form['new_answer'])
-
-        rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'] , Questions.answer == request.form['answer'])
-        print(rows_to_update)
+        rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'], Questions.answer == request.form['answer'])
         for row in rows_to_update:
             row.answer = request.form['new_answer']
-        print("supposedly updated")
         database_session.commit()
     return "success answer"
 
 
+# TODO is this used in the project?
 def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
