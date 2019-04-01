@@ -39,7 +39,7 @@
       <div class="card-body">
         <ul class="list-group list-group-flush">
           {% for supervisor in supervisors %}
-          <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisors['id']}}">
+          <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisor['id']}}">
             <div class="input-group" >
               <input class="form-control question-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
               <div class="input-group-append">
