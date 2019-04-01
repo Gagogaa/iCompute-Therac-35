@@ -1,7 +1,7 @@
 import database
 from database.models import *
 from database.__init__ import *
-from flask import Blueprint, render_template, request, jsonify
+from flask import *
 from pprint import pprint
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -14,7 +14,7 @@ def admin_index():
 def admin_modify_test():
     return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
 
-@admin.route('test/test_create')
+@admin.route('test/test_create', methods=('GET', 'POST'))
 def admin_create_test():
     questions = []
     for question in database_session.query(Questions.question).distinct():
@@ -22,31 +22,29 @@ def admin_create_test():
 
     if request.method == 'POST':
         is_validated = True
-        if 'test_name' not in request.form:
+        if ('test_name' not in request.form) or ('year' not in request.form) or ('grade' not in request.form):
             is_validated = False
-
-        for i in range(0, len(request.form)-1):
-            if ('question' + str(i)) not in request.form:
-                is_validated = False
 
         if is_validated:
             if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
-                for i in range(0, len(request.form)-1):
+                database_session.query(iComputeTest).delete()
+                database_session.commit()
+                for i in range(1, len(request.form)-2):
                     temp = iComputeTest(orderId=i,
-                                        question=(request.form['question'] + str(i)),
+                                        question=request.form['question' + str(i)],
                                         section=1,
                                         test_name=request.form['test_name'],
-                                        year=request.form['year'],
+                                        year=int(request.form['year']),
                                         student_grade=request.form['grade'])
                     database_session.add(temp)
                 database_session.commit()
-                return redirect(url_for('admin_view_test'), test_name=request.form['test_name'])
+                return redirect(url_for('admin.admin_view_test'))
             else:
                 flash('A test with this test name already exists. Please try again with a different name or edit a pre-existing test.')
-                return redirect(url_for('admin_create_test'))
+                return redirect(url_for('admin.admin_create_test'))
         else:
             flash('Something went wrong with the data you tried to submit.')
-            return redirect(url_for('admin_create_test'))
+            return redirect(url_for('admin.admin_create_test'))
 
     return render_template('test_create.html', questions=questions)
 
