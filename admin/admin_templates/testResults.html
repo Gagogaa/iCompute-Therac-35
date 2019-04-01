@@ -5,7 +5,7 @@
 <h3>Test Results by Test</h3>
 <br>
 <!-- The entire accordian begins here-->
-<div id="accordion">
+<div id="accordion" action="" method="post">
 
 {% for theTest in theScores %}
   <div class="card">
@@ -13,7 +13,8 @@
       <a class="collapsed card-link align-middle" data-toggle="collapse" style= "font-size:22px" href={{theTest['accord1']}}>
         {{theTest['theTestName']}}
       </a>
-      <button type="button" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button>
+      <a href="#" id="submit" class="btn btn-primary float-right align-middle success"><i class="fas fa-download"></i></a>
+      <!--<button type="button" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button>-->
     </div>
 
     <div id={{theTest['accord2']}} class="collapse" data-parent="#accordion">
@@ -46,5 +47,11 @@
 {% endfor %}
 
 </div>
+
+<script>
+	$('#submit').click(function(){
+      $('#accordian').submit();
+  });
+</script>
 
 {% endblock %}

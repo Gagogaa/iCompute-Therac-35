@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from database import database_session
 from database.models import *
+import csv
+import os
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -20,7 +22,7 @@ def admin_edit_users():
 def admin_edit_questions():
 	return render_template('questionEditUI.html', link="./")
 
-@admin.route('/results')
+@admin.route('/results', methods=('GET', 'POST'))
 def admin_view_results():
 
 	theScores = []
@@ -44,7 +46,7 @@ def admin_view_results():
 		theScores.append(data)
 		counter += 1
 		data = {}
-
+	
 	#Add the rest of the data in a sub Dictionary of each test
 	details = {}
 	for i in range(0, counter):
@@ -62,5 +64,14 @@ def admin_view_results():
 			theScores[i]['testTakers'].append(details)
 			details = {}
 
+	if request.method == 'POST':
+		with open('person.csv', 'w') as csvFile:
+			writer = csv.writer(csvFile)
+			writer.writerow('Yo dawg')
+			for stuff in theScores[0]['testTakers']:
+				writer.writerow(theScores[0]['theTestName'])
+				writer.writerows(stuff.items())
 
+
+		csvFile.close()
 	return render_template('testResults.html', link="./", theScores=theScores)
