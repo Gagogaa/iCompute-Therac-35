@@ -24,11 +24,7 @@ def admin_modify_test():
     return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
 
 
-<<<<<<< HEAD
-@admin.route('test/test_create', methods=('GET', 'POST'))
-=======
 @admin.route('test/test_create', methods=("GET", "POST"))
->>>>>>> origin/A.4.3.5
 @login_required
 @required_user_type('Supervisor')
 def admin_create_test():
