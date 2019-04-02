@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, jsonify, url_for, send_file, send_from_directory
+from flask import Blueprint, render_template, request, jsonify, url_for, send_file, send_from_directory, stream_with_context
+from io import StringIO
 from flask_login import login_required
 from logon import required_user_type
 from database import database_session
@@ -8,6 +9,8 @@ from flask import *
 from pprint import pprint
 import csv
 import os
+from werkzeug.datastructures import Headers
+from werkzeug.wrappers import Response
 
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -150,7 +153,7 @@ def theDownload(filepath):
 	return send_from_directory(directory='/', filename=filepath)
 
 
-@admin.route('/results')
+@admin.route('/results', methods=('GET', 'POST'))
 @login_required
 @required_user_type('Supervisor')
 def admin_view_results():
@@ -193,22 +196,27 @@ def admin_view_results():
             exam_results[i]['student_teams'].append(details)
             details = {}
 
-
-        #One of the Save Buttons was pressed, time to make the csv file
-    if request.method == 'POST':
+    def generate():
+    	
+        #Generate a csv file to be streamed into a csv file on return
         theName = request.form["testForm"]
+        data = StringIO()
+        w = csv.writer(data)
+        w.writerow([theName])
         for i in range(0, counter):
             if (exam_results[i]['test_name'] == theName):
-                with open('./logon/' + theName + '.csv', 'w') as csvFile:
-                    writer = csv.writer(csvFile)
-                    writer.writerow([theName])
-                    for stuff in exam_results[i]['student_teams']:
-                        writer.writerows(stuff.items())
+                for stuff in exam_results[i]['student_teams']:
+        	        w.writerows(stuff.items())
+        
+    #A save button was pressed, time to download a file
+    if request.method == 'POST':
+        headers = Headers()
+        headers.set('Content-Disposition', 'attachment', filename= request.form["testForm"] + '.csv')
 
-		#done writing, time to download
-        csvFile.close()
-        path = theName + '.csv'
-        return send_file(path, as_attachment=True)
+        return Response(
+            stream_with_context(generate()), mimetype='text/csv', headers=headers
+            )
+    #not POST method return    
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
