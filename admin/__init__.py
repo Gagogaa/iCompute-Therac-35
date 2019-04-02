@@ -197,16 +197,22 @@ def admin_view_results():
             details = {}
 
     def generate():
-    	
+
         #Generate a csv file to be streamed into a csv file on return
         theName = request.form["testForm"]
         data = StringIO()
         w = csv.writer(data)
         w.writerow([theName])
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
         for i in range(0, counter):
             if (exam_results[i]['test_name'] == theName):
                 for stuff in exam_results[i]['student_teams']:
         	        w.writerows(stuff.items())
+        	        yield data.getvalue()
+                data.seek(0)
+                data.truncate(0)
         
     #A save button was pressed, time to download a file
     if request.method == 'POST':
