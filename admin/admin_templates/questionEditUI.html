@@ -1,141 +1,513 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
+<div class="card mt-4">
+  <ul class="list-group">
 
+    <!-- Dropdown for createing new questions -->
+    <li class="list-group-item">
+      <button class="btn btn-outline-secondary" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> <i class="fas fa-caret-down"></i></button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#" id="new-multiple-choice" onclick="addQuestionDialog(this)" data-question-type="multiple-choice">Add new multiple choice</a>
+        <a class="dropdown-item" href="#" id="new-short-answer" onclick="addQuestionDialog(this)" data-question-type="short-answer">Add new short answer</a>
+        <a class="dropdown-item" href="#" id="new-scratch-answer" onclick="addQuestionDialog(this)" data-question-type="scratch-answer">Add new scratch question</a>
+      </div>
+    </li>
 
-<body class="container">
+    {% for question in questions %}
+      {% if question['section'] == 1 %}
+        <li class="list-group-item" id ="question{{question['id']}}">
 
-  <!-- replace hardcoded values with jinja once backend is complete -->
-  <div class="card">
-    <ul class="list-group">
-
-      <li class="list-group-item">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
+          <!-- First row of multiple choice questions -->
+          <div class="input-group" >
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
+            </div>
+            <input class="form-control question-textbox" id="question-name{{question['id']}}" type="text" value="{{question['question']}}" disabled>
+            <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
+            </div>
           </div>
-          <input class="form-control" type="text" value="This provides a step-by-step procedure for performing a task." disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
+
+          <div class="question-edit-answers collapse is-collased">
+            {% for answer in answers %}
+              {% if answer['ansCounter'] == question['id'] %}
+                {% if answer['is_correct'] %}
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                    </div>
+
+                    <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
+                      <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
+                      <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                      <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                  </div>
+                {% else %}
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                    </div>
+
+                    <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
+                      <button class="btn btn-outline-secondary" type="button" onclick="delAnswerDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+
+                    <!-- TODO Instead of having these hidden inputs we could pass in arguments via jinja -->
+                    <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
+                    <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
           </div>
+        </li>
+      {% else %}  <!-- end section one questions -->
+        <li class="list-group-item" id="question{{question['id']}}">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
+            </div>
+            <input class="form-control" type="text" id="question-name{{question['id']}}" value="{{question['question']}}" disabled>
+            <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+        </li>
+      {% endif %}
+    {% endfor %}
+    <!-- button for adding/removing questions -->
+  </ul>
+</div>
+
+<!-- question modal below -->
+<div class="modal fade" id="new-question-modal" tabindex="-1" role="dialog" aria-labelledby="new-question-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-question-modal-label">New Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-question-question-textbox" class="col-form-label">Question text:</label>
+          <input type="text" class="form-control" id="new-question-question-textbox">
+          <label for="new-question-answer-textbox" class="col-form-label">Correct answer:</label>
+          <input type="text" class="form-control" id="new-question-answer-textbox">
+          <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
+          <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
         </div>
-
-        <div class="question-edit-answers collapse">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Algorithm" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Keyboard" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Internet" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Windows" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswer(this)"><i class="fas fa-plus"></i></button>
-        </div>
-      </li>
-
-      <li class="list-group-item">
-        <div class="input-group">
-          <div class="input-group-prepend">
-            <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
-          </div>
-          <input class="form-control" type="text" value="Which one of the following is not a programming language?" disabled>
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-            <button class="btn btn-outline-secondary" type="button" onclick="deleteQuestion(this)"><i class="fas fa-trash-alt"></i></button>
-          </div>
-        </div>
-
-        <div class="question-edit-answers collapse">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Binary" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="Java" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="HTML" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            </div>
-            <input class="form-control" type="text" value="C++" disabled>
-            <div class="input-group-append">
-              <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-              <button class="btn btn-outline-secondary" type="button" onclick="deleteAnswer(this)"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-
-          <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswer(this)"><i class="fas fa-plus"></i></button>
-        </div>
-      </li>
-
-      <li class="list-group-item">
-        <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addQuestion()"><i class="fas fa-plus"></i></button>
-      </li>
-    </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="new-question-submit">Submit</button>
+      </div>
+    </div>
   </div>
+</div>
 
+<!-- answer modal below -->
+<div class="modal fade" id="new-answer-modal" tabindex="-1" role="dialog" aria-labelledby="new-answer-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="answer-modal-label" data-question="question"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-answer-answer-textbox" class="col-form-label">Answer text:</label>
+          <input type="text" class="form-control" id="new-answer-answer-textbox">
+          <div class="invalid-feedback" id="new-answer-answer-invalid-feedback">Error</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="new-answer-submit" data-question="question">Submit</button>
+      </div>
+  </div>
+</div>
+</div>
+
+<!--del question confirmation Modal -->
+<div class="modal fade" id="del-question-modal" tabindex="-1" role="dialog" aria-labelledby="del-question-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="del-modal-label" data-question="question">Are you sure you wish to remove question:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <p id="delQuestion-modal-body"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="del-question-submit" data-question="question">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- del answer confirmation modal -->
+<div class="modal fade" id="del-answer-modal" tabindex="-1" role="dialog" aria-labelledby="del-answer-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="del-answer-modal-label" data-question="question"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <p id="delAnswer-modal-body"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="del-answer-submit" data-question="question" data-answer="answer">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// toggle a textfield to be edited or saved
+function toggleEditQuestion(elem) {
+  var currentQuestion = elem.parentNode.parentNode.getElementsByClassName("hidden")[0].value;
+  var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+
+  if(textField.disabled) {
+    textField.disabled = false;
+    elem.innerHTML = "<i class=\"fas fa-save\"></i>";
+    textField.focus();
+  } else {
+    elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+    textField.disabled = true;
+    var newQuestion = elem.parentNode.parentNode.getElementsByClassName("form-control")[0].value;
+
+    // TODO: add code to update the text in the database
+    $.ajax({
+      url: '/admin/editQuestion',
+      data: {question:currentQuestion,new_question:newQuestion},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
+  }
+}
+
+
+function toggleEditAnswer(elem) {
+  var currentAnswer = elem.parentNode.parentNode.getElementsByClassName("hidden")[0].value;
+  var currentQuestion = elem.parentNode.parentNode.getElementsByClassName("hidden2")[0].value;
+  var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+
+  if(textField.disabled) {
+    textField.disabled = false;
+    elem.innerHTML = "<i class=\"fas fa-save\"></i>";
+    textField.focus();
+  } else {
+    elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+    textField.disabled = true;
+    var newAnswer = elem.parentNode.parentNode.getElementsByClassName("form-control")[0].value;
+
+    // TODO: add code to update the text in the database
+    $.ajax({
+      url: '/admin/editAnswer',
+      data: {question:currentQuestion,answer:currentAnswer,new_answer:newAnswer},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+    });
+  }
+}
+
+
+// toggle the collapsable answers fields
+function toggleCollapse(elem) {
+  var collapse = elem.parentNode.parentNode.parentNode.getElementsByClassName("question-edit-answers")[0];
+  if(collapse.classList.contains("is-collapsed")) {
+    collapse.classList.remove("is-collapsed");
+    elem.innerHTML = "<i class=\"fas fa-caret-down\"></i>";
+  } else {
+    collapse.classList.add("is-collapsed");
+    elem.innerHTML = "<i class=\"fas fa-caret-right\"></i>";
+  }
+
+  $(collapse).collapse('toggle');
+}
+
+
+function addDelQuestionDialog(elem) {
+  // get the question  from the calling button and save it to the submit button for later
+  var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+  var question = $(elem).data("question");
+  $("#delQuestion-modal-body").text(questionVal.value);
+  $("#del-question-submit").data("question", questionVal.value);
+
+  // finally, show the modal
+  $("#del-question-modal").modal("show");
+}
+
+
+// delete a question from the database
+$(function deleteQuestion() {
+  $('#del-question-submit').click(function() {
+    var question = $("#del-question-submit").data("question");
+    $.ajax({
+      url: '/admin/delQuestion',
+      data: {question:question},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        location.reload();
+      },
+      error: function(error){
+        location.reload();
+      }
+    });
+    $("#del-question-modal").modal("hide");
+  });
+});
+
+
+function delAnswerDialog(elem){
+  // get the question  from the calling button and save it to the submit button for later
+  var answerVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+  var questionVal = elem.parentNode.parentNode.getElementsByClassName("hidden2")[0];
+  var question = $(elem).data("question");
+  $("#del-answer-modal-label").text("Remove answer from question: " + questionVal.value + "?");
+  $("#delAnswer-modal-body").text("answer to remove " + answerVal.value);
+  $("#del-answer-submit").data("question", questionVal.value);
+  $("#del-answer-submit").data("answer", answerVal.value);
+
+  // finally, show the modal
+  $("#del-answer-modal").modal("show");
+}
+
+
+// delete an answer from the database
+$(function deleteAnswer() {
+  $('#del-answer-submit').click(function() {
+    var question = $("#del-answer-submit").data("question");
+    var answer = $("#del-answer-submit").data("answer");
+
+    $.ajax({
+      url: '/admin/delAnswer',
+      data: {question:question, answer:answer},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        location.reload();
+      },
+      error: function(error){
+        location.reload();
+      }
+    });
+    $("#del-answer-modal").modal("hide");
+  });
+});
+
+
+// open the new question modal and save what type of question it is
+function addQuestionDialog(elem) {
+  // clear existing text from the textboxes
+  $("#new-question-question-textbox").val("");
+  $("#new-question-answer-textbox").val("");
+  // clear any error message from the textboxes
+  $("#new-question-question-textbox").removeClass("is-invalid");
+  $("#new-question-submit").attr("disabled", false);
+  // get the question type from the calling button and save it to the submit button for later
+  var questionType = $(elem).data("question-type");
+  $("#new-question-submit").data("question-type", questionType);
+  // show or hide the answer field, depending on the question type
+  if(questionType === "multiple-choice") {
+    $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").show();
+  } else if (questionType === "short-answer") {
+    $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+  } else if (questionType === "scratch-answer") {
+    $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+  }
+  // finally, show the modal
+  $("#new-question-modal").modal("show");
+}
+
+
+// get the question and answer text from the dialog boxes and add new question to database
+$(function addQuestion() {
+  // get the question and answer text and the question type blocks multiple choice if there is no question or answers
+  // blocks scratch and short answer if there is no question
+  $('#new-question-submit').click(function() {
+    var questionText = $("#new-question-question-textbox").val();
+    var answerText = $("#new-question-answer-textbox").val();
+    var type = $("#new-question-submit").data("question-type");
+    var section;
+    var errorText = "";
+    console.log(questionText);
+    console.log(answerText);
+
+    if(type != 'multiple-choice'){
+      answerText = "not a multiple choice question"
+    }
+
+    if(questionText === "" || answerText === "") {
+      errorText = "Question and/or answer cannot be blank";
+      alert(errorText);
+    } else if(!checkQuestionText(questionText)) {
+      errorText = "Question cannot be duplicate";
+      alert(errorText);
+    } else {
+      // checks question type and sends appropriate data to python
+      if(type === "multiple-choice") {
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText,answer:answerText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            location.reload();
+          },
+          error: function(error){
+            location.reload();
+          }
+        });
+      } else if(type === "short-answer") {
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            location.reload();
+          },
+          error: function(error){
+            location.reload();
+          }
+        });
+      } else if(type === "scratch-answer"){
+        $.ajax({
+          url: '/admin/addQuestion',
+          data: {section:type,question:questionText},
+          type: 'POST',
+          traditional: true,
+          success: function(response){
+            location.reload();
+          },
+          error: function(error){
+            location.reload();
+          }
+        });
+      } else {
+        // ideally this should never appear
+        alert("Error: unknown question type: \"" + type + "\"");
+      }
+      // hide the modal
+
+      $("#new-question-modal").modal("hide");
+    }
+  });
+});
+
+
+//add answer dialog modal
+function addAnswerDialog(elem) {
+  // clear existing text from the textboxes
+  $("#new-answer-answer-textbox").val("");
+  // clear any error message from the textboxes and disable submit button
+  $("#new-answer-answer-textbox").removeClass("is-invalid");
+  $("#new-answer-submit").attr("disabled", false);
+  // get the question  from the calling button and save it to the submit button for later
+  var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+  var question = $(elem).data("question");
+  $("#answer-modal-label").text(questionVal.value);
+  $("#new-answer-submit").data("question", questionVal.value);
+  // show or hide the answer field, depending on the question type
+  $("label #new-answer-answer-textbox").show();
+  // finally, show the modal
+  $("#new-answer-modal").modal("show");
+}
+
+
+// add new answer to a question
+$(function addAnswer() {
+  // to-do: add new answer, update database with new answer
+  $('#new-answer-submit').click(function() {
+    var question = $("#new-answer-submit").data("question");
+    var answerText = $("#new-answer-answer-textbox").val();
+    var errorText = "";
+    console.log(answerText);
+
+    if(answerText === "") {
+      errorText = "Answer cannot be blank";
+      alert(errorText);
+    } else {
+      $.ajax({
+        url: '/admin/addAnswer',
+        data: {question:question,answer:answerText},
+        type: 'POST',
+        traditional: true,
+        success: function(response){
+          console.log(response);
+        },
+        error: function(error){
+          console.log(error);
+        }
+      });
+      $("#new-answer-modal").modal("hide");
+      location.reload();
+    }
+  });
+});
+
+
+// check to make sure the question text is good (not blank, not a duplicate)
+// TODO: add validation serverside to make sure the question text is good
+function checkQuestionText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("question-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+</script>
 
 {% endblock %}

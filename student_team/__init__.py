@@ -1,71 +1,52 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, escape
 from database import database_session
 from database.models import *
 import datetime
+from logon import required_user_type
+from flask_login import login_required, current_user
 
 
 student_team = Blueprint('student_team', __name__, template_folder='student_templates')
 
 
 @student_team.route('/', methods=('GET', 'POST'))
+@login_required
+@required_user_type('Student')
 def student_team_index():
-
-    questions = []
-    data = {}
-    counter = 1
-    ansNum = 1
+    exam_questions = []
+    question = {}
 
     # Build Dictionary for questions pulled from the db
-    for question in database_session.query(iComputeTest.question):
-        data['id'] = counter
-        data['question'] = question.question
-        for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
-            ans = 'answer' + str(ansNum)
-            data[ans] = answer.answer
-            ansNum += 1
-        questions.append(data)
-        ansNum = 1
-        counter += 1
-        data = {}
+    # TODO grab the correct exam for this team!
+    for counter, exam_question in enumerate(database_session.query(iComputeTest.question).order_by(iComputeTest.orderId), start=1):
+        question['id'] = str(counter)
+        question['question'] = exam_question.question
+        question['answers'] = []
+        for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question.question):
+            question['answers'].append(escape(answer.answer))
+        exam_questions.append(question)
+        question = {}
 
-
-    #grab the Student submitted answers off the form and submit to database
+    # Grab the Student submitted answers off the form and submit to database
     if request.method == 'POST':
-        #checking to make sure an empty form isn't being submitted so it doesn't break the app
-        is_validated = True
-        if 'team_name' not in request.form:
-            is_validated = False
+        for question in exam_questions:
+            form_response = request.form[question['id']] if question['id'] in request.form else None
 
-        for i in range(1, (len(questions)+1)):
-            questionName = "question" + str(i)
-            valueName = "optradio" + str(i)
-            if questionName not in request.form or valueName not in request.form:
-                is_validated = False
+            database_session.add(StudentAnswer(
+                team_name=current_user.username,
+                team_year=datetime.datetime.now().year,
+                section=1,
+                # TODO since the question was escaped we may need to unescape it here
+                question=question['question'],
+                answer=form_response))
 
-        if is_validated == True:
-            year = '2019'
-            for i in range(1, (len(questions)+1)):
-                questionName = "question" + str(i)
-                valueName =  "optradio" + str(i)
-                if request.form[valueName] == 'not_answered':
-                    temp = StudentAnswer(team_name=request.form['team_name'],
-                                         team_year=datetime.datetime.now().year,
-                                         section=1,
-                                         question=request.form[questionName],
-                                         answer=None)
-                else:
-                    temp = StudentAnswer(team_name=request.form['team_name'],
-                                         team_year=datetime.datetime.now().year,
-                                         section=1,
-                                         question=request.form[questionName],
-                                         answer=request.form[valueName])
-                database_session.add(temp)
-                database_session.commit()
-        else:
-            return render_template('multiple_choice.html', questions=questions)
+            database_session.commit()
 
-    return render_template('multiple_choice.html', questions=questions)
+    return render_template('multiple_choice.html', exam_questions=exam_questions)
+
 
 @student_team.route('/sectionb')
+@login_required
+@required_user_type('Student')
 def section_b():
     return render_template('short_answer.html')

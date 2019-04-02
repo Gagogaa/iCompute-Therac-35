@@ -7,17 +7,16 @@
 <!-- The entire accordian begins here-->
 <div id="accordion" action="" method="post">
 
-{% for theTest in theScores %}
+{% for test in exam_results %}
   <div class="card">
     <div class="card-header">
       <form action="" method="post">
-        <a class="collapsed card-link align-middle" data-toggle="collapse" style= "font-size:22px" href={{theTest['accord1']}}>
-        {{theTest['theTestName']}}
+        <a class="collapsed card-link align-middle" data-toggle="collapse" style= "font-size:22px" href={{test['accord1']}}>
+        {{test['test_name']}}
         </a>
-      <input name="testForm" type="hidden" value="{{theTest['theTestName']}}"/><button type="submit" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button></form>
+      <input name="testForm" type="hidden" value="{{test['test_name']}}"/><button type="submit" class="btn btn-primary float-right align-middle"><i class="fas fa-download"></i></button></form>
     </div>
-
-    <div id={{theTest['accord2']}} class="collapse" data-parent="#accordion">
+    <div id={{test['accord2']}} class="collapse" data-parent="#accordion">
       <table class="table table-hover">
       <thead>
           <tr>
@@ -30,14 +29,14 @@
          </tr>
       </thead>
       <tbody>
-      	{% for teamName in theTest['testTakers'] %}
+      	{% for team in test['student_teams'] %}
       	  <tr>
-            <td>{{teamName['teamName']}}</td>
-            <td>{{teamName['theSchoolName']}}</td>
-            <td>{{teamName['sectionAScore']}}</td>
-            <td>{{teamName['sectionBScore']}}</td>
-            <td>{{teamName['sectionCScore']}}</td>
-            <td>{{teamName['totalScore']}}</td>
+            <td>{{team['team_name']}}</td>
+            <td>{{team['school_name']}}</td>
+            <td>{{team['sectionAScore']}}</td>
+            <td>{{team['sectionBScore']}}</td>
+            <td>{{team['sectionCScore']}}</td>
+            <td>{{team['totalScore']}}</td>
           </tr>
       	{% endfor %}
         </tbody>
@@ -48,5 +47,5 @@
 
 </div>
 
-
 {% endblock %}
+
