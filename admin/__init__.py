@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, jsonify, url_for
+from flask import Blueprint, render_template, request, jsonify, url_for, send_file, send_from_directory, stream_with_context
+from io import StringIO
 from flask_login import login_required
 from logon import required_user_type
 from database import database_session
@@ -6,6 +7,11 @@ from database.models import *
 from database.__init__ import *
 from flask import *
 from pprint import pprint
+import csv
+import os
+from werkzeug.datastructures import Headers
+from werkzeug.wrappers import Response
+
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -202,7 +208,14 @@ def admin_edit_questions():
     return render_template('questionEditUI.html', questions=questions, answers=answers )
 
 
-@admin.route('/results')
+
+@admin.route('./<path:filename>', methods=('GET', 'POST'))
+def theDownload(filepath):
+	#uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
+	return send_from_directory(directory='/', filename=filepath)
+
+
+@admin.route('/results', methods=('GET', 'POST'))
 @login_required
 @required_user_type('Supervisor')
 def admin_view_results():
@@ -237,14 +250,41 @@ def admin_view_results():
 
             # TODO Why is team year in details because it's not used on the page?
             details['team_year'] = test_result.team_year
-            details['section_one_score'] = test_result.section_one_score
-            details['section_two_score'] = test_result.section_two_score
-            details['section_three_score'] = test_result.section_three_score
-            details['total_score'] = test_result.total_score
+            details['sectionAScore'] = test_result.section_one_score
+            details['sectionBScore'] = test_result.section_two_score
+            details['sectionCScore'] = test_result.section_three_score
+            details['totalScore'] = test_result.total_score
 
             exam_results[i]['student_teams'].append(details)
             details = {}
 
+    def generate():
+
+        #Generate a csv file to be streamed into a csv file on return
+        theName = request.form["testForm"]
+        data = StringIO()
+        w = csv.writer(data)
+        w.writerow([theName])
+        yield data.getvalue()
+        data.seek(0)
+        data.truncate(0)
+        for i in range(0, counter):
+            if (exam_results[i]['test_name'] == theName):
+                for stuff in exam_results[i]['student_teams']:
+        	        w.writerows(stuff.items())
+        	        yield data.getvalue()
+                data.seek(0)
+                data.truncate(0)
+        
+    #A save button was pressed, time to download a file
+    if request.method == 'POST':
+        headers = Headers()
+        headers.set('Content-Disposition', 'attachment', filename= request.form["testForm"] + '.csv')
+
+        return Response(
+            stream_with_context(generate()), mimetype='text/csv', headers=headers
+            )
+    #not POST method return    
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
