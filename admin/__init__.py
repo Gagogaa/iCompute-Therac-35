@@ -61,10 +61,10 @@ def admin_view_results():
 			for schoolName in database_session.query(StudentTeam).filter(StudentTeam.team_name == details['teamName']):
 				details['theSchoolName'] = schoolName.school_name
 			details['teamYear'] = testResult.team_year
-			details['section1Score'] = testResult.section_one_score
-			details['section2Score'] = testResult.section_two_score
-			details['section3Score'] = testResult.section_three_score
-			details['section4Score'] = testResult.total_score
+			details['sectionAScore'] = testResult.section_one_score
+			details['sectionBScore'] = testResult.section_two_score
+			details['sectionCScore'] = testResult.section_three_score
+			details['totalScore'] = testResult.total_score
 
 			theScores[i]['testTakers'].append(details)
 			details = {}
