@@ -170,6 +170,7 @@
       alert("The user is logging out");
     }
 
+    // add on click events to the section headers
     $("#section-A-toggle").on("click", function() {
       $("#section-A-caret").toggleClass("fa-caret-down");
       $("#section-A-caret").toggleClass("fa-caret-right");
@@ -188,6 +189,7 @@
       $("#section-C").collapse("toggle");
     });
 
+    // toggle editing the grade
     function toggleEdit(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       if(textField.disabled) {
@@ -207,19 +209,24 @@
       }
     }
 
+    // check that the given textfield is a valid grade
     function checkGradeIsValid(elem) {
       var grade = Number(elem.value);
-      console.log(grade);
       if(Number.isNaN(grade)) {
         return false;
       }
       if(grade < 0) {
         return false;
       }
-      console.log($(elem).attr("data-max"));
+      if(!Number.isInteger(grade)) {
+        return false;
+      }
       var max = Number($(elem).data("max"));
-      console.log(max);
-      return grade <= max;
+      if(grade > max) {
+        return false;
+      }
+      // passed checks
+      return true;
     }
   </script>
 
