@@ -213,7 +213,7 @@ def admin_view_results():
         	        yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
-        
+
     #A save button was pressed, time to download a file
     if request.method == 'POST':
         headers = Headers()
@@ -222,7 +222,7 @@ def admin_view_results():
         return Response(
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
-    #not POST method return    
+    #not POST method return
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
