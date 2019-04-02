@@ -197,6 +197,11 @@ def edit_question():
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
+        rows_to_update = database_session.query(iComputeTest).filter(iComputeTest.question == request.form['question'])
+        for row in rows_to_update:
+            row.question = request.form['new_question']
+        database_session.commit()
+
     return "success"
 
 @admin.route('/editAnswer', methods=['POST'])
