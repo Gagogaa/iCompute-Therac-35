@@ -98,10 +98,11 @@ def admin_view_test():
 @required_user_type('Supervisor')
 def admin_edit_users():
 
-
+    tests = []
     supervisors = []
     data = {}
     counter = 1
+    test_counter = 1
 
     # Build Dictionary users
     for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
@@ -114,7 +115,51 @@ def admin_edit_users():
         counter += 1
         data = {}
 
-    return render_template('userAdd.html', supervisors=supervisors )
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        data['id'] = test_counter
+        data['test_name'] = test.test_name
+        tests.append(data)
+        test_counter += 1
+        data = {}
+
+    return render_template('userAdd.html', supervisors=supervisors, tests=tests )
+
+@admin.route('/addUser')
+@login_required
+@required_user_type('Supervisor')
+def admin_add_users():
+    if 'user_type' in request.form:
+        user_type = request.form['user_type']
+        if user_type == "Student":
+            if 'username' in request.form and 'password' in request.form and 'test_name' in request.form  and 'team_year' in request.form and 'school_name' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                test_name = request.form['test_name']
+                team_year = request.form['team_year']
+                school_name = request.form['school_name']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type),
+                            StudentTeam(team_name = username,
+                                        team_year = team_year,
+                                        school_name = school_name,
+                                        test_id = test_name)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+        else:
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+
+    return 'success'
+
 
 
 @admin.route('/question')
