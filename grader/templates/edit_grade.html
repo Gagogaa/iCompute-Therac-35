@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %} - iCompute</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../static/styles.css">
+
+</head>
+
+<body class="container">
+
+  <nav class="navbar sticky-top navbar-light bg-light">
+    <a class="navbar-brand" href="{{link}}" style="padding-right: 10px">iCompute</a>
+
+    <div>
+      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Supervisor</span>
+      <a class="nav-link" id="logout-link" href="#" style="float: left" onclick="logoutAlert()">Logout</a>
+    </div>
+  </nav>
+
+  <!-- TODO: this bit should be its own file -->
+
+  <h3 class="alert-heading mt-3 ml-2">Grading Bach 4th Grade</h3>
+
+  <div class="card text-white bg-secondary mt-3">
+    <div class="card-header pseudo-link" style="display: flex" id="section-A-toggle">
+      <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-A-caret"></i>Section A</h4>
+      <h5 class="mb-0"><span class="badge badge-primary" id="section-A-score">8/10</span></h5>
+    </div>
+  </div>
+
+  <div id="section-A" class="collapse show">
+    <div class="card">
+      <div class="card-header" style="display: flex; flex-wrap: nowrap">
+          <h2><span class="badge badge-primary mr-3">1</span></h2>
+          <h5 style="align-self: center">This provides a step-by-step procedure for performing a task.</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">Algorithm</a>
+          <input class="form-check-input" type="radio" disabled checked>
+          <a class="mr-3">Keyboard</a>
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">Windows</a>
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">Internet</a>
+        </div>
+        <span class="badge badge-danger" style="float: right"><i class="fas fa-times mr-1"></i>Incorrect</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="display: flex; flex-wrap: nowrap">
+          <h2><span class="badge badge-primary mr-3">2</span></h2>
+          <h5 style="align-self: center">Which one of the following is not a programming language?</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">HTML</a>
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">Java</a>
+          <input class="form-check-input" type="radio" disabled checked>
+          <a class="mr-3">Binary</a>
+          <input class="form-check-input" type="radio" disabled>
+          <a class="mr-3">C++</a>
+        </div>
+        <span class="badge badge-success" style="float: right"><i class="fas fa-check mr-1"></i>Correct</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card text-white bg-secondary mt-3">
+    <div class="card-header pseudo-link" style="display: flex" id="section-B-toggle">
+      <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-B-caret"></i>Section B</h4>
+      <h5 class="mb-0"><span class="badge badge-primary" id="section-B-score">7/10</span></h5>
+    </div>
+  </div>
+
+  <div id="section-B" class="collapse show">
+    <div class="card">
+      <div class="card-header" style="display: flex; flex-wrap: nowrap">
+          <h2><span class="badge badge-primary mr-3">1</span></h2>
+          <h5 style="align-self: center">Convert 11011001 from binary to decimal (show your work).</h5>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <textarea class="form-control fixed-width-text" rows="8" disabled>Each bit represents a power of two:&#13;Bit:   1 1 0 1 1 0 0 1&#13;Power: 7 6 5 4 3 2 1 0&#13;&#13;So by adding together all of the powers with a 1, we can calculate what value this is in decimal:&#13;&#13; 1*2^0 + 0*2^1 + 0*2^2 + 1*2^3 + 1*2^4 + 0*2^5 + 1*2^6 + 1*2^7&#13;= 2^0          +          2^3  +  2^4      +      2^6  +  2^7&#13;=  1           +           8   +  16       +      64   +  128&#13;= 217&#13;&#13;So 11011001 in binary is equal to 217 in decimal.</textarea>
+        </div>
+        <form class="form-inline" style="float: right">
+          <label class="my-1 mr-2" for="section-B-grade-input-q1">Grade</label>
+          <div class="input-group" id="section-B-grade-input-q1">
+            <input type="text" class="form-control" value="5" size="1" data-max="5" disabled>
+            <div class="input-group-append">
+              <span class="input-group-text">/5</span>
+              <button class="btn btn-outline-secondary edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="card text-white bg-secondary mt-3">
+    <div class="card-header pseudo-link" style="display: flex" id="section-C-toggle">
+      <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-C-caret"></i>Section C</h4>
+      <h5 class="mb-0"><span class="badge badge-primary" id="section-C-score">24/30</span></h5>
+    </div>
+  </div>
+
+  <div id="section-C" class="collapse show">
+    <div class="card">
+      <div class="card-header" style="display: flex; flex-wrap: nowrap">
+          <h2><span class="badge badge-primary mr-3">1</span></h2>
+          <h5 style="align-self: center">Build a tic-tac-toe game in Scratch. It should have a two-player mode and a single-player mode against a computer opponent.</h5>
+      </div>
+      <div class="card-body">
+        <div style="display: flex">
+          <div><h1><i class="far fa-file m-2 mr-4"></i></h1></div>
+          <div class="form-group mt-2" style="flex-grow: 1">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" value="tictactoe-jeff-amy-v2-final (3).sb2" id="scratch-file-textbox" disabled>
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Download<i class="fas fa-file-download ml-2"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form class="form-inline" style="float: right">
+          <label class="my-1 mr-2" for="section-C-grade-input-q1">Grade</label>
+          <div class="input-group" id="section-C-grade-input-q1">
+            <input type="text" class="form-control" value="24" size="1" data-max="30" disabled>
+            <div class="input-group-append">
+              <span class="input-group-text">/30</span>
+              <button class="btn btn-outline-secondary edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .pseudo-link {
+      cursor: pointer;
+    }
+    .fixed-width-text {
+      font-family: Consolas, Monaco, Lucida Console, monospace;
+    }
+    .edit-button {
+      min-width: 2.75em;
+      text-align: center;
+    }
+    .section-caret {
+      min-width: 0.5em;
+    }
+  </style>
+
+  <!-- end of bit that needs to be its own file -->
+
+  <script>
+    function logoutAlert() {
+      alert("The user is logging out");
+    }
+
+    $("#section-A-toggle").on("click", function() {
+      $("#section-A-caret").toggleClass("fa-caret-down");
+      $("#section-A-caret").toggleClass("fa-caret-right");
+      $("#section-A").collapse("toggle");
+    });
+
+    $("#section-B-toggle").on("click", function() {
+      $("#section-B-caret").toggleClass("fa-caret-down");
+      $("#section-B-caret").toggleClass("fa-caret-right");
+      $("#section-B").collapse("toggle");
+    });
+
+    $("#section-C-toggle").on("click", function() {
+      $("#section-C-caret").toggleClass("fa-caret-down");
+      $("#section-C-caret").toggleClass("fa-caret-right");
+      $("#section-C").collapse("toggle");
+    });
+
+    function toggleEdit(elem) {
+      var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+      if(textField.disabled) {
+        textField.disabled = false;
+        elem.innerHTML = "<i class=\"fas fa-save\"></i>";
+        textField.focus();
+      } else {
+        if(checkGradeIsValid(textField)) {
+          textField.classList.remove("is-invalid");
+          elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+          textField.disabled = true;
+          // TODO: add code to update the grade in the database, then update grade badge clientside
+        } else {
+          textField.classList.add("is-invalid");
+        }
+
+      }
+    }
+
+    function checkGradeIsValid(elem) {
+      var grade = Number(elem.value);
+      console.log(grade);
+      if(Number.isNaN(grade)) {
+        return false;
+      }
+      if(grade < 0) {
+        return false;
+      }
+      console.log($(elem).attr("data-max"));
+      var max = Number($(elem).data("max"));
+      console.log(max);
+      return grade <= max;
+    }
+  </script>
+
+{% block content %} {% endblock %}
+</body>
+</html>
