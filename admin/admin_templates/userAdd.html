@@ -28,7 +28,7 @@
           {% for supervisor in supervisorArray %}
           <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisorArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
+              <input class="form-control user-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
               <div class="input-group-append">
                 <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
@@ -53,7 +53,7 @@
           {% for grader in graderArray %}
           <li class="list-group-item" name="grader" id="grader-id{{graderArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="grader-name{{grader['id']}}" type="text" value="{{grader['grader']}}" disabled>
+              <input class="form-control user-textbox" id="grader-name{{grader['id']}}" type="text" value="{{grader['grader']}}" disabled>
               <div class="input-group-append">
                 <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
@@ -78,7 +78,7 @@
           {% for studentTeam in studentTeamArray %}
           <li class="list-group-item" name="studentTeam" id="studentTeam-id{{studentTeamArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="studentTeam-name{{studentTeam['id']}}" type="text" value="{{studentTeam['studentTeam']}}" disabled>
+              <input class="form-control user-textbox" id="studentTeam-name{{studentTeam['id']}}" type="text" value="{{studentTeam['studentTeam']}}" disabled>
               <div class="input-group-append">
                 <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
@@ -194,9 +194,11 @@ function addSupervisor() {
       var username = $("#new-supervisor-username-textbox").val();
       var password = $("#new-supervisor-password-textbox").val();
       var userType = $("#new-supervisor-submit").data("user-type");
-      alert(userType)
-      alert(username)
-      alert(password)
+      if(username == "" || password == "") {
+        alert("Username and/or password cannot be blank")
+      } else if(!checkSupervisorText(username)){
+        alert("username already in system")
+      } else {
   $.ajax({
     url: '/admin/addUser',
     data: {username:username,password:password,user_type:userType},
@@ -204,13 +206,15 @@ function addSupervisor() {
     traditional: true,
     success: function(response){
       console.log(response);
+      location.reload();
     },
     error: function(error){
       console.log(error);
+      location.reload();
     }
-
-});
-  $("#new-supervisor-modal").modal("hide");
+  });
+    $("#new-supervisor-modal").modal("hide");
+  }
 };
 
 
@@ -219,23 +223,27 @@ function addGrader(elem) {
         var username = $("#new-grader-username-textbox").val();
         var password = $("#new-grader-password-textbox").val();
         var userType = $("#new-grader-submit").data("user-type");
-        alert(userType)
-        alert(username)
-        alert(password)
-    $.ajax({
-      url: '/admin/addUser',
-      data: {username:username,password:password,user_type:userType},
-      type: 'POST',
-      traditional: true,
-      success: function(response){
-        console.log(response);
-      },
-      error: function(error){
-        console.log(error);
+    if(username == "" || password == "") {
+      alert("Username and/or password cannot be blank")
+    } else if(!checkGraderText(username)){
+      alert("username already in system")
+    } else{
+      $.ajax({
+        url: '/admin/addUser',
+        data: {username:username,password:password,user_type:userType},
+        type: 'POST',
+        traditional: true,
+        success: function(response){
+          console.log(response);
+          location.reload();
+        },
+        error: function(error){
+          console.log(error);
+          location.reload();
       }
-
-  });
-  $("#new-grader-modal").modal("hide");
+    });
+      $("#new-grader-modal").modal("hide");
+  }
 };
 
 function addStudent(elem) {
@@ -246,25 +254,29 @@ function addStudent(elem) {
         var team_year = $("#new-student-year-textbox").val();
         var userType = $("#new-student-submit").data("user-type");
         var test_name = $("#new-student-test-select").val();
-        alert(userType)
-        alert(username)
-        alert(password)
-        alert(test_name)
-    $.ajax({
-      url: '/admin/addUser',
-      data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year, test_name:test_name},
-      type: 'POST',
-      traditional: true,
-      success: function(response){
-        console.log(response);
-      },
-      error: function(error){
-        console.log(error);
-      }
+        if(username == "" || password == "") {
+          alert("Username and/or password cannot be blank")
+        } else if(!checkStudentText(username)){
+          alert("username already in system")
+        } else {
+          $.ajax({
+            url: '/admin/addUser',
+            data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year, test_name:test_name},
+            type: 'POST',
+            traditional: true,
+            success: function(response){
+              console.log(response);
+              location.reload();
+            },
+            error: function(error){
+              console.log(error);
+              location.reload();
+            }
 
-  });
-  $("#new-student-modal").modal("hide");
-};
+          });
+          $("#new-student-modal").modal("hide");
+        }
+      };
 
 
 
@@ -314,5 +326,52 @@ function addGraderDialog(elem) {
 }
 
 
+function checkGraderText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkStudentText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkSupervisorText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
 </script>
 {% endblock %}

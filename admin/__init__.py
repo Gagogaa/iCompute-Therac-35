@@ -107,57 +107,64 @@ def admin_edit_users():
 
     supervisorArray = []
     data = {}
-    counter = 1
+    counterSupervisor = 1
 
     # Build Dictionary users
     for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
-        data['id'] = counter
+        data['id'] = counterSupervisor
         currentSupervisor = supervisor.username
         data['supervisor'] = currentSupervisor
-        print(currentSupervisor)
         supervisorArray.append(data)
 
-        counter += 1
+        counterSupervisor += 1
         data = {}
 
 
-        graderArray = []
-        data = {}
-        counter = 1
+    graderArray = []
+    data = {}
+    counterGrader = 1
 
         # Build Dictionary users
-        for grader in database_session.query(Users).filter(Users.user_type == 'Grader'):
-            data['id'] = counter
-            currentGrader = grader.username
-            data['grader'] = currentGrader
-            print(currentGrader)
-            graderArray.append(data)
+    for grader in database_session.query(Users).filter(Users.user_type == 'Grader'):
+        data['id'] = counterGrader
+        currentGrader = grader.username
+        data['grader'] = currentGrader
+        graderArray.append(data)
 
-            counter += 1
-            data = {}
-
-
-
-        studentTeamArray = []
+        counterGrader += 1
         data = {}
-        counter = 1
+
+
+
+    studentTeamArray = []
+    data = {}
+    counterStudent = 1
 
         # Build Dictionary users
-        for studentTeam in database_session.query(Users).filter(Users.user_type == 'Student'):
-            data['id'] = counter
-            currentStudentTeam = studentTeam.username
-            data['studentTeam'] = currentStudentTeam
-            print(currentStudentTeam)
-            studentTeamArray.append(data)
+    for studentTeam in database_session.query(Users).filter(Users.user_type == 'Student'):
+        data['id'] = counterStudent
+        currentStudentTeam = studentTeam.username
+        data['studentTeam'] = currentStudentTeam
+        print(currentStudentTeam)
+        studentTeamArray.append(data)
 
-            counter += 1
-            data = {}
+        counterStudent += 1
+        data = {}
+
+    tests = []
+    data = {}
+    counterTests = 1
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        data['id'] = counterTests
+        data['test_name'] = test.test_name
+        tests.append(data)
+
+        counterTests +=1
+        data={}
 
 
 
-
-
-    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray)
+    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests)
 
 @admin.route('/addUser',  methods=['POST'])
 @login_required
