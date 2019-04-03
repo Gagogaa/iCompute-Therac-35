@@ -4,6 +4,7 @@ from database.models import *
 from flask_login import login_required, current_user, logout_user
 from logon import required_user_type
 import datetime
+import random
 
 
 student_team = Blueprint('student_team', __name__, template_folder='student_templates')
@@ -49,6 +50,7 @@ def student_team_index():
         question['answers'] = []
         for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question.question):
             question['answers'].append(escape(answer.answer))
+            random.shuffle(question['answers'])
         exam_questions.append(question)
         question = {}
 
