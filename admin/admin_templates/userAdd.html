@@ -169,7 +169,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="new-student-submit">Submit</button>
+        <button type="button" class="btn btn-primary" id="new-student-submit" onclick="addStudent(this)">Submit</button>
       </div>
     </div>
   </div>
@@ -197,15 +197,15 @@ function addSupervisor() {
     }
 
 });
-
+  $("#new-supervisor-modal").modal("hide");
 };
 
 
 function addGrader(elem) {
 
-        var username = $("#new-supervisor-username-textbox").val();
-        var password = $("#new-supervisor-password-textbox").val();
-        var userType = $("#new-supervisor-submit").data("user-type");
+        var username = $("#new-grader-username-textbox").val();
+        var password = $("#new-grader-password-textbox").val();
+        var userType = $("#new-grader-submit").data("user-type");
         alert(userType)
         alert(username)
         alert(password)
@@ -222,9 +222,34 @@ function addGrader(elem) {
       }
 
   });
-
+  $("#new-grader-modal").modal("hide");
 };
 
+function addStudent(elem) {
+
+        var username = $("#new-student-username-textbox").val();
+        var password = $("#new-student-password-textbox").val();
+        var school_name = $("#new-student-school-textbox").val();
+        var team_year = $("#new-student-year-textbox").val();
+        var userType = $("#new-student-submit").data("user-type");
+        alert(userType)
+        alert(username)
+        alert(password)
+    $.ajax({
+      url: '/admin/addUser',
+      data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+
+  });
+  $("#new-student-modal").modal("hide");
+};
 
 
 
@@ -268,7 +293,7 @@ function addGraderDialog(elem) {
   $("#new-grader-submit").attr("disabled", false);
   // get the question type from the calling button and save it to the submit button for later
   var userType = $(elem).data("user-type");
-  $("#new-question-submit").data("user-type", userType);
+  $("#new-grader-submit").data("user-type", userType);
   // finally, show the modal
   $("#new-grader-modal").modal("show");
 }
