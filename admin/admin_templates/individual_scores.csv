@@ -1,0 +1,2 @@
+{% for response in student_scores %}{{response.team_name}},{{response.team_year}},{{response.section}},{{response.question}},{{response.answer}}
+{% endfor %}
