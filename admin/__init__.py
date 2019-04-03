@@ -11,8 +11,7 @@ import csv
 import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
-import re
-
+from werkzeug.security import generate_password_hash
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -134,6 +133,115 @@ def admin_view_test():
 @login_required
 @required_user_type('Supervisor')
 def admin_edit_users():
+
+
+    supervisorArray = []
+    data = {}
+    counterSupervisor = 1
+
+    # Build Dictionary users
+    for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
+        data['id'] = counterSupervisor
+        currentSupervisor = supervisor.username
+        data['supervisor'] = currentSupervisor
+        supervisorArray.append(data)
+
+        counterSupervisor += 1
+        data = {}
+
+
+    graderArray = []
+    data = {}
+    counterGrader = 1
+
+        # Build Dictionary users
+    for grader in database_session.query(Users).filter(Users.user_type == 'Grader'):
+        data['id'] = counterGrader
+        currentGrader = grader.username
+        data['grader'] = currentGrader
+        graderArray.append(data)
+
+        counterGrader += 1
+        data = {}
+
+
+
+    studentTeamArray = []
+    data = {}
+    counterStudent = 1
+
+        # Build Dictionary users
+    for studentTeam in database_session.query(Users).filter(Users.user_type == 'Student'):
+        data['id'] = counterStudent
+        currentStudentTeam = studentTeam.username
+        data['studentTeam'] = currentStudentTeam
+        print(currentStudentTeam)
+        studentTeamArray.append(data)
+
+        counterStudent += 1
+        data = {}
+
+    tests = []
+    data = {}
+    counterTests = 1
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        data['id'] = counterTests
+        data['test_name'] = test.test_name
+        tests.append(data)
+
+        counterTests +=1
+        data={}
+
+
+
+    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests)
+
+@admin.route('/addUser',  methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def admin_add_users():
+    if 'user_type' in request.form:
+        user_type = request.form['user_type']
+        if user_type == "Student":
+            if 'username' in request.form and 'password' in request.form and 'test_name' in request.form  and 'team_year' in request.form and 'school_name' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                test_name = request.form['test_name']
+                team_year = request.form['team_year']
+                school_name = request.form['school_name']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type),
+
+                            StudentTeam(team_name = username,
+                                        team_year = team_year,
+                                        school_name = school_name,
+                                        test_id = test_name)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+        elif user_type == "Grader":
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+        else:
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+    return 'success'
+
 
     usernames = []
     data = {}
