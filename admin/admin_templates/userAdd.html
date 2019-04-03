@@ -25,8 +25,8 @@
     <div id="collapseOne" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          {% for UserNames in Users %}
-            {% if Users['user_type'] == Supervisor %}
+          {% for UserName in UsersNames %}
+            {% if UserNames['user_type'] == "Supervisor" %}
           <li class="list-group-item" name="supervisor" id="supervisor-id{{UserNames['id']}}">
             <div class="input-group" >
               <input class="form-control question-textbox" id="supervisor-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
@@ -36,6 +36,7 @@
               </div>
             </div>
           </li>
+          {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -51,9 +52,19 @@
     <div id="collapseTwo" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
+          {% for UserName in UsersNames %}
+            {% if Users['user_type'] == Graders %}
+          <li class="list-group-item" name="grader" id="graders-id{{UserNames['id']}}">
+            <div class="input-group" >
+              <input class="form-control question-textbox" id="graders-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          </li>
+          {% endif %}
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -68,12 +79,19 @@
     <div id="collapseThree" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
+          {% for UserName in UsersNames %}
+            {% if Users['user_type'] == Student %}
+          <li class="list-group-item" name="student" id="student-id{{UserNames['id']}}">
+            <div class="input-group" >
+              <input class="form-control question-textbox" id="student-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          </li>
+          {% endif %}
+          {% endfor %}
         </ul>
       </div>
     </div>

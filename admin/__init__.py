@@ -108,27 +108,27 @@ def admin_edit_users():
     UserNames = []
     data = {}
     counter = 1
-    test_counter = 1
 
     # Build Dictionary users
-    for UserNames in database_session.query(Users):
+    for UserName in database_session.query(Users.username).distinct():
         data['id'] = counter
-        currentUser = UserNames.username
-        data['UserNames'] = currentSupervisor
+        currentUser = UserName.username
+        data['UserNames'] = currentUser
         print(currentUser)
         UserNames.append(data)
 
         counter += 1
         data = {}
 
-    for test in database_session.query(iComputeTest.test_name).distinct():
-        data['id'] = test_counter
-        data['test_name'] = test.test_name
-        tests.append(data)
-        test_counter += 1
-        data = {}
 
-    return render_template('userAdd.html', supervisors=supervisors, tests=tests )
+#    for test in database_session.query(iComputeTest.test_name).distinct():
+#        data['id'] = test_counter
+#        data['test_name'] = test.test_name
+#        tests.append(data)
+#        test_counter += 1
+#        data = {}
+
+    return render_template('userAdd.html', UserNames=UserNames)
 
 @admin.route('/addUser',  methods=['POST'])
 @login_required
