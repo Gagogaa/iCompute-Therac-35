@@ -146,6 +146,7 @@ def admin_add_users():
                 userData = [Users(username = username,
                                    password = generate_password_hash(password),
                                    user_type = user_type),
+                                   
                             StudentTeam(team_name = username,
                                         team_year = team_year,
                                         school_name = school_name,

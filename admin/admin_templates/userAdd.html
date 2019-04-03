@@ -232,12 +232,14 @@ function addStudent(elem) {
         var school_name = $("#new-student-school-textbox").val();
         var team_year = $("#new-student-year-textbox").val();
         var userType = $("#new-student-submit").data("user-type");
+        var test_name = $("#new-student-test-select").val();
         alert(userType)
         alert(username)
         alert(password)
+        alert(test_name)
     $.ajax({
       url: '/admin/addUser',
-      data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year},
+      data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year, test_name:test_name},
       type: 'POST',
       traditional: true,
       success: function(response){
