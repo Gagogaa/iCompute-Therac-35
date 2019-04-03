@@ -1,5 +1,2 @@
-{% for team in student_teams['team_name'] %}
-    {% for question, answer in student_teams['questions'] %}
-{{team}},{{question}},{{answer}}
-    {% endfor %}
+{% for response in student_scores %}{{response.team_name}},{{response.team_year}},{{response.section}},{{response.question}},{{response.answer}}
 {% endfor %}

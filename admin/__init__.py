@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, url_for, send_file, send_from_directory, stream_with_context
+from flask import Blueprint, render_template, request, jsonify, url_for, send_file, send_from_directory, stream_with_context, make_response
 from io import StringIO
 from flask_login import login_required
 from logon import required_user_type
@@ -153,17 +153,28 @@ def theDownload(filepath):
 	return send_from_directory(directory='/', filename=filepath)
 
 
-# TODO
-@admin.route('/individual-results', methods=('POST'))
+@admin.route('/individual-results/<test>')
 @login_required
 @required_user_type('Supervisor')
-def individual_results_csv():
-    # first get the test name
-    if 'test-name' in request.form:
-        pass
-    else:
-        return abort(405)
+def individual_results_csv(test):
+    all_scores = []
 
+    student_teams = StudentTeam.query.filter_by(test_id=test).all()
+
+    for team in student_teams:
+        all_scores = all_scores + list(StudentAnswer.query.filter_by(team_name=team.team_name, team_year=team.team_year).all())
+
+    from pprint import pprint
+    pprint(all_scores)
+    individual_csv = render_template('individual_scores.csv', student_scores=all_scores)
+    response = make_response(individual_csv)
+
+    response.headers['Cache-Control'] = 'must-revalidate'
+    response.headers['Pragma'] = 'must-revalidate'
+    response.headers['Content-type'] = 'text/csv'
+    response.headers['Content-Disposition'] = f'attachment; filename={student_teams[0].test_id}.csv'
+
+    return response
 
 
 @admin.route('/results', methods=('GET', 'POST'))
