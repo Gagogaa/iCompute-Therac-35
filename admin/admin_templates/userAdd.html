@@ -12,10 +12,6 @@
 <button type="submit" class="btn btn-primary mb-2" style="width: 20%" onclick="addSupervisorDialog(this)" data-user-type="Supervisor">Supervisor</button>
 </div>
 
-
-
-
-
 <h3>View Users:</h3>
 <br>
 <div id="accordion">
@@ -107,7 +103,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="new-supervisor-submit">Submit</button>
+        <button type="button" class="btn btn-primary" id="new-supervisor-submit" onclick="addSupervisor(this)">Submit</button>
       </div>
     </div>
   </div>
@@ -135,7 +131,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="new-grader-submit">Submit</button>
+        <button type="button" class="btn btn-primary" id="new-grader-submit" onclick="addGrader(this)">Submit</button>
       </div>
     </div>
   </div>
@@ -180,10 +176,14 @@
 </div>
 
 <script>
-function addUser(elem) {
-  var username = document.getElementById("new-username");
-  var password = document.getElementById("new-password");
-  var userType = document.getElementById("UserType");
+function addSupervisor() {
+
+      var username = $("#new-supervisor-username-textbox").val();
+      var password = $("#new-supervisor-password-textbox").val();
+      var userType = $("#new-supervisor-submit").data("user-type");
+      alert(userType)
+      alert(username)
+      alert(password)
   $.ajax({
     url: '/admin/addUser',
     data: {username:username,password:password,user_type:userType},
@@ -197,7 +197,34 @@ function addUser(elem) {
     }
 
 });
-}
+
+};
+
+
+function addGrader(elem) {
+
+        var username = $("#new-supervisor-username-textbox").val();
+        var password = $("#new-supervisor-password-textbox").val();
+        var userType = $("#new-supervisor-submit").data("user-type");
+        alert(userType)
+        alert(username)
+        alert(password)
+    $.ajax({
+      url: '/admin/addUser',
+      data: {username:username,password:password,user_type:userType},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+
+  });
+
+};
+
 
 
 
@@ -227,7 +254,7 @@ function addSupervisorDialog(elem) {
   $("#new-supervisor-submit").attr("disabled", false);
   // get the question type from the calling button and save it to the submit button for later
   var userType = $(elem).data("user-type");
-  $("#new-question-submit").data("user-type", userType);
+  $("#new-supervisor-submit").data("user-type", userType);
   // finally, show the modal
   $("#new-supervisor-modal").modal("show");
 }
@@ -245,5 +272,6 @@ function addGraderDialog(elem) {
   // finally, show the modal
   $("#new-grader-modal").modal("show");
 }
+
 </script>
 {% endblock %}

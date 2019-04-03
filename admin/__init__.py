@@ -11,7 +11,7 @@ import csv
 import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
-
+from werkzeug.security import generate_password_hash
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -130,7 +130,7 @@ def admin_edit_users():
 
     return render_template('userAdd.html', supervisors=supervisors, tests=tests )
 
-@admin.route('/addUser')
+@admin.route('/addUser',  methods=['POST'])
 @login_required
 @required_user_type('Supervisor')
 def admin_add_users():
@@ -153,6 +153,16 @@ def admin_add_users():
                                    ]
                 database_session.add_all(userData)
                 database_session.commit()
+        elif user_type == "Grader":
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
         else:
             if 'username' in request.form and 'password' in request.form:
                 username = request.form['username']
@@ -163,7 +173,6 @@ def admin_add_users():
                                    ]
                 database_session.add_all(userData)
                 database_session.commit()
-
     return 'success'
 
 
@@ -275,7 +284,7 @@ def admin_view_results():
         	        yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
-        
+
     #A save button was pressed, time to download a file
     if request.method == 'POST':
         headers = Headers()
@@ -284,7 +293,7 @@ def admin_view_results():
         return Response(
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
-    #not POST method return    
+    #not POST method return
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
