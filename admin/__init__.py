@@ -256,7 +256,9 @@ def admin_add_users():
         counter += 1
         data = {}
 
-        return render_template('userAdd.html', link="./")
+
+    return render_template('userAdd.html', link="./")
+
 
 @admin.route('/question')
 @login_required
