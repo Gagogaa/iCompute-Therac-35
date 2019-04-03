@@ -1,5 +1,89 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for catagory, message in messages %}
+        <div class="alert {{'alert-info' if catagory == 'info' else 'alert-danger'}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<h1 style="text-align: center;"><strong>Edit Test{{num}}</strong></h1>
+<form action="" method="post">
+  <div class="form-group">
+    <label for="current-section-selector">Select Test:</label>
+    <select class="form-control" id="current-section-selector" name="test_name">
+      <option selected="selected">Select Test</option>
+      {% for test in tests %}
+        <option>{{test}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <hr />
+{% if questions %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    var counter = 2;
+    $(document).ready(function(){
+      $("#add_new").on("click",function(){
+        $("br:last").after('<div id="question' + counter + '"><hr /><div class="dropdown show" style="display: flex;"><select name="question' + counter + '" class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
+        counter += 1;
+      });
+    });
 
+    function removeQuestion(qid) {
+      $('#question' + qid).remove();
+      $("br:first").remove();
+    }
+  </script>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{name}}" name="test_name" required>
+    </div>
+    <br />
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Year:</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{year}}" name="year" required>
+    </div>
+    <br />
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Student Grade:</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{grade}}" name="grade" required>
+    </div>
+    <hr />
+    <h2><strong>Section A</strong></h2>
+    <button id="add_new" class="btn btn-primary btn-lg btn-block" type="button">
+        <div class="question">
+        <p>Add Another Question</p>
+    </div>
+    </button>
+    <br />
+    {% for question in questions %}
+    <div id="question">
+      <hr />
+      <div class="dropdown show" style="display: flex;">
+        <select name='question1' class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>
+          {% for question in questions %}
+            <option class="dropdown-item" value='{{question}}'>{{question}}</option>
+          {% endfor %}
+        </select>
+        <button type="button" onclick='removeQuestion(1);' id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
+      </div>
+    </div>
+    <br />
+    {% endfor %}
+{% endif %}
+  <button class="btn btn-primary btn-lg btn-block">Submit</button>
+</form>
 {% endblock %}

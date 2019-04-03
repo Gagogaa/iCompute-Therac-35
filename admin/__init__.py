@@ -45,7 +45,7 @@ def admin_create_test():
 
         if is_validated:
             if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
-                database_session.query(iComputeTest).delete()
+                # database_session.query(iComputeTest).delete()
                 database_session.commit()
                 for i in range(1, len(request.form)-2):
                     temp = iComputeTest(orderId=i,
@@ -67,11 +67,26 @@ def admin_create_test():
     return render_template('test_create.html', questions=questions)
 
 
-@admin.route('test/test_edit')
+@admin.route('test/test_edit', methods=("GET", "POST"))
 @login_required
 @required_user_type('Supervisor')
 def admin_edit_test():
-    return render_template('test_edit.html')
+    tests = []
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        tests.append(test.test_name)
+
+    if request.method == 'POST':
+        questions = []
+
+        for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
+            questions.append(question.question)
+
+        test_name = database_session.query(iComputeTest.test_name).filter(iComputeTest.test_name == request.form['test_name']).first()
+        year = database_session.query(iComputeTest.year).filter(iComputeTest.test_name == request.form['test_name']).first()
+        grade = database_session.query(iComputeTest.student_grade).filter(iComputeTest.test_name == request.form['test_name']).first()
+        return render_template('test_edit.html', tests=tests, questions=questions, name=test_name, grade=grade, year=year, num=num)
+
+    return render_template('test_edit.html', tests=tests)
 
 
 @admin.route('test/test_view')
@@ -213,7 +228,7 @@ def admin_view_results():
         	        yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
-        
+
     #A save button was pressed, time to download a file
     if request.method == 'POST':
         headers = Headers()
@@ -222,7 +237,7 @@ def admin_view_results():
         return Response(
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
-    #not POST method return    
+    #not POST method return
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
