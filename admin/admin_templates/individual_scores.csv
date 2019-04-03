@@ -1,0 +1,5 @@
+{% for team in student_teams['team_name'] %}
+    {% for question, answer in student_teams['questions'] %}
+{{team}},{{question}},{{answer}}
+    {% endfor %}
+{% endfor %}

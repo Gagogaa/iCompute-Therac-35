@@ -153,6 +153,19 @@ def theDownload(filepath):
 	return send_from_directory(directory='/', filename=filepath)
 
 
+# TODO
+@admin.route('/individual-results', methods=('POST'))
+@login_required
+@required_user_type('Supervisor')
+def individual_results_csv():
+    # first get the test name
+    if 'test-name' in request.form:
+        pass
+    else:
+        return abort(405)
+
+
+
 @admin.route('/results', methods=('GET', 'POST'))
 @login_required
 @required_user_type('Supervisor')
@@ -213,7 +226,7 @@ def admin_view_results():
         	        yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
-        
+
     #A save button was pressed, time to download a file
     if request.method == 'POST':
         headers = Headers()
@@ -222,7 +235,7 @@ def admin_view_results():
         return Response(
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
-    #not POST method return    
+    #not POST method return
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
