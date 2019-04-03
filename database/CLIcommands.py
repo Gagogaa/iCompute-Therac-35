@@ -130,7 +130,8 @@ def testing_data():
                   ),
         StudentTeam(team_name = 'teamM8s',
                     team_year = datetime.datetime.now().year,
-                    school_name= 'School of Rock'
+                    school_name= 'School of Rock',
+                    test_id = 'Test One'
                     ),
         StudentTeam(team_name = 'teamGr8',
                     team_year = datetime.datetime.now().year,
