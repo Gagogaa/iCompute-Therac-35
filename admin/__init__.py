@@ -45,7 +45,7 @@ def admin_create_test():
 
         if is_validated:
             if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
-                database_session.query(iComputeTest).delete()
+                # database_session.query(iComputeTest).delete()
                 database_session.commit()
                 for i in range(1, len(request.form)-2):
                     temp = iComputeTest(orderId=i,
@@ -67,11 +67,41 @@ def admin_create_test():
     return render_template('test_create.html', questions=questions)
 
 
-@admin.route('test/test_edit')
+@admin.route('test/test_edit', methods=("GET", "POST"))
 @login_required
 @required_user_type('Supervisor')
 def admin_edit_test():
-    return render_template('test_edit.html')
+    tests = []
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        tests.append(test.test_name)
+
+    if request.method == 'POST':
+        if "question1" in request.form:
+            database_session.query(iComputeTest).delete()
+            for i in range(1, len(request.form)-2):
+                temp = iComputeTest(orderId=i,
+                                    question=request.form['question' + str(i)],
+                                    section=1,
+                                    test_name=request.form['test_name'],
+                                    year=int(request.form['year']),
+                                    student_grade=request.form['grade'])
+                database_session.add(temp)
+            database_session.commit()
+            return redirect(url_for('admin.admin_view_test'))
+        else:
+            testquestions = []
+            questions = []
+
+            for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
+                testquestions.append(question.question)
+
+            for question in database_session.query(Questions.question).distinct():
+                questions.append(question.question)
+
+            test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
+            return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
+
+    return render_template('test_edit.html', tests=tests)
 
 
 @admin.route('test/test_view')
@@ -213,6 +243,20 @@ def admin_add_users():
     return 'success'
 
 
+    usernames = []
+    data = {}
+    counter = 1
+
+    for users in database_session.query(Users.username).distinct():
+        data['username'] = counter
+        currentUser = Users.username
+        data['Users'] = currentUser
+
+        users.append(data)
+        counter += 1
+        data = {}
+
+        return render_template('userAdd.html', link="./")
 
 @admin.route('/question')
 @login_required
@@ -334,8 +378,8 @@ def admin_view_results():
         for i in range(0, counter):
             if (exam_results[i]['test_name'] == theName):
                 for stuff in exam_results[i]['student_teams']:
-        	        w.writerows(stuff.items())
-        	        yield data.getvalue()
+                    w.writerows(stuff.items())
+                    yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
 

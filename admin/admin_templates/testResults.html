@@ -31,8 +31,8 @@
          </tr>
       </thead>
       <tbody>
-      	{% for team in test['student_teams'] %}
-      	  <tr>
+        {% for team in test['student_teams'] %}
+          <tr>
             <td>{{team['team_name']}}</td>
             <td>{{team['school_name']}}</td>
             <td>{{team['sectionAScore']}}</td>
@@ -40,7 +40,7 @@
             <td>{{team['sectionCScore']}}</td>
             <td>{{team['totalScore']}}</td>
           </tr>
-      	{% endfor %}
+        {% endfor %}
         </tbody>
       </table>
     </div>
