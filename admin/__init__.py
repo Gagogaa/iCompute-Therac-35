@@ -146,13 +146,6 @@ def admin_edit_questions():
     return render_template('questionEditUI.html', questions=questions, answers=answers )
 
 
-
-@admin.route('./<path:filename>', methods=('GET', 'POST'))
-def theDownload(filepath):
-	#uploads = os.path.join(current_app.root_path, app.config['UPLOAD_FOLDER'])
-	return send_from_directory(directory='/', filename=filepath)
-
-
 @admin.route('/individual-results/<test>')
 @login_required
 @required_user_type('Supervisor')
