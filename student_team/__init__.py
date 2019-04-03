@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, escape
+from flask import Blueprint, render_template, request, escape, redirect, url_for, flash
 from database import database_session
 from database.models import *
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, logout_user
 from logon import required_user_type
 import datetime
 
@@ -11,7 +11,7 @@ student_team = Blueprint('student_team', __name__, template_folder='student_temp
 # Function for grading all students answers to section 1
 def grade_section_one(team):
     student_team = StudentTeam.query.filter_by(team_name=team).order_by(StudentTeam.team_year).first()
-    total_questions = database_session.query(iComputeTest).filter_by(iComputeTest.test_name==student_team.test_id).count()
+    total_questions = database_session.query(iComputeTest).filter(iComputeTest.test_name==student_team.test_id).count()
     correct_answers = 0
 
     for response in StudentAnswer.query.filter_by(team_name=team).all():
@@ -22,7 +22,7 @@ def grade_section_one(team):
 
     student_score = StudentScore(team_name=student_team.team_name,
                                  team_year=student_team.team_year,
-                                 test_name=None,  # right now we have no idea what test the students were taking
+                                 test_name=student_team.test_id,
                                  total_score=0,  # This should probably be nullable but for now they get a 0 until the grader grades the exam
                                  # WESO Scoring says that each multiple choice question is worth 2 points
                                  section_one_score=(correct_answers*2),
@@ -66,7 +66,14 @@ def student_team_index():
                 answer=form_response))
 
             database_session.commit()
-            grade_section_one(current_user.username)
+        grade_section_one(current_user.username)
+
+        # For now when the team is done taking the test the application will destroy the password and log the team out.
+        current_user.password = 'Deactivated'
+        database_session.commit()
+        logout_user()
+        flash('Your answers have been submitted. Thank you for participating!', 'info')
+        return redirect(url_for('index'))
 
     return render_template('multiple_choice.html', exam_questions=exam_questions)
 

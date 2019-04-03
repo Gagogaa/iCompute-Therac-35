@@ -20,8 +20,8 @@ def grader_index():
     if request.method == 'POST':
         if 'team_name' in request.form:
             team = request.form['team_name']
-            # TODO just read the score from the database
-            sec_a_score = grade_section_one(team)
+            student_scores = StudentScore.query.filter_by(team_name=team).order_by(StudentScore.team_year).first()
+            sec_a_score = student_scores.section_one_score
             return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score)
 
     return render_template('grader_home.html', teams=teams, sec_a_score=None)
