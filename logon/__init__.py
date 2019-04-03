@@ -90,7 +90,10 @@ def index():
                 flash('Invalid Username', 'error')
                 return redirect(url_for('index'))
             else:
-                if check_password_hash(user.password, request.form['Password']):
+                if user.password == 'Deactivated':
+                    flash('Account deactivated', 'error')
+                    return redirect(url_for('index'))
+                elif check_password_hash(user.password, request.form['Password']):
 
                     login_user(user)
 
