@@ -77,17 +77,30 @@ def admin_edit_test():
         tests.append(test.test_name)
 
     if request.method == 'POST':
-        testquestions = []
-        questions = []
+        if "question1" in request.form:
+            database_session.query(iComputeTest).delete()
+            for i in range(1, len(request.form)-2):
+                temp = iComputeTest(orderId=i,
+                                    question=request.form['question' + str(i)],
+                                    section=1,
+                                    test_name=request.form['test_name'],
+                                    year=int(request.form['year']),
+                                    student_grade=request.form['grade'])
+                database_session.add(temp)
+            database_session.commit()
+            return redirect(url_for('admin.admin_view_test'))
+        else:
+            testquestions = []
+            questions = []
 
-        for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
-            testquestions.append(question.question)
+            for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
+                testquestions.append(question.question)
 
-        for question in database_session.query(Questions.question).distinct():
-            questions.append(question.question)
+            for question in database_session.query(Questions.question).distinct():
+                questions.append(question.question)
 
-        test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
-        return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
+            test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
+            return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
 
     return render_template('test_edit.html', tests=tests)
 
