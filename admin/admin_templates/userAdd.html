@@ -30,8 +30,8 @@
             <div class="input-group" >
               <input class="form-control question-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
           </li>
@@ -299,6 +299,7 @@ function addGraderDialog(elem) {
   // finally, show the modal
   $("#new-grader-modal").modal("show");
 }
+
 
 </script>
 {% endblock %}
