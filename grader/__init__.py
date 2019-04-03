@@ -21,7 +21,10 @@ def grader_index():
         if 'team_name' in request.form:
             team = request.form['team_name']
             student_scores = StudentScore.query.filter_by(team_name=team).order_by(StudentScore.team_year).first()
-            sec_a_score = student_scores.section_one_score
-            return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score)
+            if student_scores:
+                sec_a_score = student_scores.section_one_score
+                return render_template('grader_home.html', teams=teams, sec_a_score=sec_a_score)
+            else:
+                return render_template('grader_home.html', teams=teams, sec_a_score=None)
 
     return render_template('grader_home.html', teams=teams, sec_a_score=None)
