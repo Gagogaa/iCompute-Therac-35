@@ -450,6 +450,7 @@ function addAnswerDialog(elem) {
   // get the question  from the calling button and save it to the submit button for later
   var questionVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
   var question = $(elem).data("question");
+  
   $("#answer-modal-label").text(questionVal.value);
   $("#new-answer-submit").data("question", questionVal.value);
   // show or hide the answer field, depending on the question type
@@ -479,13 +480,15 @@ $(function addAnswer() {
         traditional: true,
         success: function(response){
           console.log(response);
+        location.reload();
         },
         error: function(error){
           console.log(error);
+          location.reload();
         }
       });
       $("#new-answer-modal").modal("hide");
-      location.reload();
+
     }
   });
 });
