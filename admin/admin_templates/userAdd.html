@@ -25,18 +25,16 @@
     <div id="collapseOne" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          {% for UserName in UsersNames %}
-            {% if UserNames['user_type'] == "Supervisor" %}
-          <li class="list-group-item" name="supervisor" id="supervisor-id{{UserNames['id']}}">
+          {% for supervisor in supervisorArray %}
+          <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisorArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="supervisor-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
+              <input class="form-control question-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
               <div class="input-group-append">
                 <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
                 <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
           </li>
-          {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -52,18 +50,16 @@
     <div id="collapseTwo" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          {% for UserName in UsersNames %}
-            {% if Users['user_type'] == Graders %}
-          <li class="list-group-item" name="grader" id="graders-id{{UserNames['id']}}">
+          {% for grader in graderArray %}
+          <li class="list-group-item" name="grader" id="grader-id{{graderArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="graders-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
+              <input class="form-control question-textbox" id="grader-name{{grader['id']}}" type="text" value="{{grader['grader']}}" disabled>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
           </li>
-          {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -79,18 +75,16 @@
     <div id="collapseThree" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          {% for UserName in UsersNames %}
-            {% if Users['user_type'] == Student %}
-          <li class="list-group-item" name="student" id="student-id{{UserNames['id']}}">
+          {% for studentTeam in studentTeamArray %}
+          <li class="list-group-item" name="studentTeam" id="studentTeam-id{{studentTeamArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="student-name{{UserNames['id']}}" type="text" value="{{Users['username']}}" disabled>
+              <input class="form-control question-textbox" id="studentTeam-name{{studentTeam['id']}}" type="text" value="{{studentTeam['studentTeam']}}" disabled>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
           </li>
-          {% endif %}
           {% endfor %}
         </ul>
       </div>

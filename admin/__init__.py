@@ -105,30 +105,59 @@ def admin_view_test():
 def admin_edit_users():
 
 
-    UserNames = []
+    supervisorArray = []
     data = {}
     counter = 1
 
     # Build Dictionary users
-    for UserName in database_session.query(Users.username).distinct():
+    for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
         data['id'] = counter
-        currentUser = UserName.username
-        data['UserNames'] = currentUser
-        print(currentUser)
-        UserNames.append(data)
+        currentSupervisor = supervisor.username
+        data['supervisor'] = currentSupervisor
+        print(currentSupervisor)
+        supervisorArray.append(data)
 
         counter += 1
         data = {}
 
 
-#    for test in database_session.query(iComputeTest.test_name).distinct():
-#        data['id'] = test_counter
-#        data['test_name'] = test.test_name
-#        tests.append(data)
-#        test_counter += 1
-#        data = {}
+        graderArray = []
+        data = {}
+        counter = 1
 
-    return render_template('userAdd.html', UserNames=UserNames)
+        # Build Dictionary users
+        for grader in database_session.query(Users).filter(Users.user_type == 'Grader'):
+            data['id'] = counter
+            currentGrader = grader.username
+            data['grader'] = currentGrader
+            print(currentGrader)
+            graderArray.append(data)
+
+            counter += 1
+            data = {}
+
+
+
+        studentTeamArray = []
+        data = {}
+        counter = 1
+
+        # Build Dictionary users
+        for studentTeam in database_session.query(Users).filter(Users.user_type == 'Student'):
+            data['id'] = counter
+            currentStudentTeam = studentTeam.username
+            data['studentTeam'] = currentStudentTeam
+            print(currentStudentTeam)
+            studentTeamArray.append(data)
+
+            counter += 1
+            data = {}
+
+
+
+
+
+    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray)
 
 @admin.route('/addUser',  methods=['POST'])
 @login_required
