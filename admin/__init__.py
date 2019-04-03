@@ -11,7 +11,7 @@ import csv
 import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
-
+from werkzeug.security import generate_password_hash
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -108,6 +108,7 @@ def admin_edit_users():
     UserNames = []
     data = {}
     counter = 1
+    test_counter = 1
 
     # Build Dictionary users
     for UserNames in database_session.query(Users):
@@ -120,7 +121,61 @@ def admin_edit_users():
         counter += 1
         data = {}
 
-    return render_template('userAdd.html', supervisors=supervisors )
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        data['id'] = test_counter
+        data['test_name'] = test.test_name
+        tests.append(data)
+        test_counter += 1
+        data = {}
+
+    return render_template('userAdd.html', supervisors=supervisors, tests=tests )
+
+@admin.route('/addUser',  methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def admin_add_users():
+    if 'user_type' in request.form:
+        user_type = request.form['user_type']
+        if user_type == "Student":
+            if 'username' in request.form and 'password' in request.form and 'test_name' in request.form  and 'team_year' in request.form and 'school_name' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                test_name = request.form['test_name']
+                team_year = request.form['team_year']
+                school_name = request.form['school_name']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type),
+
+                            StudentTeam(team_name = username,
+                                        team_year = team_year,
+                                        school_name = school_name,
+                                        test_id = test_name)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+        elif user_type == "Grader":
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+        else:
+            if 'username' in request.form and 'password' in request.form:
+                username = request.form['username']
+                password = request.form['password']
+                userData = [Users(username = username,
+                                   password = generate_password_hash(password),
+                                   user_type = user_type)
+                                   ]
+                database_session.add_all(userData)
+                database_session.commit()
+    return 'success'
+
 
 
 @admin.route('/question')
@@ -230,7 +285,7 @@ def admin_view_results():
         	        yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
-        
+
     #A save button was pressed, time to download a file
     if request.method == 'POST':
         headers = Headers()
@@ -239,7 +294,7 @@ def admin_view_results():
         return Response(
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
-    #not POST method return    
+    #not POST method return
     return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
