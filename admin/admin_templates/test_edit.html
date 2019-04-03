@@ -13,7 +13,7 @@
         {% endfor %}
     {% endif %}
 {% endwith %}
-<h1 style="text-align: center;"><strong>Edit Test{{num}}</strong></h1>
+<h1 style="text-align: center;"><strong>Edit Test</strong></h1>
 <form action="" method="post">
   <div class="form-group">
     <label for="current-section-selector">Select Test:</label>
@@ -25,11 +25,12 @@
     </select>
   </div>
   <hr />
-{% if questions %}
+{% if testquestions %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <script>
-    var counter = 2;
+    var counter = 0;
     $(document).ready(function(){
+      counter = $('.uniqueQuestion').length;
       $("#add_new").on("click",function(){
         $("br:last").after('<div id="question' + counter + '"><hr /><div class="dropdown show" style="display: flex;"><select name="question' + counter + '" class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>{% for question in questions %}<option class="dropdown-item" value="{{question}}">{{question}}</option>{% endfor %}</select><button type="button" onclick="removeQuestion(' + counter + ');" id="delete' + counter + '" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button></div></div><br />');
         counter += 1;
@@ -37,6 +38,7 @@
     });
 
     function removeQuestion(qid) {
+      counter = $('.uniqueQuestion').length;
       $('#question' + qid).remove();
       $("br:first").remove();
     }
@@ -69,16 +71,21 @@
     </div>
     </button>
     <br />
-    {% for question in questions %}
-    <div id="question">
+    {% for testquestion in testquestions %}
+    <div id="question{{loop.index}}">
+      <div class="uniqueQuestion"></div>
       <hr />
       <div class="dropdown show" style="display: flex;">
-        <select name='question1' class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>
+        <select name='question{{loop.index}}' class="btn btn-secondary dropdown-toggle" style="display: inline-block; flex: 1; padding: 1em; border: solid;" required>
           {% for question in questions %}
-            <option class="dropdown-item" value='{{question}}'>{{question}}</option>
+            {% if question == testquestion %}
+              <option class="dropdown-item" value='{{question}}' selected="selected">{{question}}</option>
+            {% else %}
+              <option class="dropdown-item" value='{{question}}'>{{question}}</option>
+            {% endif %}
           {% endfor %}
         </select>
-        <button type="button" onclick='removeQuestion(1);' id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
+        <button type="button" onclick='removeQuestion({{loop.index}});' id="delete1" class="btn btn-danger" style="display: inline-block; flex: 1; padding: 1em; border: solid;">Delete</button>
       </div>
     </div>
     <br />
