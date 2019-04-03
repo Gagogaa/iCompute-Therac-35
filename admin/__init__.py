@@ -309,8 +309,6 @@ def individual_results_csv(test):
     for team in student_teams:
         all_scores = all_scores + list(StudentAnswer.query.filter_by(team_name=team.team_name, team_year=team.team_year).all())
 
-    from pprint import pprint
-    pprint(all_scores)
     individual_csv = render_template('individual_scores.csv', student_scores=all_scores)
     response = make_response(individual_csv)
 
