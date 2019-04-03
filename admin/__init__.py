@@ -11,6 +11,7 @@ import csv
 import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
+import re
 
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
@@ -85,10 +86,8 @@ def admin_edit_test():
         for question in database_session.query(Questions.question).distinct():
             questions.append(question.question)
 
-        test_name = database_session.query(iComputeTest.test_name).filter(iComputeTest.test_name == request.form['test_name']).first()
-        year = database_session.query(iComputeTest.year).filter(iComputeTest.test_name == request.form['test_name']).first()
-        grade = database_session.query(iComputeTest.student_grade).filter(iComputeTest.test_name == request.form['test_name']).first()
-        return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test_name, grade=grade, year=year)
+        test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
+        return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
 
     return render_template('test_edit.html', tests=tests)
 
