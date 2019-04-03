@@ -1,30 +1,17 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor-User Creation{% endblock %}
-
 {% block content %}
 <div class="container">
 <br><br><br>
 
 <h3>Add a new User:</h3>
-<form class="form-inline" action="/action_page.php">
-  <label for="email" class="mr-sm-2" style="width: 10%">Username:</label>
-  <input type="email" class="form-control mb-2 mr-sm-2" id="user" style="width: 20%">
-  <label for="pwd" class="mr-sm-2" style="width: 10%">Password:</label>
-  <input type="password" class="form-control mb-2 mr-sm-2" id="pass" style="width: 20%">
-  <div class="form-group" style="width: 30%; margin-left: 20px">
-    <label for="UserType">Select User Type:</label>
-    <select class="form-control" id="UserType" name="sellist1" style="margin-left: 10px; width: 60%" >
-      <option>Supervisor</option>
-      <option>Grader</option>
-      <option>Student</option>
-    </select>
-  </div>
-</form>
-<button type="submit" class="btn btn-primary mb-2" style="width: 20%">Submit</button>
-<br>
+<div>
 
+<button type="submit" class="btn btn-primary mb-2" style="width: 20%" onclick="addStudentDialog(this)" data-user-type="Student">Student</button>
+<button type="submit" class="btn btn-primary mb-2" style="width: 20%" onclick="addGraderDialog(this)" data-user-type="Grader">Grader</button>
+<button type="submit" class="btn btn-primary mb-2" style="width: 20%" onclick="addSupervisorDialog(this)" data-user-type="Supervisor">Supervisor</button>
+</div>
 
-<br><br>
 <h3>View Users:</h3>
 <br>
 <div id="accordion">
@@ -38,13 +25,13 @@
     <div id="collapseOne" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          {% for supervisor in supervisors %}
-          <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisor['id']}}">
+          {% for supervisor in supervisorArray %}
+          <li class="list-group-item" name="supervisor" id="supervisor-id{{supervisorArray['id']}}">
             <div class="input-group" >
-              <input class="form-control question-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
+              <input class="form-control user-textbox" id="supervisor-name{{supervisor['id']}}" type="text" value="{{supervisor['supervisor']}}" disabled>
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
-                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
               </div>
             </div>
           </li>
@@ -63,9 +50,17 @@
     <div id="collapseTwo" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
+          {% for grader in graderArray %}
+          <li class="list-group-item" name="grader" id="grader-id{{graderArray['id']}}">
+            <div class="input-group" >
+              <input class="form-control user-textbox" id="grader-name{{grader['id']}}" type="text" value="{{grader['grader']}}" disabled>
+              <div class="input-group-append">
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            </div>
+          </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
@@ -80,16 +75,303 @@
     <div id="collapseThree" class="collapse" data-parent="#accordion">
       <div class="card-body">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
-          <li class="list-group-item">First item</li>
-          <li class="list-group-item">Second item</li>
-          <li class="list-group-item">Third item</li>
+          {% for studentTeam in studentTeamArray %}
+          <li class="list-group-item" name="studentTeam" id="studentTeam-id{{studentTeamArray['id']}}">
+            <div class="input-group" >
+              <input class="form-control user-textbox" id="studentTeam-name{{studentTeam['id']}}" type="text" value="{{studentTeam['studentTeam']}}" disabled>
+              <div class="input-group-append">
+                <!-- impliment when we have time <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="editUserDialog(this)"><i class="fas fa-edit"></i></button>
+                <button class="btn btn-outline-secondary" type="button" onclick="addDelUserDialog(this)"><i class="fas fa-trash-alt"></i></button> -->
+              </div>
+            </div>
+          </li>
+          {% endfor %}
         </ul>
       </div>
     </div>
   </div>
 </div>
 </div>
+
+<!-- supervisor modal below -->
+
+<div class="modal fade" id="new-supervisor-modal" tabindex="-1" role="dialog" aria-labelledby="new-supervisor-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-supervisor-modal-label">New Supervisor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-supervisor-username-textbox" class="col-form-label">Username:</label>
+          <input type="text" class="form-control" id="new-supervisor-username-textbox">
+          <label for="new-supervisor-password-textbox" class="col-form-label">Password:</label>
+          <input type="text" class="form-control" id="new-supervisor-password-textbox">
+          <div class="invalid-feedback" id="new-supervisor-username-invalid-feedback">Error</div>
+          <div class="invalid-feedback" id="new-supervisor-password-invalid-feedback">Error</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="new-supervisor-submit" onclick="addSupervisor(this)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- grader modal below -->
+<div class="modal fade" id="new-grader-modal" tabindex="-1" role="dialog" aria-labelledby="new-grader-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-grader-modal-label">New Grader</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-grader-username-textbox" class="col-form-label">Username:</label>
+          <input type="text" class="form-control" id="new-grader-username-textbox">
+          <label for="new-grader-password-textbox" class="col-form-label">Password:</label>
+          <input type="text" class="form-control" id="new-grader-password-textbox">
+          <div class="invalid-feedback" id="new-grader-username-invalid-feedback">Error</div>
+          <div class="invalid-feedback" id="new-grader-password-invalid-feedback">Error</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="new-grader-submit" onclick="addGrader(this)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- student modal below -->
+<div class="modal fade" id="new-student-modal" tabindex="-1" role="dialog" aria-labelledby="new-student-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="new-student-modal-label">New Student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-student-username-textbox" class="col-form-label">Username:</label>
+          <input type="text" class="form-control" id="new-student-username-textbox">
+          <label for="new-student-password-textbox" class="col-form-label">Password:</label>
+          <input type="text" class="form-control" id="new-student-password-textbox">
+          <label for="new-student-school-textbox" class="col-form-label">School Name:</label>
+          <input type="text" class="form-control" id="new-student-school-textbox">
+          <label for="new-student-year-textbox" class="col-form-label">Test Year:</label>
+          <input type="text" class="form-control" id="new-student-year-textbox">
+          <label for="new-student-test-select" class="col-form-label">Test to take:</label>
+          <select id="new-student-test-select">
+              {% for test in tests %}
+              <option id = "test-id{{test['id']}}" value = "{{test['test_name']}}">{{test['test_name']}}</option>
+              {% endfor %}
+          </select>
+          <div class="invalid-feedback" id="new-student-username-invalid-feedback">Error</div>
+          <div class="invalid-feedback" id="new-student-password-invalid-feedback">Error</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="new-student-submit" onclick="addStudent(this)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function addSupervisor() {
+
+      var username = $("#new-supervisor-username-textbox").val();
+      var password = $("#new-supervisor-password-textbox").val();
+      var userType = $("#new-supervisor-submit").data("user-type");
+      if(username == "" || password == "") {
+        alert("Username and/or password cannot be blank")
+      } else if(!checkSupervisorText(username)){
+        alert("username already in system")
+      } else {
+  $.ajax({
+    url: '/admin/addUser',
+    data: {username:username,password:password,user_type:userType},
+    type: 'POST',
+    traditional: true,
+    success: function(response){
+      console.log(response);
+      location.reload();
+    },
+    error: function(error){
+      console.log(error);
+      location.reload();
+    }
+  });
+    $("#new-supervisor-modal").modal("hide");
+  }
+};
+
+
+function addGrader(elem) {
+
+        var username = $("#new-grader-username-textbox").val();
+        var password = $("#new-grader-password-textbox").val();
+        var userType = $("#new-grader-submit").data("user-type");
+    if(username == "" || password == "") {
+      alert("Username and/or password cannot be blank")
+    } else if(!checkGraderText(username)){
+      alert("username already in system")
+    } else{
+      $.ajax({
+        url: '/admin/addUser',
+        data: {username:username,password:password,user_type:userType},
+        type: 'POST',
+        traditional: true,
+        success: function(response){
+          console.log(response);
+          location.reload();
+        },
+        error: function(error){
+          console.log(error);
+          location.reload();
+      }
+    });
+      $("#new-grader-modal").modal("hide");
+  }
+};
+
+function addStudent(elem) {
+
+        var username = $("#new-student-username-textbox").val();
+        var password = $("#new-student-password-textbox").val();
+        var school_name = $("#new-student-school-textbox").val();
+        var team_year = $("#new-student-year-textbox").val();
+        var userType = $("#new-student-submit").data("user-type");
+        var test_name = $("#new-student-test-select").val();
+        if(username == "" || password == "") {
+          alert("Username and/or password cannot be blank")
+        } else if(!checkStudentText(username)){
+          alert("username already in system")
+        } else {
+          $.ajax({
+            url: '/admin/addUser',
+            data: {username:username,password:password,user_type:userType, school_name:school_name, team_year:team_year, test_name:test_name},
+            type: 'POST',
+            traditional: true,
+            success: function(response){
+              console.log(response);
+              location.reload();
+            },
+            error: function(error){
+              console.log(error);
+              location.reload();
+            }
+
+          });
+          $("#new-student-modal").modal("hide");
+        }
+      };
+
+
+
+function addStudentDialog(elem) {
+  // clear existing text from the textboxes
+  $("#new-student-username-textbox").val("");
+  $("#new-student-password-textbox").val("");
+  $("#new-student-school-textbox").val("");
+  $("#new-student-year-textbox").val("");
+  // clear any error message from the textboxes
+  $("#new-student-username-textbox").removeClass("is-invalid");
+  $("#new-student-submit").attr("disabled", false);
+  // get the question type from the calling button and save it to the submit button for later
+  var userType = $(elem).data("user-type");
+  $("#new-student-submit").data("user-type", userType);
+  // show or hide the answer field, depending on the question type
+  // finally, show the modal
+  $("#new-student-modal").modal("show");
+}
+
+function addSupervisorDialog(elem) {
+  // clear existing text from the textboxes
+  $("#new-supervisor-username-textbox").val("");
+  $("#new-supervisor-password-textbox").val("");
+  // clear any error message from the textboxes
+  $("#new-supervisor-username-textbox").removeClass("is-invalid");
+  $("#new-supervisor-submit").attr("disabled", false);
+  // get the question type from the calling button and save it to the submit button for later
+  var userType = $(elem).data("user-type");
+  $("#new-supervisor-submit").data("user-type", userType);
+  // finally, show the modal
+  $("#new-supervisor-modal").modal("show");
+}
+
+function addGraderDialog(elem) {
+  // clear existing text from the textboxes
+  $("#new-grader-username-textbox").val("");
+  $("#new-grader-password-textbox").val("");
+  // clear any error message from the textboxes
+  $("#new-grader-username-textbox").removeClass("is-invalid");
+  $("#new-grader-submit").attr("disabled", false);
+  // get the question type from the calling button and save it to the submit button for later
+  var userType = $(elem).data("user-type");
+  $("#new-grader-submit").data("user-type", userType);
+  // finally, show the modal
+  $("#new-grader-modal").modal("show");
+}
+
+
+function checkGraderText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkStudentText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function checkSupervisorText(text) {
+  if(text === "") {
+    return false;
+  }
+
+  var textboxes = document.getElementsByClassName("user-textbox");
+  for(var i = 0; i < textboxes.length; i++) {
+    console.log(textboxes[i].value);
+
+    if(textboxes[i].value === text) {
+      return false;
+    }
+  }
+  return true;
+}
+</script>
 {% endblock %}

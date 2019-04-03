@@ -14,6 +14,7 @@ class StudentTeam(Base):
     team_name = Column(String, primary_key=True)
     team_year = Column(Integer, primary_key=True)
     school_name = Column(String, nullable=False)
+    test_id = Column(String)
 
 
 class StudentAnswer(Base):
@@ -36,9 +37,10 @@ class iComputeTest(Base):
     orderId = Column(Integer)
     question = Column(String, primary_key=True)
     section = Column(Integer, nullable=False)
-    test_name = Column(String)
+    test_name = Column(String, primary_key=True)
     year = Column(Integer)
     student_grade = Column(String)
+
 
     __table_args__ = (
         ForeignKeyConstraint(['question'], ['Questions.question']),
