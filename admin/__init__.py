@@ -104,19 +104,19 @@ def admin_view_test():
 @required_user_type('Supervisor')
 def admin_edit_users():
 
-    tests = []
-    supervisors = []
+
+    UserNames = []
     data = {}
     counter = 1
     test_counter = 1
 
     # Build Dictionary users
-    for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
+    for UserNames in database_session.query(Users):
         data['id'] = counter
-        currentSupervisor = supervisor.username
-        data['supervisor'] = currentSupervisor
-        print(currentSupervisor)
-        supervisors.append(data)
+        currentUser = UserNames.username
+        data['UserNames'] = currentSupervisor
+        print(currentUser)
+        UserNames.append(data)
 
         counter += 1
         data = {}
@@ -146,7 +146,7 @@ def admin_add_users():
                 userData = [Users(username = username,
                                    password = generate_password_hash(password),
                                    user_type = user_type),
-                                   
+
                             StudentTeam(team_name = username,
                                         team_year = team_year,
                                         school_name = school_name,
