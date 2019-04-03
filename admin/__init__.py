@@ -99,17 +99,17 @@ def admin_view_test():
 def admin_edit_users():
 
 
-    supervisors = []
+    UserNames = []
     data = {}
     counter = 1
 
     # Build Dictionary users
-    for supervisor in database_session.query(Users).filter(Users.user_type == 'Supervisor'):
+    for UserNames in database_session.query(Users):
         data['id'] = counter
-        currentSupervisor = supervisor.username
-        data['supervisor'] = currentSupervisor
-        print(currentSupervisor)
-        supervisors.append(data)
+        currentUser = UserNames.username
+        data['UserNames'] = currentSupervisor
+        print(currentUser)
+        UserNames.append(data)
 
         counter += 1
         data = {}
