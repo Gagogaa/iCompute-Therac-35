@@ -256,7 +256,7 @@ def admin_add_users():
         counter += 1
         data = {}
 
-	return render_template('userAdd.html', link="./")
+        return render_template('userAdd.html', link="./")
 
 @admin.route('/question')
 @login_required
@@ -378,8 +378,8 @@ def admin_view_results():
         for i in range(0, counter):
             if (exam_results[i]['test_name'] == theName):
                 for stuff in exam_results[i]['student_teams']:
-        	        w.writerows(stuff.items())
-        	        yield data.getvalue()
+                    w.writerows(stuff.items())
+                    yield data.getvalue()
                 data.seek(0)
                 data.truncate(0)
 
