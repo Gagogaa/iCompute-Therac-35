@@ -61,7 +61,7 @@ def student_team_index():
 
             database_session.add(StudentAnswer(
                 team_name=current_user.username,
-                team_year=datetime.datetime.now().year,
+                team_year=student_team.team_year,
                 section=1,
                 # TODO since the question was escaped we may need to unescape it here
                 question=question['question'],
