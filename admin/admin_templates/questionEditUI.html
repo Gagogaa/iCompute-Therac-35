@@ -479,13 +479,15 @@ $(function addAnswer() {
         traditional: true,
         success: function(response){
           console.log(response);
+          location.reload();
         },
         error: function(error){
           console.log(error);
+          location.reload();
         }
       });
       $("#new-answer-modal").modal("hide");
-      location.reload();
+
     }
   });
 });
