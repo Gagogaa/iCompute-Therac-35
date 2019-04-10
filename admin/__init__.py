@@ -385,13 +385,19 @@ def admin_view_results():
 
     #A save button was pressed, time to download a file
     if request.method == 'POST':
-        headers = Headers()
-        headers.set('Content-Disposition', 'attachment', filename= request.form["testForm"] + '.csv')
+        theName = request.form["testForm"]
+        full_info = []
+        for i in range(0, counter):
+            if(exam_results[i]['test_name'] == theName):
+                full_info = full_info + list(exam_results[i]['student_teams'])
+        full_csv = render_template('full_scores.csv', all_scores=full_info)
+        response = make_response(full_csv)
+        response.headers['Cache-Control'] = 'must-revalidate'
+        response.headers['Pragma'] = 'must-revalidate'
+        response.headers['Content-type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=' + theName +'.csv'
 
-        return Response(
-            stream_with_context(generate()), mimetype='text/csv', headers=headers
-            )
-    #not POST method return
+        return response
     return render_template('testResults.html', link="./", exam_results=exam_results, home_link='./')
 
 
