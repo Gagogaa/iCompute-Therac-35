@@ -10,14 +10,13 @@
   <link rel="stylesheet" href="../static/styles.css">
 </head>
 
-<body class="container">
-
-  <nav class="navbar sticky-top navbar-light bg-light">
+<body >
+  <nav class="navbar sticky-top navbar navbar-light bg-light">
     <a class="navbar-brand" href="#" style="padding-right: 10px">iCompute</a>
-    <!-- TODO if logged in show this button -->
   </nav>
 
-<!--For Testing Purposes Only until backend logic is implemented-->
-  {% block content %} {% endblock %}
+  <div class="container">
+    {% block content %} {% endblock %}
+  </div>
 </body>
 </html>
