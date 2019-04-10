@@ -40,7 +40,7 @@
                       <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
                     </div>
 
-                    <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+                    <input class="form-control answer-textbox" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
 
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
@@ -55,7 +55,7 @@
                       <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
                     </div>
 
-                    <input class="form-control" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
+                    <input class="form-control answer-textbox" type="text" id="{{answer['ans_id']}}" value="{{answer['answer']}}" disabled>
 
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
@@ -472,7 +472,10 @@ $(function addAnswer() {
     if(answerText === "") {
       errorText = "Answer cannot be blank";
       alert(errorText);
-    } else {
+    } else if(!checkAnswerText(answerText, question)){
+      errorText = "Duplicate Answer!"
+      alert(errorText)
+    }else{
       $.ajax({
         url: '/admin/addAnswer',
         data: {question:question,answer:answerText},
@@ -511,6 +514,9 @@ function checkQuestionText(text) {
   }
   return true;
 }
+
+function checkAnswerText() {
+
 </script>
 
 {% endblock %}
