@@ -462,7 +462,6 @@ function addAnswerDialog(elem) {
 
 // add new answer to a question
 $(function addAnswer() {
-  // to-do: add new answer, update database with new answer
   $('#new-answer-submit').click(function() {
     var question = $("#new-answer-submit").data("question");
     var answerText = $("#new-answer-answer-textbox").val();
@@ -472,9 +471,6 @@ $(function addAnswer() {
     if(answerText === "") {
       errorText = "Answer cannot be blank";
       alert(errorText);
-    } else if(!checkAnswerText(answerText, question)){
-      errorText = "Duplicate Answer!"
-      alert(errorText)
     }else{
       $.ajax({
         url: '/admin/addAnswer',
@@ -482,16 +478,18 @@ $(function addAnswer() {
         type: 'POST',
         traditional: true,
         success: function(response){
-          console.log(response);
-          location.reload();
+          if (response == 'success')
+            location.reload();
+          else{
+            errorText = "Duplicate Answer!"
+            alert(errorText)
+          }
         },
         error: function(error){
-          console.log(error);
           location.reload();
         }
       });
       $("#new-answer-modal").modal("hide");
-
     }
   });
 });
@@ -514,9 +512,6 @@ function checkQuestionText(text) {
   }
   return true;
 }
-
-function checkAnswerText() {
-
 </script>
 
 {% endblock %}

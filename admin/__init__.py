@@ -20,14 +20,14 @@ admin = Blueprint('admin', __name__, template_folder='admin_templates')
 @login_required
 @required_user_type('Supervisor')
 def admin_index():
-    return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results", home_link="#")
+    return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results")
 
 
 @admin.route('/test')
 @login_required
 @required_user_type('Supervisor')
 def admin_modify_test():
-    return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'), home_link='./')
+    return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
 
 
 @admin.route('test/test_create', methods=("GET", "POST"))
@@ -64,7 +64,7 @@ def admin_create_test():
             flash('Something went wrong with the data you tried to submit.')
             return redirect(url_for('admin.admin_create_test'))
 
-    return render_template('test_create.html', questions=questions, home_link='../')
+    return render_template('test_create.html', questions=questions)
 
 
 @admin.route('test/test_edit', methods=("GET", "POST"))
@@ -101,7 +101,7 @@ def admin_edit_test():
             test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
             return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
 
-    return render_template('test_edit.html', tests=tests, home_link='../')
+    return render_template('test_edit.html', tests=tests)
 
 
 @admin.route('test/test_view')
@@ -126,15 +126,13 @@ def admin_view_test():
         counter += 1
         data = {}
         test = database_session.query(iComputeTest).first()
-    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade, home_link='../')
+    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade)
 
 
 @admin.route('/user')
 @login_required
 @required_user_type('Supervisor')
 def admin_edit_users():
-
-
     supervisorArray = []
     data = {}
     counterSupervisor = 1
@@ -192,9 +190,8 @@ def admin_edit_users():
         counterTests +=1
         data={}
 
+    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests)
 
-
-    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests, home_link='./')
 
 @admin.route('/addUser',  methods=['POST'])
 @login_required
@@ -243,23 +240,6 @@ def admin_add_users():
     return 'success'
 
 
-    usernames = []
-    data = {}
-    counter = 1
-
-    for users in database_session.query(Users.username).distinct():
-        data['username'] = counter
-        currentUser = Users.username
-        data['Users'] = currentUser
-
-        users.append(data)
-        counter += 1
-        data = {}
-
-
-    return render_template('userAdd.html', link="./", home_link='./')
-
-
 @admin.route('/question')
 @login_required
 @required_user_type('Supervisor')
@@ -297,7 +277,7 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-    return render_template('questionEditUI.html', questions=questions, answers=answers, home_link='./' )
+    return render_template('questionEditUI.html', questions=questions, answers=answers)
 
 
 @admin.route('/individual-results/<test>')
@@ -392,7 +372,7 @@ def admin_view_results():
             stream_with_context(generate()), mimetype='text/csv', headers=headers
             )
     #not POST method return
-    return render_template('testResults.html', link="./", exam_results=exam_results, home_link='./')
+    return render_template('testResults.html', link="./", exam_results=exam_results)
 
 
 @admin.route('/addQuestion', methods=['POST'])
@@ -441,16 +421,20 @@ def add_question():
 @required_user_type('Supervisor')
 def add_answer():
     if 'question' in request.form and 'answer' in request.form:
-        currentQuestion = request.form['question'];
-        answerToAdd = request.form['answer'];
-        new_answer = [Questions(question = currentQuestion,
-                                answer = answerToAdd,
-                                is_correct = False,
-                                section = 1)
-                                ]
-        database_session.add_all(new_answer);
+        question_text = request.form['question'];
+        answer_text = request.form['answer'];
+
+        # Check to see if the answer is already associated with this question
+        if Questions.query.filter_by(question=question_text, answer=answer_text).count() > 0:
+            return "error"
+
+        new_answer = Questions(question=question_text,
+                                answer=answer_text,
+                                is_correct=False,
+                                section=1)
+        database_session.add(new_answer);
         database_session.commit();
-        return 'success'
+    return 'success'
 
 
 # TODO We also need to delete questions in tests
@@ -462,6 +446,7 @@ def delete_question():
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
+    return "success"
 
 
 @admin.route('/delAnswer', methods=['POST'])
@@ -502,7 +487,7 @@ def edit_answer():
         for row in rows_to_update:
             row.answer = request.form['new_answer']
         database_session.commit()
-    return "success answer"
+    return "success"
 
 
 # TODO is this used in the project?
@@ -510,3 +495,4 @@ def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
     database_session.commit()
+
