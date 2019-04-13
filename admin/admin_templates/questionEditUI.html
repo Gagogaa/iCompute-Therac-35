@@ -110,6 +110,16 @@
           <input type="text" class="form-control" id="new-question-answer-textbox">
           <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
           <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
+          <br>
+          <div class="input-group" id="question-file-upload">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="question-upload-label">Upload</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="question-file" aria-describedby="question-upload-label">
+              <label class="custom-file-label" for="question-file">Choose file</label>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -118,6 +128,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- answer modal below -->
@@ -355,10 +366,13 @@ function addQuestionDialog(elem) {
   // show or hide the answer field, depending on the question type
   if(questionType === "multiple-choice") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").show();
+    $("#question-file-upload").hide();
   } else if (questionType === "short-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+    $("#question-file-upload").show();
   } else if (questionType === "scratch-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+    $("#question-file-upload").show();
   }
   // finally, show the modal
   $("#new-question-modal").modal("show");
