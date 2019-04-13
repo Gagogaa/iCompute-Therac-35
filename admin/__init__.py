@@ -488,7 +488,11 @@ def delete_answer():
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
         rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
+        test_rows_to_update = database_session.query(iComputeTest).filter(iComputeTest.question == request.form['question'])
         for row in rows_to_update:
+            row.question = request.form['new_question']
+
+        for row in test_rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
     return "success"
