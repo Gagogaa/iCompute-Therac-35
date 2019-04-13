@@ -463,10 +463,7 @@ def edit_question():
         for row in test_rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
-        rows_to_update = database_session.query(iComputeTest).filter(iComputeTest.question == request.form['question'])
-        for row in rows_to_update:
-            row.question = request.form['new_question']
-        database_session.commit()
+
 
     return "success"
 
@@ -488,4 +485,3 @@ def clear_student_answers():
     del_query = database_session.query(StudentAnswers)
     del_query.delete()
     database_session.commit()
-
