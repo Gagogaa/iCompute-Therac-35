@@ -20,14 +20,14 @@ admin = Blueprint('admin', __name__, template_folder='admin_templates')
 @login_required
 @required_user_type('Supervisor')
 def admin_index():
-    return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results")
+    return render_template('index.html', link="#", link2="./test", link3="./question", link4="./user", link5="./results", home_link="#")
 
 
 @admin.route('/test')
 @login_required
 @required_user_type('Supervisor')
 def admin_modify_test():
-    return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'))
+    return render_template('test_modify.html', link=url_for('admin.admin_create_test'), link2=url_for('admin.admin_edit_test'), link3=url_for('admin.admin_view_test'), home_link='./')
 
 
 @admin.route('test/test_create', methods=("GET", "POST"))
@@ -64,7 +64,7 @@ def admin_create_test():
             flash('Something went wrong with the data you tried to submit.')
             return redirect(url_for('admin.admin_create_test'))
 
-    return render_template('test_create.html', questions=questions)
+    return render_template('test_create.html', questions=questions, home_link='../')
 
 
 @admin.route('test/test_edit', methods=("GET", "POST"))
@@ -101,7 +101,7 @@ def admin_edit_test():
             test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
             return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
 
-    return render_template('test_edit.html', tests=tests)
+    return render_template('test_edit.html', tests=tests, home_link='../')
 
 
 @admin.route('test/test_view')
@@ -126,7 +126,7 @@ def admin_view_test():
         counter += 1
         data = {}
         test = database_session.query(iComputeTest).first()
-    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade)
+    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade, home_link='../')
 
 
 @admin.route('/user')
@@ -194,7 +194,7 @@ def admin_edit_users():
 
 
 
-    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests)
+    return render_template('userAdd.html', supervisorArray=supervisorArray, graderArray=graderArray, studentTeamArray=studentTeamArray, tests=tests, home_link='./')
 
 @admin.route('/addUser',  methods=['POST'])
 @login_required
@@ -256,7 +256,9 @@ def admin_add_users():
         counter += 1
         data = {}
 
-        return render_template('userAdd.html', link="./")
+
+    return render_template('userAdd.html', link="./", home_link='./')
+
 
 @admin.route('/question')
 @login_required
@@ -295,7 +297,7 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-    return render_template('questionEditUI.html', questions=questions, answers=answers )
+    return render_template('questionEditUI.html', questions=questions, answers=answers, home_link='./' )
 
 
 @admin.route('/individual-results/<test>')
@@ -309,15 +311,13 @@ def individual_results_csv(test):
     for team in student_teams:
         all_scores = all_scores + list(StudentAnswer.query.filter_by(team_name=team.team_name, team_year=team.team_year).all())
 
-    from pprint import pprint
-    pprint(all_scores)
     individual_csv = render_template('individual_scores.csv', student_scores=all_scores)
     response = make_response(individual_csv)
 
     response.headers['Cache-Control'] = 'must-revalidate'
     response.headers['Pragma'] = 'must-revalidate'
     response.headers['Content-type'] = 'text/csv'
-    response.headers['Content-Disposition'] = f'attachment; filename={student_teams[0].test_id}.csv'
+    response.headers['Content-Disposition'] = f'attachment; filename=' + test + '.csv'
 
     return response
 
@@ -385,14 +385,20 @@ def admin_view_results():
 
     #A save button was pressed, time to download a file
     if request.method == 'POST':
-        headers = Headers()
-        headers.set('Content-Disposition', 'attachment', filename= request.form["testForm"] + '.csv')
+        theName = request.form["testForm"]
+        full_info = []
+        for i in range(0, counter):
+            if(exam_results[i]['test_name'] == theName):
+                full_info = full_info + list(exam_results[i]['student_teams'])
+        full_csv = render_template('full_scores.csv', all_scores=full_info)
+        response = make_response(full_csv)
+        response.headers['Cache-Control'] = 'must-revalidate'
+        response.headers['Pragma'] = 'must-revalidate'
+        response.headers['Content-type'] = 'text/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename=' + theName +'.csv'
 
-        return Response(
-            stream_with_context(generate()), mimetype='text/csv', headers=headers
-            )
-    #not POST method return
-    return render_template('testResults.html', link="./", exam_results=exam_results)
+        return response
+    return render_template('testResults.html', link="./", exam_results=exam_results, home_link='./')
 
 
 @admin.route('/addQuestion', methods=['POST'])
