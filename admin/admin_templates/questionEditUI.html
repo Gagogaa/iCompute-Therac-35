@@ -110,16 +110,9 @@
           <input type="text" class="form-control" id="new-question-answer-textbox">
           <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
           <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
+          <label for="fileupload" class="col-form-label">Upload Picture(optional):</label>
           <br>
-          <div class="input-group" id="question-file-upload">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="question-upload-label">Upload</span>
-            </div>
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="question-file" aria-describedby="question-upload-label">
-              <label class="custom-file-label" for="question-file">Choose file</label>
-            </div>
-          </div>
+          <input id = "fileupload" type = "file">
         </div>
       </div>
       <div class="modal-footer">
@@ -357,6 +350,7 @@ function addQuestionDialog(elem) {
   // clear existing text from the textboxes
   $("#new-question-question-textbox").val("");
   $("#new-question-answer-textbox").val("");
+  $("#fileupload").val("");
   // clear any error message from the textboxes
   $("#new-question-question-textbox").removeClass("is-invalid");
   $("#new-question-submit").attr("disabled", false);
