@@ -85,3 +85,9 @@ def student_team_index():
 @required_user_type('Student')
 def section_b():
     return render_template('short_answer.html')
+
+@student_team.route('/sectionc')
+@login_required
+@required_user_type('Student')
+def section_c():
+    return render_template('scratch_submit.html')
