@@ -3,25 +3,87 @@
 {% block content %}
 
 <h1> Title of Scratch Project</h1>
-<div class = "card" style "margin-top: lem; margin-bottom : lem;"
-  <<h4>This  is the instruction area.</h4>
+<div class = "card" style = "margin-top: lem; margin-bottom : lem;">
+  <h4>Upload your Scratch file</h4>
 
-  <div class="input-default-wrapper mt-5">
-
-    <span class="input-group-text mb-3" id="input2">Upload</span>
-
-    <input type="file" id="file-with-multi-file" class="input-default-js" data-multiple-target="{target} files selected"
-      multiple>
-
-    <label class="label-for-default-js rounded-right mb-3" for="file-with-multi-file"><span class="span-choose-file">Choose
-        file</span>
-
-      <div class="float-right span-browse">Browse</div>
-
-    </label>
-  </div>
+  <div class="d-flex mt-5">
+      <span class="input-group-text mb-3" id="input2">Upload</span>
+      <input type="file" id="file-with-multi-file" class="input-default-js" data-multiple-target="{count} files selected"
+        multiple>
+      <label class="label-for-default-js rounded-right mb-3" for="file-with-multi-file"><span class="span-choose-file">Choose
+          file</span>
+        <div class="float-right span-browse">Browse</div>
+      </label>
+    </div>
 
   </div>
+
+  <script>
+
+        .input-default-js{
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+
+    }
+        .input-default-js + label {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+        display: inline-block;
+        overflow: hidden;
+        color: #000;
+    }
+
+    .input-default-js:focus + label {
+        border-color: #80bdff;
+        outline: 0 ;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.15);
+    }
+    .input-default-js + label {
+        border: 1px solid rgba(33, 47, 41, .2);
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .input-default-js + label span{
+        padding: 0.425rem .7rem;
+        color: #495057;
+    }
+
+    .input-default-js + label span:not(.span-browse) {
+        width: 200px;
+        display: inline-block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: top;
+    }
+
+    .input-default-js + label .span-browse {
+        height: 100%;
+        color: #000;
+        background-color: #E8EBEF;
+        border-left: 1px solid rgba(33, 47, 41, .2);
+        display: inline-block;
+        padding: 0.425rem .8rem;
+        color: #495057;
+    }
+
+    @media screen and (max-width: 50em) {
+    	.input-default-js + label .span-browse {
+    		display: block;
+    	}
+    }
+
+    .label-for-default-js{
+      width: 100%;
+      height: calc(2.25rem + 2px);
+    }
+    </script>
 
 
 {% endblock %}
