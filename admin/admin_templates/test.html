@@ -85,16 +85,28 @@
   function changeSides(id) {
     if($('#' + id).parent().attr('id') == 'leftDiv') {
       document.getElementById('rightDiv').appendChild(document.getElementById(id));
+      updateCount();
     } else {
       document.getElementById('leftDiv').appendChild(document.getElementById(id));
+      updateCount();
     }
+  }
+
+  function updateCount() {
+    var count = $('#rightDiv').children().length;
+    document.getElementById('secAHeader').innerHTML = 'Section A: ' + (count-1) + ' Questions';
   }
 </script>
 <div class="toppane">
   <h1>Create or Edit Test</h1>
-  <select>
-
+  <hr/>
+  <select style="display: block; margin: 0 auto;">
+    <option value="create_new" selected="selected">Create New Test</option>
+    {% for test in tests %}
+    <option value="{{test}}">{{test}}</option>
+    {% endfor %}
   </select>
+  <hr/>
   <div class="leftpane">
     <h3>Question Bank</h3>
     <hr/>
@@ -132,6 +144,7 @@
 </div>
 <div class="rightpane" id="rightDiv" style="background-color: #eaeaea;">
   <!-- <div class="centered" id="rightDiv"> -->
+    <h2 id="secAHeader">Section A: 0 Questions</h2>
 
   <!-- </div> -->
 </div>

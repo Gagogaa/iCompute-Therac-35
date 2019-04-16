@@ -36,7 +36,8 @@ def admin_modify_test():
 def admin_test():
     questions = []
     question = {}
-    for counter, exam_question in enumerate(database_session.query(iComputeTest.question), start=1):
+    testNames = []
+    for counter, exam_question in enumerate(database_session.query(Questions.question).distinct(), start=1):
         question['id'] = str(counter)
         question['question'] = exam_question.question
         question['answers'] = []
@@ -45,33 +46,36 @@ def admin_test():
         questions.append(question)
         question = {}
 
-    if request.method == 'POST':
-        is_validated = True
-        if ('test_name' not in request.form) or ('year' not in request.form) or ('grade' not in request.form):
-            is_validated = False
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        testNames.append(test.test_name)
 
-        if is_validated:
-            if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
-                # database_session.query(iComputeTest).delete()
-                database_session.commit()
-                for i in range(1, len(request.form)-2):
-                    temp = iComputeTest(orderId=i,
-                                        question=request.form['question' + str(i)],
-                                        section=1,
-                                        test_name=request.form['test_name'],
-                                        year=int(request.form['year']),
-                                        student_grade=request.form['grade'])
-                    database_session.add(temp)
-                database_session.commit()
-                return redirect(url_for('admin.admin_view_test'))
-            else:
-                flash('A test with this test name already exists. Please try again with a different name or edit a pre-existing test.')
-                return redirect(url_for('admin.admin_create_test'))
-        else:
-            flash('Something went wrong with the data you tried to submit.')
-            return redirect(url_for('admin.admin_create_test'))
+    # if request.method == 'POST':
+    #     is_validated = True
+    #     if ('test_name' not in request.form) or ('year' not in request.form) or ('grade' not in request.form):
+    #         is_validated = False
+    #
+    #     if is_validated:
+    #         if request.form['test_name'] not in database_session.query(iComputeTest.test_name).distinct():
+    #             # database_session.query(iComputeTest).delete()
+    #             database_session.commit()
+    #             for i in range(1, len(request.form)-2):
+    #                 temp = iComputeTest(orderId=i,
+    #                                     question=request.form['question' + str(i)],
+    #                                     section=1,
+    #                                     test_name=request.form['test_name'],
+    #                                     year=int(request.form['year']),
+    #                                     student_grade=request.form['grade'])
+    #                 database_session.add(temp)
+    #             database_session.commit()
+    #             return redirect(url_for('admin.admin_view_test'))
+    #         else:
+    #             flash('A test with this test name already exists. Please try again with a different name or edit a pre-existing test.')
+    #             return redirect(url_for('admin.admin_create_test'))
+    #     else:
+    #         flash('Something went wrong with the data you tried to submit.')
+    #         return redirect(url_for('admin.admin_create_test'))
 
-    return render_template('test.html', questions=questions, link=url_for('admin.admin_index'))
+    return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'))
 
 
 # @admin.route('test/test_edit', methods=("GET", "POST"))
