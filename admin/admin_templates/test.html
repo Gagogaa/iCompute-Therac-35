@@ -107,9 +107,9 @@
   <form method="post" action="" id="testForm">
     <select class="form-control" onchange="getTest();" id="testSelect" name="test">
       {% if active_select == "Create New Test" %}
-        <option value="create_new" selected="selected">Create New Test</option>
+        <option value="New Test" selected="selected">Create New Test</option>
       {% else %}
-        <option value="create_new">Create New Test</option>
+        <option value="New Test">Create New Test</option>
       {% endif %}
       {% for test in tests %}
       {% if active_select == test %}
@@ -119,6 +119,13 @@
       {% endif %}
       {% endfor %}
     </select>
+    <br>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+      </div>
+      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
+    </div>
   </form>
   <hr/>
   <div class="leftpane">
