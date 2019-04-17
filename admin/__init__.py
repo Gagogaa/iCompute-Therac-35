@@ -267,10 +267,13 @@ def admin_add_users():
 def admin_edit_questions():
     questions = []
     answers = []
+    files = []
+    fileData = {}
     ansData = {}
     data = {}
     counter = 1
     ansNum = 1
+    fileCounter = 1
 
     # Build Dictionary for questions pulled from the db
     for question in database_session.query(Questions.question, Questions.section).distinct():
@@ -293,10 +296,23 @@ def admin_edit_questions():
             answers.append(ansData)
             ansNum += 1
 
+        for file in database_session.query(QuestionsImages.file_name).filter(QuestionsImages.question == question.question):
+            fileData['file_id'] = fileCounter
+            fileData['file_counter'] = counter
+            file_name = file.file_name
+            fileData['file'] = file_name
+            files.append(fileData)
+            fileCounter +=1
         questions.append(data)
         ansNum = 1
         counter += 1
         data = {}
+
+    for question_image in database_session.query(QuestionsImages.question, QuestionsImages.file_name).distinct():
+        fileData['id'] = fileCounter
+        file_name = question_image.file_name
+
+
 
     return render_template('questionEditUI.html', questions=questions, answers=answers, home_link='./' )
 
@@ -457,15 +473,19 @@ def add_question():
 @admin.route('/addImage', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')
-def add_image(question):
-    file = request.files['file']
-    myQuestion = question
+def add_image():
+    file = request.files['inputFile']
+    myQuestion = request.form['hiddenfield_id']
     questionImage = [QuestionsImages(question = myQuestion,
-                            filename = file.filename,
+                            file_name = file.filename,
                             data = file.read()),
                                 ]
     print(file.filename)
-    return'dope'
+    print(myQuestion)
+    database_session.add_all(questionImage)
+    database_session.commit()
+    return render_template('questionEditUI.html')
+
 @admin.route('/addAnswer', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')
@@ -492,7 +512,9 @@ def delete_question():
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
-
+        del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
+        del_query.delete()
+        database_session.commit()
 
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
@@ -512,6 +534,10 @@ def delete_answer():
 def edit_question():
     if 'question' in request.form and 'new_question' in request.form:
         rows_to_update = database_session.query(Questions).filter(Questions.question == request.form['question'])
+        for row in rows_to_update:
+            row.question = request.form['new_question']
+        database_session.commit()
+        rows_to_update = database_session.query(QuestionsImages).filter(QuestionsImages.question == request.form['question'])
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()

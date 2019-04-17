@@ -77,12 +77,44 @@
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
+              <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
             </div>
             <input class="form-control" type="text" id="question-name{{question['id']}}" value="{{question['question']}}" disabled>
             <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+          <div class="question-edit-answers collapse is-collapsed">
+            {% for file in files %}
+              {% if file['file_counter'] == question['id'] %}
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+                  </div>
+
+                  <input class="form-control" type="text" id="{{file['file_id']}}" value="{{file['file']}}">
+
+                  <div class="input-group-append">
+
+                    <button class="btn btn-outline-secondary" type="button" onclick="delpictureDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+              </div>
+              <form method="POST" action="/admin/addImage" encType="multipart/form-data" class="form-control-append" value="">
+
+                <input type="file" name="inputFile">
+                <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
+
+              </form>
+
             </div>
           </div>
         </li>
@@ -110,10 +142,10 @@
           <input type="text" class="form-control" id="new-question-answer-textbox">
           <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
           <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
-          <form  enctype="multipart/form-data" action="" method="post" name="upload-file">
+          <form  enctype="multipart/form-data" action="/admin/editAnswer" method="post" name="upload-file">
           <label for="fileupload" class="col-form-label">Upload Picture(optional):</label>
           <br>
-          <input id = "fileupload" type = "file" name ="file" enctype="multipart/form-data">
+          <input id = "fileupload" type = "file" name ="file">
           </form>
         </div>
       </div>
@@ -384,7 +416,7 @@ $(function addQuestion() {
     var answerText = $("#new-question-answer-textbox").val();
     var type = $("#new-question-submit").data("question-type");
     var file = document.getElementById("fileupload");
-
+    alert(form_data);
     var section;
     var errorText = "";
 
@@ -420,7 +452,7 @@ $(function addQuestion() {
       } else if(type === "short-answer") {
         $.ajax({
           url: '/admin/addQuestion',
-          data: {section:type,question:questionText, file:file},
+          data: {section:type,question:questionTextf},
           type: 'POST',
           traditional: true,
           success: function(response){
