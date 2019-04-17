@@ -56,7 +56,7 @@ def admin_test():
             for question in questions:
                 if question['question'] == exam_question.question:
                     question['side'] = "right"
-                    
+
         return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select=test_name)
 
     return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='Create New Test')
@@ -98,29 +98,38 @@ def admin_test():
 #     return render_template('test_edit.html', tests=tests)
 
 
-@admin.route('test/test_view')
+@admin.route('test/test_view', methods=("GET", "POST"))
 @login_required
 @required_user_type('Supervisor')
 def admin_view_test():
-    questions = []
-    data = {}
-    counter = 1
-    ansNum = 1
+    test_names = []
+    for test in database_session.query(iComputeTest.test_name).distinct():
+        test_names.append(test.test_name)
 
-    # Build Dictionary for questions pulled from the db
-    for question in database_session.query(iComputeTest.question):
-        data['id'] = counter
-        data['question'] = question.question
-        for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
-            ans = 'answer' + str(ansNum)
-            data[ans] = answer.answer
-            ansNum += 1
-        questions.append(data)
-        ansNum = 1
-        counter += 1
+    if request.method == "POST":
+        questions = []
         data = {}
-        test = database_session.query(iComputeTest).first()
-    return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade)
+        counter = 1
+        ansNum = 1
+
+        # Build Dictionary for questions pulled from the db
+        for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test']):
+            data['id'] = counter
+            data['question'] = question.question
+            for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
+                ans = 'answer' + str(ansNum)
+                data[ans] = answer.answer
+                ansNum += 1
+            questions.append(data)
+            ansNum = 1
+            counter += 1
+            data = {}
+
+        test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test']).first()
+
+        return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade, is_chosen=True, tests=test_names)
+
+    return render_template('test_view.html', is_chosen=False, tests=test_names)
 
 
 @admin.route('/user')
