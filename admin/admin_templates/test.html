@@ -65,7 +65,7 @@
 }
 
 .leftpane {
-    width: 50%;
+    width: 40%;
     height: 100%;
     float: left;
     border-collapse: collapse;
@@ -73,7 +73,7 @@
 }
 
 .rightpane {
-  width: 50%;
+  width: 60%;
   height: 100%;
   position: relative;
   float: right;
@@ -96,16 +96,30 @@
     var count = $('#rightDiv').children().length;
     document.getElementById('secAHeader').innerHTML = 'Section A: ' + (count-1) + ' Questions';
   }
+
+  function getTest(){
+    $('#testForm').submit();
+  }
 </script>
 <div class="toppane">
   <h1>Create or Edit Test</h1>
   <hr/>
-  <select style="display: block; margin: 0 auto;">
-    <option value="create_new" selected="selected">Create New Test</option>
-    {% for test in tests %}
-    <option value="{{test}}">{{test}}</option>
-    {% endfor %}
-  </select>
+  <form method="post" action="" id="testForm">
+    <select class="form-control" onchange="getTest();" id="testSelect" name="test">
+      {% if active_select == "Create New Test" %}
+        <option value="create_new" selected="selected">Create New Test</option>
+      {% else %}
+        <option value="create_new">Create New Test</option>
+      {% endif %}
+      {% for test in tests %}
+      {% if active_select == test %}
+        <option value="{{test}}" selected="selected">{{test}}</option>
+      {% else %}
+        <option value="{{test}}">{{test}}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+  </form>
   <hr/>
   <div class="leftpane">
     <h3>Question Bank</h3>
@@ -119,33 +133,58 @@
 <div class="leftpane" id="leftDiv">
   <!-- <div class="centered" id="leftDiv"> -->
   {% for question in questions %}
-    <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id)">
-      <div class="container">
-        <h4><b>{{question['question']}}</b></h4>
-        {% for answer in question['answers'] %}
-        {% if answer['is_correct'] == "True" %}
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-            <p style="margin-left: 5px;">{{answer['answer']}}</p>
-          </div>
-          <br>
-          {% else %}
-          <div class="input-group-prepend">
-            <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-            <p style="margin-left: 5px;">{{answer['answer']}}</p>
-          </div>
-          <br>
-          {% endif %}
-        {% endfor %}
+    {% if question['side'] == "left" %}
+      <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id)">
+        <div class="container">
+          <h4><b>{{question['question']}}</b></h4>
+          {% for answer in question['answers'] %}
+          {% if answer['is_correct'] == "True" %}
+            <div class="input-group-prepend">
+              <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+              <p style="margin-left: 5px;">{{answer['answer']}}</p>
+            </div>
+            <br>
+            {% else %}
+            <div class="input-group-prepend">
+              <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+              <p style="margin-left: 5px;">{{answer['answer']}}</p>
+            </div>
+            <br>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
-    </div>
+    {% endif %}
   {% endfor %}
   <!-- </div -->
 </div>
 <div class="rightpane" id="rightDiv" style="background-color: #eaeaea;">
   <!-- <div class="centered" id="rightDiv"> -->
     <h2 id="secAHeader">Section A: 0 Questions</h2>
-
+    {% for question in questions %}
+      {% if question['side'] == "right" %}
+        <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id)">
+          <div class="container">
+            <h4><b>{{question['question']}}</b></h4>
+            {% for answer in question['answers'] %}
+            {% if answer['is_correct'] == "True" %}
+              <div class="input-group-prepend">
+                <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                <p style="margin-left: 5px;">{{answer['answer']}}</p>
+              </div>
+              <br>
+              {% else %}
+              <div class="input-group-prepend">
+                <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                <p style="margin-left: 5px;">{{answer['answer']}}</p>
+              </div>
+              <br>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
   <!-- </div> -->
 </div>
 {% endblock %}
