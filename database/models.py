@@ -46,6 +46,12 @@ class iComputeTest(Base):
         ForeignKeyConstraint(['question'], ['Questions.question']),
     )
 
+class QuestionsImages(Base):
+    __tablename__ = 'QuestionsImages'
+
+    question = Column(String, primary_key=True)
+    file_name = Column(String, primary_key=True)
+    data = Column(LargeBinary)
 
 class Questions(Base):
     __tablename__ = 'Questions'

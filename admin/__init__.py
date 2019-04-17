@@ -238,6 +238,7 @@ def admin_add_users():
                                    password = generate_password_hash(password),
                                    user_type = user_type)
                                    ]
+
                 database_session.add_all(userData)
                 database_session.commit()
     return 'success'
@@ -405,22 +406,23 @@ def admin_view_results():
 @login_required
 @required_user_type('Supervisor')
 def add_question():
-    if 'section' in request.form:
-        mySection = request.form['section']
-        if mySection == "multiple-choice":
-            if 'question' in request.form and 'answer' in request.form:
-                myQuestion = request.form['question']
-                myAnswer = request.form['answer']
-                question = [Questions(question = myQuestion,
-                                   answer = myAnswer,
-                                   is_correct = True,
-                                   section = 1)
-                                   ]
-                database_session.add_all(question)
-                database_session.commit()
-                return render_template('questionEditUI.html')
-        elif mySection == "short-answer":
-                if 'question' in request.form:
+    if request.method == 'POST':
+        if 'section' in request.form:
+            mySection = request.form['section']
+            if mySection == "multiple-choice":
+                if 'question' in request.form and 'answer' in request.form:
+                    myQuestion = request.form['question']
+                    myAnswer = request.form['answer']
+                    question = [Questions(question = myQuestion,
+                                        answer = myAnswer,
+                                        is_correct = True,
+                                        section = 1)
+                                        ]
+                    database_session.add_all(question)
+                    database_session.commit()
+                    return render_template('questionEditUI.html')
+            elif mySection == "short-answer":
+                if 'question' in request.form and 'file' in request.form:
                     myQuestion = request.form['question']
                     question = [Questions(question = myQuestion,
                                     answer = "this is a section 2 question",
@@ -428,20 +430,42 @@ def add_question():
                                     section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-                    return render_template('questionEditUI.html')
-        elif mySection == "scratch-answer":
-            if 'question' in request.form:
-                myQuestion = request.form['question']
-                question = [Questions(question = myQuestion,
+
+                else:
+                    myQuestion = request.form['question']
+
+                    question = [Questions(question = myQuestion,
+                                        answer = "this is a section 2 question",
+                                        is_correct = True,
+                                        section = 2)]
+                    database_session.add_all(question)
+                    database_session.commit()
+                return render_template('questionEditUI.html')
+            elif mySection == "scratch-answer":
+                if 'question' in request.form:
+                    myQuestion = request.form['question']
+                    question = [Questions(question = myQuestion,
                                     answer = "this is a section 3 question",
                                     is_correct = True,
-                                    section = 3)]
-                database_session.add_all(question)
-                database_session.commit()
-                return render_template('questionEditUI.html')
-    return 'success'
+                                    section = 3),
+                            ]
+                    database_session.add_all(question)
+                    database_session.commit()
+                    return render_template('questionEditUI.html')
+        return 'success'
 
-
+@admin.route('/addImage', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def add_image(question):
+    file = request.files['file']
+    myQuestion = question
+    questionImage = [QuestionsImages(question = myQuestion,
+                            filename = file.filename,
+                            data = file.read()),
+                                ]
+    print(file.filename)
+    return'dope'
 @admin.route('/addAnswer', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')

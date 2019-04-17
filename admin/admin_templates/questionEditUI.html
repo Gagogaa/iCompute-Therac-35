@@ -110,9 +110,11 @@
           <input type="text" class="form-control" id="new-question-answer-textbox">
           <div class="invalid-feedback" id="new-question-question-invalid-feedback">Error</div>
           <div class="invalid-feedback" id="new-question-answer-invalid-feedback">Error</div>
+          <form  enctype="multipart/form-data" action="" method="post" name="upload-file">
           <label for="fileupload" class="col-form-label">Upload Picture(optional):</label>
           <br>
-          <input id = "fileupload" type = "file">
+          <input id = "fileupload" type = "file" name ="file" enctype="multipart/form-data">
+          </form>
         </div>
       </div>
       <div class="modal-footer">
@@ -360,13 +362,13 @@ function addQuestionDialog(elem) {
   // show or hide the answer field, depending on the question type
   if(questionType === "multiple-choice") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").show();
-    $("#question-file-upload").hide();
+    $("label[for='fileupload'],#fileupload").hide();
   } else if (questionType === "short-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
-    $("#question-file-upload").show();
+    $("label[for='fileupload'],#fileupload").show();
   } else if (questionType === "scratch-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
-    $("#question-file-upload").show();
+    $("label[for='fileupload'],#fileupload").show();
   }
   // finally, show the modal
   $("#new-question-modal").modal("show");
@@ -381,8 +383,11 @@ $(function addQuestion() {
     var questionText = $("#new-question-question-textbox").val();
     var answerText = $("#new-question-answer-textbox").val();
     var type = $("#new-question-submit").data("question-type");
+    var file = document.getElementById("fileupload");
+
     var section;
     var errorText = "";
+
     console.log(questionText);
     console.log(answerText);
 
@@ -402,6 +407,7 @@ $(function addQuestion() {
         $.ajax({
           url: '/admin/addQuestion',
           data: {section:type,question:questionText,answer:answerText},
+          data2: form_data,
           type: 'POST',
           traditional: true,
           success: function(response){
@@ -414,7 +420,7 @@ $(function addQuestion() {
       } else if(type === "short-answer") {
         $.ajax({
           url: '/admin/addQuestion',
-          data: {section:type,question:questionText},
+          data: {section:type,question:questionText, file:file},
           type: 'POST',
           traditional: true,
           success: function(response){
@@ -427,7 +433,7 @@ $(function addQuestion() {
       } else if(type === "scratch-answer"){
         $.ajax({
           url: '/admin/addQuestion',
-          data: {section:type,question:questionText},
+          data: {section:type,question:questionText,file:file},
           type: 'POST',
           traditional: true,
           success: function(response){
