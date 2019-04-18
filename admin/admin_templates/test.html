@@ -140,6 +140,7 @@
 <div class="leftpane" id="leftDiv">
   <!-- <div class="centered" id="leftDiv"> -->
   <h3><strong>Section A Questions</strong></h3>
+  <hr />
   {% for question in questions %}
     {% if question['section'] == 1 %}
       {% if question['side'] == "left" %}
@@ -167,6 +168,7 @@
     {% endif %}
   {% endfor %}
   <h3><strong>Section C Questions</strong></h3>
+  <hr />
   {% for question in questions %}
     {% if question['section'] == 3 %}
       {% if question['side'] == "left" %}
