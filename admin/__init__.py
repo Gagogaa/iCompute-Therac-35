@@ -430,7 +430,7 @@ def add_question():
                                         ]
                     database_session.add_all(question)
                     database_session.commit()
-                    return render_template('questionEditUI.html')
+                return redirect(url_for('admin.admin_edit_questions'))
             elif mySection == "short-answer":
                 if 'question' in request.form and 'file' in request.form:
                     myQuestion = request.form['question']
@@ -450,7 +450,7 @@ def add_question():
                                         section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-                return render_template('questionEditUI.html')
+                return redirect(url_for('admin.admin_edit_questions'))
             elif mySection == "scratch-answer":
                 if 'question' in request.form:
                     myQuestion = request.form['question']
@@ -461,7 +461,8 @@ def add_question():
                             ]
                     database_session.add_all(question)
                     database_session.commit()
-                    return render_template('questionEditUI.html')
+                return redirect(url_for('admin.admin_edit_questions'))
+
         return 'success'
 
 @admin.route('/addImage', methods=['POST'])
