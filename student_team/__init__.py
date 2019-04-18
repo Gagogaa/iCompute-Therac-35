@@ -90,4 +90,18 @@ def section_b():
 @login_required
 @required_user_type('Student')
 def section_c():
-    return render_template('scratch_submit.html')
+
+        sectionCQuestion = database_session.query(QuestionsImages.question)
+        sectionCImage = database_session.query(QuestionsImages.file_name)
+
+    #student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
+    #    if 'team_name' in request.form and 'team_year' in request.form and 'section' in request.form and 'question' in request.form and 'answer' in request.form:
+
+# filename to answer
+        #filename = $('scratch_file').val().replace(/.*(\/|\\)/, '');
+        #filename = request.form['answer']
+        scratch_file = Column(LargeBinary)
+
+
+
+        return render_template('scratch_submit.html')
