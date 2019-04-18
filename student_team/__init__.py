@@ -90,5 +90,8 @@ def section_b():
 @login_required
 @required_user_type('Student')
 def section_c():
+<<<<<<< HEAD
     
+=======
+>>>>>>> C.16
     return render_template('scratch_submit.html')
