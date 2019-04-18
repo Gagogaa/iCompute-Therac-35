@@ -483,7 +483,6 @@ $(function addQuestion() {
         $.ajax({
           url: '/admin/addQuestion',
           data: {section:type,question:questionText,answer:answerText},
-          data2: form_data,
           type: 'POST',
           traditional: true,
           success: function(response){
