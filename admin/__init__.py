@@ -268,7 +268,6 @@ def admin_edit_questions():
     questions = []
     answers = []
     files = []
-    fileData = {}
     ansData = {}
     data = {}
     counter = 1
@@ -297,6 +296,7 @@ def admin_edit_questions():
             ansNum += 1
 
         for file in database_session.query(QuestionsImages.file_name).filter(QuestionsImages.question == question.question):
+            fileData = {}
             fileData['file_id'] = fileCounter
             fileData['file_counter'] = counter
             file_name = file.file_name
@@ -468,17 +468,19 @@ def add_question():
 @login_required
 @required_user_type('Supervisor')
 def add_image():
-    file = request.files['inputFile']
-    myQuestion = request.form['hiddenfield_id']
-    questionImage = [QuestionsImages(question = myQuestion,
-                            file_name = file.filename,
-                            data = file.read()),
-                                ]
-    print(file.filename)
-    print(myQuestion)
-    database_session.add_all(questionImage)
-    database_session.commit()
-    return render_template('questionEditUI.html')
+    if ('inputFile' in request.files) and ('hiddenfield_id' in request.form):
+        file = request.files['inputFile']
+        myQuestion = request.form['hiddenfield_id']
+        if not QuestionsImages.query.filter_by(file_name=file.filename).first():
+            questionImage = [QuestionsImages(question = myQuestion,
+                                             file_name = file.filename,
+                                             data = file.read()),
+                                             ]
+            database_session.add_all(questionImage)
+            database_session.commit()
+
+    return redirect(url_for('admin.admin_edit_questions'))
+
 
 @admin.route('/addAnswer', methods=['POST'])
 @login_required
