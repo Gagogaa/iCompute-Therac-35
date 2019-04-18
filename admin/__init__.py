@@ -297,6 +297,7 @@ def admin_edit_questions():
             ansNum += 1
 
         for file in database_session.query(QuestionsImages.file_name).filter(QuestionsImages.question == question.question):
+            fileData = {}
             fileData['file_id'] = fileCounter
             fileData['file_counter'] = counter
             file_name = file.file_name
