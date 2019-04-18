@@ -76,6 +76,7 @@
         <li class="list-group-item" id="question{{question['id']}}">
           <div class="input-group">
             <div class="input-group-prepend">
+              <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
               <span class="input-group-text question-edit-prepend"><i class="fas fa-align-left"></i></span>
             </div>
             <input class="form-control" type="text" id="question-name{{question['id']}}" value="{{question['question']}}" disabled>
@@ -83,6 +84,37 @@
             <div class="input-group-append">
               <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
               <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+          <div class="question-edit-answers collapse is-collapsed">
+            {% for file in files %}
+              {% if file['file_counter'] == question['id'] %}
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+                  </div>
+
+                  <input class="form-control" type="text" id="{{file['file_id']}}" value="{{file['file']}}">
+                  <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                  <div class="input-group-append">
+
+                    <button class="btn btn-outline-secondary" type="button" onclick="delpictureDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+              </div>
+              <form method="POST" action="/admin/addImage" encType="multipart/form-data" class="form-control-append" value="">
+
+                <input type="file" name="inputFile">
+                <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
+
+              </form>
+
             </div>
           </div>
         </li>
@@ -118,6 +150,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <!-- answer modal below -->
@@ -186,6 +219,28 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="button" class="btn btn-primary" id="del-answer-submit" data-question="question" data-answer="answer">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- del picture confirmation modal -->
+<div class="modal fade" id="del-image-modal" tabindex="-1" role="dialog" aria-labelledby="del-answer-modal-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="del-image-modal-label" data-question="question"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <p id="del-image-modal-body"></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="del-image-submit" data-question="question" data-image="file_name">Confirm</button>
       </div>
     </div>
   </div>
@@ -301,8 +356,36 @@ $(function deleteQuestion() {
     $("#del-question-modal").modal("hide");
   });
 });
+function delpictureDialog(elem) {
+  var imageVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
+  var questionVal = elem.parentNode.parentNode.getElementsByClassName("hidden")[0];
+  var question = $(elem).data("question");
+  $("#del-image-modal-body").text("Remove image " + imageVal.value + " from " + questionVal.value + "?");
+  $("#del-image-submit").data("question", questionVal.value);
+  $("#del-image-submit").data("file_name", imageVal.value);
+  // finally, show the modal
+  $("#del-image-modal").modal("show");
+}
+$(function deleteImage() {
+  $('#del-image-submit').click(function() {
+    var question = $("#del-image-submit").data("question");
+    var file_name = $("#del-image-submit").data("file_name");
 
-
+    $.ajax({
+      url: '/admin/delImage',
+      data: {question:question, file_name:file_name},
+      type: 'POST',
+      traditional: true,
+      success: function(response){
+        location.reload();
+      },
+      error: function(error){
+        location.reload();
+      }
+    });
+    $("#del-answer-modal").modal("hide");
+  });
+});
 function delAnswerDialog(elem){
   // get the question  from the calling button and save it to the submit button for later
   var answerVal = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
@@ -346,6 +429,7 @@ function addQuestionDialog(elem) {
   // clear existing text from the textboxes
   $("#new-question-question-textbox").val("");
   $("#new-question-answer-textbox").val("");
+  $("#fileupload").val("");
   // clear any error message from the textboxes
   $("#new-question-question-textbox").removeClass("is-invalid");
   $("#new-question-submit").attr("disabled", false);
@@ -355,10 +439,13 @@ function addQuestionDialog(elem) {
   // show or hide the answer field, depending on the question type
   if(questionType === "multiple-choice") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").show();
+
   } else if (questionType === "short-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+
   } else if (questionType === "scratch-answer") {
     $("label[for='new-question-answer-textbox'], #new-question-answer-textbox").hide();
+
   }
   // finally, show the modal
   $("#new-question-modal").modal("show");
@@ -373,8 +460,10 @@ $(function addQuestion() {
     var questionText = $("#new-question-question-textbox").val();
     var answerText = $("#new-question-answer-textbox").val();
     var type = $("#new-question-submit").data("question-type");
+
     var section;
     var errorText = "";
+
     console.log(questionText);
     console.log(answerText);
 
@@ -406,7 +495,7 @@ $(function addQuestion() {
       } else if(type === "short-answer") {
         $.ajax({
           url: '/admin/addQuestion',
-          data: {section:type,question:questionText},
+          data: {section:type,question:questionText,answer:answerText},
           type: 'POST',
           traditional: true,
           success: function(response){
@@ -419,7 +508,7 @@ $(function addQuestion() {
       } else if(type === "scratch-answer"){
         $.ajax({
           url: '/admin/addQuestion',
-          data: {section:type,question:questionText},
+          data: {section:type,question:questionText,answer:answerText},
           type: 'POST',
           traditional: true,
           success: function(response){
