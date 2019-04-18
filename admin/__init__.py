@@ -61,41 +61,27 @@ def admin_test():
 
     return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='Create New Test')
 
-# @admin.route('test/test_edit', methods=("GET", "POST"))
-# @login_required
-# @required_user_type('Supervisor')
-# def admin_edit_test():
-#     tests = []
-#     for test in database_session.query(iComputeTest.test_name).distinct():
-#         tests.append(test.test_name)
-#
-#     if request.method == 'POST':
-#         if "question1" in request.form:
-#             database_session.query(iComputeTest).delete()
-#             for i in range(1, len(request.form)-2):
-#                 temp = iComputeTest(orderId=i,
-#                                     question=request.form['question' + str(i)],
-#                                     section=1,
-#                                     test_name=request.form['test_name'],
-#                                     year=int(request.form['year']),
-#                                     student_grade=request.form['grade'])
-#                 database_session.add(temp)
-#             database_session.commit()
-#             return redirect(url_for('admin.admin_view_test'))
-#         else:
-#             testquestions = []
-#             questions = []
-#
-#             for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
-#                 testquestions.append(question.question)
-#
-#             for question in database_session.query(Questions.question).distinct():
-#                 questions.append(question.question)
-#
-#             test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
-#             return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
-#
-#     return render_template('test_edit.html', tests=tests)
+
+@admin.route('test/add_question', methods=("GET", "POST"))
+@login_required
+@required_user_type('Supervisor')
+def test_add_question():
+    if ('testId' in request.form) and ('question' in request.form):
+        print(f'Add {request.form["question"]} to {request.form["testId"]}')
+        return "success"
+
+    return "error"
+
+
+@admin.route('test/remove_question', methods=("GET", "POST"))
+@login_required
+@required_user_type('Supervisor')
+def test_remove_question():
+    if ('testId' in request.form) and ('question' in request.form):
+        print(f'Remove {request.form["question"]} from {request.form["testId"]}')
+        return "success"
+
+    return "error"
 
 
 @admin.route('test/test_view', methods=("GET", "POST"))

@@ -83,12 +83,37 @@
 </style>
 <script>
   function changeSides(id) {
+    testName = document.getElementById('test-name').value;
+    question = document.getElementById(id).children[0].children[0].children[0].innerText;
+
     if($('#' + id).parent().attr('id') == 'leftDiv') {
       document.getElementById('rightDiv').appendChild(document.getElementById(id));
       updateCount();
+
+      $.ajax({
+        url: '/admin/test/add_question',
+        data: {testId: testName, question: question},
+        type: 'POST',
+        traditional: true,
+        success: function(response){},
+        error: function(error){
+          console.log(error);
+        }
+      });
     } else {
       document.getElementById('leftDiv').appendChild(document.getElementById(id));
       updateCount();
+
+      $.ajax({
+        url: '/admin/test/remove_question',
+        data: {testId: testName, question: question},
+        type: 'POST',
+        traditional: true,
+        success: function(response){},
+        error: function(error){
+          console.log(error);
+        }
+      });
     }
   }
 
@@ -124,7 +149,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
       </div>
-      <input type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
+      <input {% if not (active_select == "New Test") %} disabled {% endif %} id="test-name" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
     </div>
   </form>
   <hr/>
