@@ -288,11 +288,7 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-<<<<<<< HEAD
-    return render_template('questionEditUI.html', questions=questions, answers=answers)
-=======
     return render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' )
->>>>>>> C.16
 
 
 @admin.route('/individual-results/<test>')
