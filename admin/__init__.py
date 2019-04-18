@@ -308,13 +308,7 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-    for question_image in database_session.query(QuestionsImages.question, QuestionsImages.file_name).distinct():
-        fileData['id'] = fileCounter
-        file_name = question_image.file_name
-
-
-
-    return render_template('questionEditUI.html', questions=questions, answers=answers, home_link='./' )
+    return render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' )
 
 
 @admin.route('/individual-results/<test>')
@@ -526,6 +520,15 @@ def delete_answer():
         database_session.commit()
     return"success"
 
+@admin.route('/delImage', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def delete_image():
+    if 'question' in request.form and 'file_name' in request.form:
+        del_query = database_session.query(QuestionsImages.file_name).filter(and_(QuestionsImages.question==request.form['question'], QuestionsImages.file_name==request.form['file_name']))
+        del_query.delete()
+        database_session.commit()
+    return"success"
 
 # TODO When altering a question we also need to alter the questions in the Test table
 @admin.route('/editQuestion', methods=['POST'])
