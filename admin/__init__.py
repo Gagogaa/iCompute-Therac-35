@@ -12,6 +12,9 @@ import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
 from werkzeug.security import generate_password_hash
+from datetime import datetime
+from sqlalchemy import desc
+
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -62,24 +65,44 @@ def admin_test():
     return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='Create New Test')
 
 
-@admin.route('test/add_question', methods=("GET", "POST"))
+@admin.route('test/add_question', methods=["POST"])
 @login_required
 @required_user_type('Supervisor')
 def test_add_question():
     if ('testId' in request.form) and ('question' in request.form):
-        print(f'Add {request.form["question"]} to {request.form["testId"]}')
-        return "success"
+        existing_question = iComputeTest.query.filter_by(test_name=request.form['testId'], question=request.form['question']).first()
+        question_section = Questions.query.filter_by(question=request.form['question']).first()
+
+        if (not existing_question) and question_section:
+            test = iComputeTest.query.filter_by(test_name=request.form['testId']).order_by(desc(iComputeTest.orderId)).first()
+
+
+            test_question = iComputeTest(orderId=(test.orderId + 1 if test else 1),
+                                         question=request.form['question'],
+                                         section=question_section.section,
+                                         test_name=request.form['testId'],
+                                         year=(test.year if test else datetime.now().year),
+                                         student_grade='5'  # TODO Figure out what to do with this
+                                         )
+
+            database_session.add(test_question)
+            database_session.commit()
+
+            return "success"
 
     return "error"
 
 
-@admin.route('test/remove_question', methods=("GET", "POST"))
+@admin.route('test/remove_question', methods=["POST"])
 @login_required
 @required_user_type('Supervisor')
 def test_remove_question():
     if ('testId' in request.form) and ('question' in request.form):
-        print(f'Remove {request.form["question"]} from {request.form["testId"]}')
-        return "success"
+        question = database_session.query(iComputeTest).filter_by(test_name=request.form['testId'], question=request.form['question']).first()
+        if question:
+            database_session.delete(question)
+            database_session.commit()
+            return "success"
 
     return "error"
 
