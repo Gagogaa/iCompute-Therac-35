@@ -37,11 +37,12 @@ def admin_test():
     questions = []
     question = {}
     testNames = []
-    for counter, exam_question in enumerate(database_session.query(Questions.question).distinct(), start=1):
+    for counter, exam_question in enumerate(database_session.query(Questions.question, Questions.section).distinct(), start=1):
         question['id'] = str(counter)
         question['question'] = exam_question.question
         question['answers'] = []
         question['side'] = "left"
+        question['section'] = exam_question.section
         for answer in database_session.query(Questions.answer, Questions.is_correct).filter(Questions.question == exam_question.question):
             question['answers'].append({"answer": escape(answer.answer), "is_correct": escape(answer.is_correct)})
         questions.append(question)
