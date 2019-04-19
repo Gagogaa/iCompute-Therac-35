@@ -12,6 +12,9 @@ import os
 from werkzeug.datastructures import Headers
 from werkzeug.wrappers import Response
 from werkzeug.security import generate_password_hash
+from datetime import datetime
+from sqlalchemy import desc
+
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -62,41 +65,47 @@ def admin_test():
 
     return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='Create New Test')
 
-# @admin.route('test/test_edit', methods=("GET", "POST"))
-# @login_required
-# @required_user_type('Supervisor')
-# def admin_edit_test():
-#     tests = []
-#     for test in database_session.query(iComputeTest.test_name).distinct():
-#         tests.append(test.test_name)
-#
-#     if request.method == 'POST':
-#         if "question1" in request.form:
-#             database_session.query(iComputeTest).delete()
-#             for i in range(1, len(request.form)-2):
-#                 temp = iComputeTest(orderId=i,
-#                                     question=request.form['question' + str(i)],
-#                                     section=1,
-#                                     test_name=request.form['test_name'],
-#                                     year=int(request.form['year']),
-#                                     student_grade=request.form['grade'])
-#                 database_session.add(temp)
-#             database_session.commit()
-#             return redirect(url_for('admin.admin_view_test'))
-#         else:
-#             testquestions = []
-#             questions = []
-#
-#             for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test_name']):
-#                 testquestions.append(question.question)
-#
-#             for question in database_session.query(Questions.question).distinct():
-#                 questions.append(question.question)
-#
-#             test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test_name']).first()
-#             return render_template('test_edit.html', questions=questions, tests=tests, testquestions=testquestions, name=test.test_name, grade=test.student_grade, year=test.year)
-#
-#     return render_template('test_edit.html', tests=tests)
+
+@admin.route('test/add_question', methods=["POST"])
+@login_required
+@required_user_type('Supervisor')
+def test_add_question():
+    if ('testId' in request.form) and ('question' in request.form):
+        existing_question = iComputeTest.query.filter_by(test_name=request.form['testId'], question=request.form['question']).first()
+        question_section = Questions.query.filter_by(question=request.form['question']).first()
+
+        if (not existing_question) and question_section:
+            test = iComputeTest.query.filter_by(test_name=request.form['testId']).order_by(desc(iComputeTest.orderId)).first()
+
+
+            test_question = iComputeTest(orderId=(test.orderId + 1 if test else 1),
+                                         question=request.form['question'],
+                                         section=question_section.section,
+                                         test_name=request.form['testId'],
+                                         year=(test.year if test else datetime.now().year),
+                                         student_grade='5'  # TODO Figure out what to do with this
+                                         )
+
+            database_session.add(test_question)
+            database_session.commit()
+
+            return "success"
+
+    return "error"
+
+
+@admin.route('test/remove_question', methods=["POST"])
+@login_required
+@required_user_type('Supervisor')
+def test_remove_question():
+    if ('testId' in request.form) and ('question' in request.form):
+        question = database_session.query(iComputeTest).filter_by(test_name=request.form['testId'], question=request.form['question']).first()
+        if question:
+            database_session.delete(question)
+            database_session.commit()
+            return "success"
+
+    return "error"
 
 
 @admin.route('test/test_view', methods=("GET", "POST"))
