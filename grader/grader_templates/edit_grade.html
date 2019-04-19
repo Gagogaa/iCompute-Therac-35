@@ -64,7 +64,7 @@
           <div class="card">
             <div class="card-header" style="display: flex; flex-wrap: nowrap">
                 <h2><span class="badge badge-primary mr-3">{{loop.index}}</span></h2>
-                <h5 style="align-self: center">{{section_two_answer.question}}</h5>
+                <h5 class="section-two-question-text" style="align-self: center">{{section_two_answer.question}}</h5>
             </div>
             <div class="card-body">
               <div class="form-group">
@@ -73,7 +73,7 @@
               <form class="form-inline" style="float: right">
                 <label class="my-1 mr-2" for="section-two-grade-input-q1">Grade</label>
                 <div class="input-group" id="section-two-grade-input-q1">
-                  <input type="text" class="form-control" value="5" size="1" data-max="5" disabled>
+                  <input type="text" class="form-control section-two-score-textbox" value="5" size="1" data-max="5" disabled>
                   <div class="input-group-append">
                     <span class="input-group-text">/5</span>
                     <button class="btn btn-outline-secondary edit-button section-two-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
@@ -188,11 +188,21 @@
           textField.classList.remove("is-invalid");
           elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
           textField.disabled = true;
-          // TODO: add code to update the grade in the database, then update grade badge clientside
-          //updateSectionThreeGrade("section_three", textField.value);
+          // handle edits to grade if the edit is for section three
           if(elem.classList.contains('section-three-edit-button')) {
-            updateSectionThreeGrade("section_three", textField.value);
+            updateSectionThreeGrade(textField.value);
             document.getElementById('section-three-score').innerHTML = textField.value;
+          } else if(elem.classList.contains('section-two-edit-button')) {
+            var question = elem.parentNode.parentNode.parentNode.parentNode.parentNode.getElementsByClassName("section-two-question-text").innerHTML;
+            updateSectionTwoGrade(question, textField.value);
+
+            // add up the grades of section two to update the badge clientside
+            var scoreTextboxes = document.getElementById("section-two").getElementsByClassName("section-two-score-textbox");
+            var sectionTwoScore = 0;
+            for(scoreTextbox in scoreTextboxes) {
+              sectionTwoScore += Number(scoreTextbox.value);
+            }
+            document.getElementById('section-two-score').innerHTML = sectionTwoScore;
           }
         } else {
           textField.classList.add("is-invalid");
@@ -221,11 +231,11 @@
       return true;
     }
 
-    // update grade in backend
-    function updateSectionThreeGrade(section, score) {
+    // update section three grade in backend
+    function updateSectionThreeGrade(score) {
       $.ajax({
         url: '/grader/editGrade',
-        data: {team_name:$('#team_data').data('team_name'), team_year:$('#team_data').data('team_year'), section:section, score:score},
+        data: {team_name:$('#team_data').data('team_name'), team_year:$('#team_data').data('team_year'), section:"section_three", score:score},
         type: 'POST',
         traditional: true,
         success: function(response){
@@ -235,6 +245,10 @@
           console.log(error);
         }
       });
+    }
+    // update section two grade in backend TODO: make this interact with backend once section two backend is ready
+    function updateSectionTwoGrade(question, score) {
+
     }
 
   </script>
