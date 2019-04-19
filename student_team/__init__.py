@@ -111,6 +111,7 @@ def student_s3():
         exam_questions_s3.append(question)
         question = {}
 
+
         #sectionCQuestion = database_session.query(QuestionsImages.question)
     #    sectionCImage = database_session.query(QuestionsImages.file_name)
 
@@ -123,4 +124,4 @@ def student_s3():
 
 
 
-        return render_template('scratch_submit.html')
+        return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3)

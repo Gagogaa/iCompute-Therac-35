@@ -4,9 +4,9 @@
 
 <h1>Section 3 Scratch</h1>
 <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
-  {% for question in exam_qestions %}
+  {% for question in exam_qestions_s3 %}
     {% if question['section'] == 3 %}
-      <p style="font-size: 18px" id="instructions{{sectionCQuestion}}">Instructions for scratch project placeholder</p>
+      <p style="font-size: 18px" id="instructions{{question['question']}}">Instructions for scratch project placeholder</p>
 
       <img id= "image{{sectionCImage}}">
     {% endif %}
