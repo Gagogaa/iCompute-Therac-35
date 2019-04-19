@@ -51,6 +51,10 @@ def student_team_index():
         for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question.question):
             question['answers'].append(escape(answer.answer))
             random.shuffle(question['answers'])
+        for section in database_session.query(Questions.section).filter(Question.question == exam_question.question)
+            question['section'] = section.section
+        for image in database_session.query(QuestionsImages.data).filter(QuestionsImages.questions == exam_question.question)
+            question['image'] = image.data
         exam_questions.append(question)
         question = {}
 
@@ -77,7 +81,7 @@ def student_team_index():
         flash('Your answers have been submitted. Thank you for participating!', 'info')
         return redirect(url_for('index'))
 
-    return render_template('multiple_choice.html', exam_questions=exam_questions)
+    return render_template('multiple_choice.html', 'scratch_submit.html', exam_questions = exam_questions)
 
 
 @student_team.route('/sectionb')
