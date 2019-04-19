@@ -91,6 +91,7 @@ def section_b():
 @required_user_type('Student')
 def section_c():
 
+        
         sectionCQuestion = database_session.query(QuestionsImages.question)
         sectionCImage = database_session.query(QuestionsImages.file_name)
 
