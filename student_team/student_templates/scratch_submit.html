@@ -10,7 +10,7 @@
 
       <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
       <!-- TODO fetch images -->
-      <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
+      <div class="card" style="margin-bottom: 1em;">
         <div class="card-header bg-light">
           {{question['id']}}. {{question['question']}}
 
@@ -20,10 +20,10 @@
       </div>
         {% for image in images %}
           {% if image['file_counter'] == question['id'] %}
-          <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}">
+          <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}" class="img-fluid mb-2">
           {% endif %}
         {% endfor %}
-        <input type="file" name="inputFile" >
+        <input type="file" name="inputFile" class="mb-2">
         <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
 
 
