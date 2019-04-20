@@ -476,14 +476,12 @@ def delete_question():
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
-<<<<<<< HEAD
-    return "success"
 
-=======
         del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
         del_query.delete()
         database_session.commit()
->>>>>>> C.16
+        
+    return "success"
 
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
@@ -519,15 +517,10 @@ def edit_question():
         for row in test_rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
-<<<<<<< HEAD
-
-
-=======
         rows_to_update = database_session.query(QuestionsImages).filter(QuestionsImages.question == request.form['question'])
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
->>>>>>> C.16
     return "success"
 
 
