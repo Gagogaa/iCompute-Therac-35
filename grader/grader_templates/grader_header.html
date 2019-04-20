@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>{% block title %}{% endblock %} - iCompute</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -11,13 +12,16 @@
 
   <!-- Why is this here -->
   <style>
-    .question-edit-prepend {width: 2.5em; text-align: center;}
-    .question-edit-button {width: 2.5em; text-align: center;}
-    .correct-answer {background-color: #e6ffe6;}
-    .incorrect-answer {background-color: #ffe6e6;}
+    .table-mid {
+      text-align: center;
+    }
+    .table-end {
+      text-align: right;
+    }
+    .pseudo-link {
+      cursor: pointer;
+    }
   </style>
-</head>
-
 </head>
 
 <body>
@@ -30,12 +34,16 @@
     </div>
   </nav>
 
-  <script>
-  </script>
 {% block content %} {% endblock %}
+
+  <script>
+    $("tr[data-href]").on("click", function() {
+      document.location = $(this).data("href");
+    });
+  </script>
+
 </body>
 </html>
 
 <script>
 </script>
-

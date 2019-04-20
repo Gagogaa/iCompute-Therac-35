@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %} - iCompute</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="../static/styles.css">
+
+</head>
+
+<body class="container">
+
+  <nav class="navbar sticky-top navbar-light bg-light">
+    <a class="navbar-brand" href="{{link}}" style="padding-right: 10px">iCompute</a>
+
+    <div>
+      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Supervisor</span>
+      <a class="nav-link" id="logout-link" href="#" style="float: left" onclick="logoutAlert()">Logout</a>
+    </div>
+  </nav>
+
+
+  <h3 class="mt-3 ml-2">Select a team to grade</h3>
+
+  <table class="table table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Team</th>
+        <th scope="col" class="table-mid">Section A</th>
+        <th scope="col" class="table-mid">Section B</th>
+        <th scope="col" class="table-mid">Section C</th>
+        <th scope="col" class="table-mid">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-href="#" class="pseudo-link">
+        <th scope="row">Bach 4th Grade</th>
+        <td class="table-mid">8/10</td>
+        <td class="table-mid">7/10</td>
+        <td class="table-mid">24/30</td>
+        <td class="table-mid">39/50</td>
+      </tr>
+      <tr data-href="#" class="pseudo-link">
+        <th scope="row">Bach 5th Grade</th>
+        <td class="table-mid">9/10</td>
+        <td class="table-mid">8/10</td>
+        <td class="table-mid">21/30</td>
+        <td class="table-mid">38/50</td>
+      </tr>
+      <tr data-href="#" class="pseudo-link">
+        <th scope="row">Ann Arbor Open 4th Grade</th>
+        <td class="table-mid">10/10</td>
+        <td class="table-mid">6/10</td>
+        <td class="table-mid">27/30</td>
+        <td class="table-mid">43/50</td>
+      </tr>
+      <tr data-href="#" class="pseudo-link">
+        <th scope="row">Ann Arbor Open 5th Grade</th>
+        <td class="table-mid">9/10</td>
+        <td class="table-mid">10/10</td>
+        <td class="table-mid">28/30</td>
+        <td class="table-mid">47/50</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <style>
+    .table-mid {
+      text-align: center;
+    }
+    .table-end {
+      text-align: right;
+    }
+    .pseudo-link {
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function logoutAlert() {
+      alert("The user is logging out");
+    }
+
+    $("tr[data-href]").on("click", function() {
+      document.location = $(this).data("href");
+    });
+
+    // check if the page was loaded via pressing the back button, and if so, reload the page to make sure the data is up to date
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
+  </script>
+
+{% block content %} {% endblock %}
+</body>
+</html>

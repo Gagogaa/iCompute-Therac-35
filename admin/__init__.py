@@ -321,7 +321,7 @@ def individual_results_csv(test):
     response.headers['Cache-Control'] = 'must-revalidate'
     response.headers['Pragma'] = 'must-revalidate'
     response.headers['Content-type'] = 'text/csv'
-    response.headers['Content-Disposition'] = f'attachment; filename=' + test + '.csv'
+    response.headers['Content-Disposition'] = f'attachment; filename="{test}.csv"'
 
     return response
 
@@ -515,7 +515,7 @@ def delete_image():
         database_session.commit()
     return"success"
 
-# TODO When altering a question we also need to alter the questions in the Test table
+
 @admin.route('/editQuestion', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')

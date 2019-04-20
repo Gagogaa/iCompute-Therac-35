@@ -1,0 +1,35 @@
+{% extends 'header.html' %}
+{% block title %}Student Team{% endblock %}
+{% block content %}
+
+<h1>Section 3 Scratch</h1>
+
+
+
+      {% for question in exam_questions_s3 %}
+      {% if question['section'] == 3 %}
+      <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
+      <!-- TODO fetch images -->
+      <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
+        <div class="card-header bg-light">
+          {{question['id']}}. {{question['question']}}
+
+        </div>
+
+      </div>
+      </div>
+        {% for image in images %}
+          {% if image['file_counter'] == question['id'] %}
+          <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}">
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+        <input type="file" id="studentScratchFile{{scratch_file}}" class="input-default-js" data-multiple-target="{count} files selected" multiple>
+      {% endfor %}
+  <div>
+  
+  </div>
+
+
+
+{% endblock %}

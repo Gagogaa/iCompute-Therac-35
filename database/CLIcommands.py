@@ -124,6 +124,11 @@ def add_demo_data():
                   is_correct = False,
                   section = 1
                   ),
+        Questions(question = 'Scratch Test Question',
+                  answer = 'This is a section 3 question',
+                  is_correct = False,
+                  section = 3
+                  ),
         StudentTeam(team_name = 'teamM8s',
                     team_year = datetime.datetime.now().year,
                     school_name= 'School of Rock',
@@ -168,6 +173,13 @@ def add_demo_data():
                      test_name = 'Test One',
                      year = datetime.datetime.now().year,
                      student_grade = 'Fourth'
+                     ),
+        iComputeTest(orderId = 5,
+                     question = 'Scratch Test Question',
+                     section = 3,
+                     test_name = 'Test One',
+                     year = datetime.datetime.now().year,
+                     student_grade = 'Fourth',
                      ),
         Users(username = 'teamM8s',
               password = generate_password_hash('password'),
