@@ -24,8 +24,6 @@
     </div>
   </nav>
 
-  <!-- TODO: this bit should be its own file -->
-
 
   <h3 class="mt-3 ml-2">Select a team to grade</h3>
 
@@ -83,8 +81,6 @@
     }
   </style>
 
-  <!-- end of bit that needs to be its own file -->
-
   <script>
     function logoutAlert() {
       alert("The user is logging out");
@@ -93,6 +89,12 @@
     $("tr[data-href]").on("click", function() {
       document.location = $(this).data("href");
     });
+
+    // check if the page was loaded via pressing the back button, and if so, reload the page to make sure the data is up to date
+    if(!!window.performance && window.performance.navigation.type == 2)
+    {
+        window.location.reload();
+    }
   </script>
 
 {% block content %} {% endblock %}
