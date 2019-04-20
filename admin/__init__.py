@@ -482,6 +482,10 @@ def delete_question():
         del_query.delete()
         database_session.commit()
 
+        del_query = database_session.query(iComputeTest).filter(iComputeTest.question==request.form['question'])
+        del_query.delete()
+        database_session.commit()
+
         del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
         del_query.delete()
         database_session.commit()
