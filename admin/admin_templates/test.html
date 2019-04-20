@@ -133,7 +133,7 @@
   }
 
   function updateCount() {
-    var count = $('#rightDiv').children().length;
+    var count = document.getElementById('rightDiv').children[0].children.length;
     document.getElementById('secAHeader').innerHTML = 'Section A: ' + (count-1) + ' Questions';
   }
 
