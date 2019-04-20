@@ -248,6 +248,7 @@ def admin_add_users():
                                    password = generate_password_hash(password),
                                    user_type = user_type)
                                    ]
+
                 database_session.add_all(userData)
                 database_session.commit()
     return 'success'
@@ -259,10 +260,12 @@ def admin_add_users():
 def admin_edit_questions():
     questions = []
     answers = []
+    files = []
     ansData = {}
     data = {}
     counter = 1
     ansNum = 1
+    fileCounter = 1
 
     # Build Dictionary for questions pulled from the db
     for question in database_session.query(Questions.question, Questions.section).distinct():
@@ -285,12 +288,20 @@ def admin_edit_questions():
             answers.append(ansData)
             ansNum += 1
 
+        for file in database_session.query(QuestionsImages.file_name).filter(QuestionsImages.question == question.question):
+            fileData = {}
+            fileData['file_id'] = fileCounter
+            fileData['file_counter'] = counter
+            file_name = file.file_name
+            fileData['file'] = file_name
+            files.append(fileData)
+            fileCounter +=1
         questions.append(data)
         ansNum = 1
         counter += 1
         data = {}
 
-    return render_template('questionEditUI.html', questions=questions, answers=answers)
+    return render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' )
 
 
 @admin.route('/individual-results/<test>')
@@ -381,22 +392,23 @@ def admin_view_results():
 @login_required
 @required_user_type('Supervisor')
 def add_question():
-    if 'section' in request.form:
-        mySection = request.form['section']
-        if mySection == "multiple-choice":
-            if 'question' in request.form and 'answer' in request.form:
-                myQuestion = request.form['question']
-                myAnswer = request.form['answer']
-                question = [Questions(question = myQuestion,
-                                   answer = myAnswer,
-                                   is_correct = True,
-                                   section = 1)
-                                   ]
-                database_session.add_all(question)
-                database_session.commit()
-                return render_template('questionEditUI.html')
-        elif mySection == "short-answer":
-                if 'question' in request.form:
+    if request.method == 'POST':
+        if 'section' in request.form:
+            mySection = request.form['section']
+            if mySection == "multiple-choice":
+                if 'question' in request.form and 'answer' in request.form:
+                    myQuestion = request.form['question']
+                    myAnswer = request.form['answer']
+                    question = [Questions(question = myQuestion,
+                                        answer = myAnswer,
+                                        is_correct = True,
+                                        section = 1)
+                                        ]
+                    database_session.add_all(question)
+                    database_session.commit()
+                return redirect(url_for('admin.admin_edit_questions'))
+            elif mySection == "short-answer":
+                if 'question' in request.form and 'file' in request.form:
                     myQuestion = request.form['question']
                     question = [Questions(question = myQuestion,
                                     answer = "this is a section 2 question",
@@ -404,18 +416,47 @@ def add_question():
                                     section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-                    return render_template('questionEditUI.html')
-        elif mySection == "scratch-answer":
-            if 'question' in request.form:
-                myQuestion = request.form['question']
-                question = [Questions(question = myQuestion,
+
+                else:
+                    myQuestion = request.form['question']
+
+                    question = [Questions(question = myQuestion,
+                                        answer = "this is a section 2 question",
+                                        is_correct = True,
+                                        section = 2)]
+                    database_session.add_all(question)
+                    database_session.commit()
+                return redirect(url_for('admin.admin_edit_questions'))
+            elif mySection == "scratch-answer":
+                if 'question' in request.form:
+                    myQuestion = request.form['question']
+                    question = [Questions(question = myQuestion,
                                     answer = "this is a section 3 question",
                                     is_correct = True,
-                                    section = 3)]
-                database_session.add_all(question)
-                database_session.commit()
-                return render_template('questionEditUI.html')
-    return 'success'
+                                    section = 3),
+                            ]
+                    database_session.add_all(question)
+                    database_session.commit()
+                return redirect(url_for('admin.admin_edit_questions'))
+
+        return 'success'
+
+@admin.route('/addImage', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def add_image():
+    if ('inputFile' in request.files) and ('hiddenfield_id' in request.form):
+        file = request.files['inputFile']
+        myQuestion = request.form['hiddenfield_id']
+        if not QuestionsImages.query.filter_by(file_name=file.filename,question=myQuestion).first():
+            questionImage = [QuestionsImages(question = myQuestion,
+                                             file_name = file.filename,
+                                             data = file.read()),
+                                             ]
+            database_session.add_all(questionImage)
+            database_session.commit()
+
+    return redirect(url_for('admin.admin_edit_questions'))
 
 
 @admin.route('/addAnswer', methods=['POST'])
@@ -448,8 +489,11 @@ def delete_question():
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
-    return "success"
 
+        del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
+        del_query.delete()
+        database_session.commit()
+    return "success"
 
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
@@ -461,6 +505,15 @@ def delete_answer():
         database_session.commit()
     return"success"
 
+@admin.route('/delImage', methods=['POST'])
+@login_required
+@required_user_type('Supervisor')
+def delete_image():
+    if 'question' in request.form and 'file_name' in request.form:
+        del_query = database_session.query(QuestionsImages.file_name).filter(and_(QuestionsImages.question==request.form['question'], QuestionsImages.file_name==request.form['file_name']))
+        del_query.delete()
+        database_session.commit()
+    return"success"
 
 # TODO When altering a question we also need to alter the questions in the Test table
 @admin.route('/editQuestion', methods=['POST'])
@@ -477,7 +530,10 @@ def edit_question():
             row.question = request.form['new_question']
         database_session.commit()
 
-
+        rows_to_update = database_session.query(QuestionsImages).filter(QuestionsImages.question == request.form['question'])
+        for row in rows_to_update:
+            row.question = request.form['new_question']
+        database_session.commit()
     return "success"
 
 
