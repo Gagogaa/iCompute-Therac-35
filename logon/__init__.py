@@ -102,6 +102,8 @@ def index():
                     elif current_user.user_type == 'Grader':
                         return redirect(url_for('grader.grader_index'))
                     elif current_user.user_type == 'Student':
+                        current_user.password = 'Deactivated'
+                        database_session.commit()
                         return redirect(url_for('student_team.student_team_index'))
                     else: # The user type is some value we don't define here so this is some sort of server error
                         abort(500)
