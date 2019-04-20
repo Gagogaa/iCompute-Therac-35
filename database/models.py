@@ -25,6 +25,7 @@ class StudentAnswer(Base):
     section = Column(Integer, nullable=False)
     question = Column(String, primary_key=True)
     answer = Column(String)
+    scratch_file = Column(LargeBinary)
 
     __table_args__ = (
         ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.team_name', 'StudentTeams.team_year']),
