@@ -89,8 +89,11 @@
       if(section == 1){
         document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
-      } else {
+      } else if(section == 2) {
         document.getElementById('rightDiv').children[1].appendChild(document.getElementById(id));
+        updateCount();
+      } else {
+        document.getElementById('rightDiv').children[2].appendChild(document.getElementById(id));
         updateCount();
       }
 
@@ -108,8 +111,11 @@
       if(section == 1){
         document.getElementById('leftDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
-      } else {
+      } else if(section == 2) {
         document.getElementById('leftDiv').children[1].appendChild(document.getElementById(id));
+        updateCount();
+      } else {
+        document.getElementById('leftDiv').children[2].appendChild(document.getElementById(id));
         updateCount();
       }
 
@@ -208,6 +214,24 @@
     {% endfor %}
   </div>
   <div>
+    <h3><strong>Section B Questions</strong></h3>
+    <hr />
+    {% for question in questions %}
+      {% if question['section'] == 2 %}
+        {% if question['side'] == "left" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
+            <div class="container">
+            <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+                <p style="margin-left: 5px;">{{answer['answer']}}</p>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div>
     <h3><strong>Section C Questions</strong></h3>
     <hr />
     {% for question in questions %}
@@ -257,6 +281,35 @@
       {% endif %}
     {% endfor %}
   <!-- </div> -->
+  </div>
+  <div>
+    <h2 id="secBHeader">Section B Questions</h2>
+    {% for question in questions %}
+      {% if question['section'] == 2 %}
+        {% if question['side'] == "right" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
+            <div class="container">
+              <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+              {% if answer['is_correct'] == "True" %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% else %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
   </div>
   <div>
     <h2 id="secCHeader">Section C Question</h2>
