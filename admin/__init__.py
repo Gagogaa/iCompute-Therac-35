@@ -416,17 +416,9 @@ def add_question():
                                     section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-
-                else:
-                    myQuestion = request.form['question']
-
-                    question = [Questions(question = myQuestion,
-                                        answer = "this is a section 2 question",
-                                        is_correct = True,
-                                        section = 2)]
-                    database_session.add_all(question)
-                    database_session.commit()
                 return redirect(url_for('admin.admin_edit_questions'))
+
+
             elif mySection == "scratch-answer":
                 if 'question' in request.form:
                     myQuestion = request.form['question']
@@ -548,7 +540,7 @@ def edit_answer():
         for row in rows_to_update:
             row.answer = request.form['new_answer']
         database_session.commit()
-    return "success"
+    return redirect(url_for('admin.admin_edit_questions'))
 
 
 # TODO is this used in the project?
