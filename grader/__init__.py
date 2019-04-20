@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, make_response
 from database import database_session
 from database.models import *
 from flask_login import login_required
@@ -66,6 +66,24 @@ def grade_edit(team_name, team_year):
     section_three_answer = StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=3).first()
 
     return render_template('edit_grade.html', student_score=student_score, section_one_data=section_one_data, section_two_answers=section_two_answers, section_three_answer=section_three_answer)
+
+@grader.route('/download-submission/<team_name>/<team_year>')
+@login_required
+@required_user_type('Grader')
+def download_scratch_question(team_name, team_year):
+    # We should only have one answer per test
+    student_response = StudentAnswer.query.filter_by(team_name=team_name, team_year=team_year).first()
+
+    if student_response:
+        response = make_response(student_response.scratch_file)
+        response.headers['Cache-Control'] = 'must-revalidate'
+        response.headers['Pragma'] = 'must-revalidate'
+        response.headers['Content-type'] = 'application/octet-stream'
+        response.headers['Content-Disposition'] = f'attachment; filename="{student_response.answer}"'
+
+        return response
+
+    return abort(404)
 
 @grader.route('/editGrade', methods=['POST'])
 @login_required

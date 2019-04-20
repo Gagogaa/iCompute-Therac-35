@@ -317,7 +317,7 @@ def individual_results_csv(test):
     response.headers['Cache-Control'] = 'must-revalidate'
     response.headers['Pragma'] = 'must-revalidate'
     response.headers['Content-type'] = 'text/csv'
-    response.headers['Content-Disposition'] = f'attachment; filename={student_teams[0].test_id}.csv'
+    response.headers['Content-Disposition'] = f'attachment; filename="{student_teams[0].test_id}.csv"'
 
     return response
 
