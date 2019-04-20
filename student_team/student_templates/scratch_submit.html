@@ -3,11 +3,12 @@
 {% block content %}
 
 <h1>Section 3 Scratch</h1>
-<div class = "card" style = "margin-top: lem; margin-bottom : lem;">
+
 
 
       {% for question in exam_questions_s3 %}
       {% if question['section'] == 3 %}
+      <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
       <!-- TODO fetch images -->
       <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
         <div class="card-header bg-light">
@@ -16,13 +17,19 @@
         </div>
 
       </div>
-      <img src="data:image ;base64,{{question['image']}}"/>
+      </div>
+        {% for image in images %}
+          {% if image['file_counter'] == question['id'] %}
+          <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}">
+          {% endif %}
+        {% endfor %}
       {% endif %}
+
       {% endfor %}
-
+  <div>
   <input type="file" id="studentScratchFile{{scratch_file}}" class="input-default-js" data-multiple-target="{count} files selected" multiple>
+  </div>
 
-</div>
 
 
 {% endblock %}

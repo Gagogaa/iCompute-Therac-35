@@ -95,24 +95,32 @@ def section_b():
 def student_s3():
     student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
     exam_questions_s3 = []
+    images=[]
     question = {}
-
+    fileData = {}
+    counter = 0
+    fileCounter = 0
     # Build Dictionary for questions pulled from the db
     # TODO grab the correct exam for this team!
     for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
-        question['id'] = str(counter)
+        question['id'] = counter
         question['question'] = exam_question_s3.question
-        question['answers'] = []
-        for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question_s3.question):
-            question['answers'].append(escape(answer.answer))
-            random.shuffle(question['answers'])
         for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
             question['section'] = section.section
         for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
+            fileData = {}
+            fileData['file_id'] = fileCounter
+            fileData['file_counter'] = counter
             image = base64.encodestring(data.data)
-            question['image'] = image
+            image2 = image.decode("UTF8")
+            fileData['image'] = image2
+            images.append(fileData)
+            fileCounter +=1
+
         exam_questions_s3.append(question)
+        counter += 1
         question = {}
+
 
 
         #sectionCQuestion = database_session.query(QuestionsImages.question)
@@ -127,4 +135,4 @@ def student_s3():
 
 
 
-    return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3)
+    return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3, images = images)
