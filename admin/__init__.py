@@ -308,7 +308,7 @@ def individual_results_csv(test):
     response.headers['Cache-Control'] = 'must-revalidate'
     response.headers['Pragma'] = 'must-revalidate'
     response.headers['Content-type'] = 'text/csv'
-    response.headers['Content-Disposition'] = f'attachment; filename=' + test + '.csv'
+    response.headers['Content-Disposition'] = f'attachment; filename="{test}.csv"'
 
     return response
 
@@ -476,14 +476,12 @@ def delete_question():
         del_query = database_session.query(Questions).filter(Questions.question==request.form['question'])
         del_query.delete()
         database_session.commit()
-<<<<<<< HEAD
-    return "success"
 
-=======
         del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
         del_query.delete()
         database_session.commit()
->>>>>>> C.16
+
+    return "success"
 
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
@@ -505,7 +503,7 @@ def delete_image():
         database_session.commit()
     return"success"
 
-# TODO When altering a question we also need to alter the questions in the Test table
+
 @admin.route('/editQuestion', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')
@@ -519,15 +517,12 @@ def edit_question():
         for row in test_rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
-<<<<<<< HEAD
 
-
-=======
         rows_to_update = database_session.query(QuestionsImages).filter(QuestionsImages.question == request.form['question'])
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
->>>>>>> C.16
+
     return "success"
 
 
