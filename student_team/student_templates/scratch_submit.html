@@ -4,13 +4,22 @@
 
 <h1>Section 3 Scratch</h1>
 <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
-  {% for question in exam_qestions_s3 %}
-    {% if question['section'] == 3 %}
-      <p style="font-size: 18px" id="instructions{{question['question']}}">Instructions for scratch project placeholder</p>
 
-      <img id= "image{{sectionCImage}}">
-    {% endif %}
-  {% endfor %}
+
+      {% for question in exam_questions_s3 %}
+      {% if question['section'] == 3 %}
+      <!-- TODO fetch images -->
+      <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
+        <div class="card-header bg-light">
+          {{question['id']}}. {{question['question']}}
+
+        </div>
+
+      </div>
+      <img src="data:image ;base64,{{question['image']}}"/>
+      {% endif %}
+      {% endfor %}
+
   <input type="file" id="studentScratchFile{{scratch_file}}" class="input-default-js" data-multiple-target="{count} files selected" multiple>
 
 </div>

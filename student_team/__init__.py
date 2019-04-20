@@ -5,7 +5,7 @@ from flask_login import login_required, current_user, logout_user
 from logon import required_user_type
 import datetime
 import random
-
+import base64
 
 student_team = Blueprint('student_team', __name__, template_folder='student_templates')
 
@@ -108,6 +108,9 @@ def student_s3():
             random.shuffle(question['answers'])
         for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
             question['section'] = section.section
+        for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
+            image = base64.encodestring(data.data)
+            question['image'] = image
         exam_questions_s3.append(question)
         question = {}
 
@@ -124,4 +127,4 @@ def student_s3():
 
 
 
-        return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3)
+    return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3)
