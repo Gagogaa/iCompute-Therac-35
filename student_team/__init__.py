@@ -44,15 +44,13 @@ def student_team_index():
 
     # Build Dictionary for questions pulled from the db
     # TODO grab the correct exam for this team!
-    for counter, exam_question_s1 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
+    for counter, exam_question_s1 in enumerate(database_session.query(iComputeTest.question).filter(and_(iComputeTest.test_name == student_team.test_id, iComputeTest.section == 1)).order_by(iComputeTest.orderId), start=1):
         question['id'] = str(counter)
         question['question'] = exam_question_s1.question
         question['answers'] = []
         for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question_s1.question):
             question['answers'].append(escape(answer.answer))
             random.shuffle(question['answers'])
-        for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s1.question):
-            question['section'] = section.section
         exam_questions_s1.append(question)
         question = {}
 
@@ -73,11 +71,9 @@ def student_team_index():
         grade_section_one(current_user.username)
 
         # For now when the team is done taking the test the application will destroy the password and log the team out.
-        current_user.password = 'Deactivated'
-        database_session.commit()
-        logout_user()
-        flash('Your answers have been submitted. Thank you for participating!', 'info')
-        return redirect(url_for('index'))
+
+        flash('Your answers have been submitted!', 'info')
+        return redirect(url_for('student_team.student_s3'))
 
     return render_template('multiple_choice.html', exam_questions_s1 = exam_questions_s1)
 
@@ -102,11 +98,9 @@ def student_s3():
     fileCounter = 0
     # Build Dictionary for questions pulled from the db
     # TODO grab the correct exam for this team!
-    for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
+    for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(and_(iComputeTest.test_name == student_team.test_id, iComputeTest.section == 3)).order_by(iComputeTest.orderId), start=1):
         question['id'] = counter
         question['question'] = exam_question_s3.question
-        for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
-            question['section'] = section.section
         for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
             fileData = {}
             fileData['file_id'] = fileCounter
@@ -121,18 +115,23 @@ def student_s3():
         counter += 1
         question = {}
 
-
-
-        #sectionCQuestion = database_session.query(QuestionsImages.question)
-    #    sectionCImage = database_session.query(QuestionsImages.file_name)
-
-    #student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
-    #    if 'team_name' in request.form and 'team_year' in request.form and 'section' in request.form and 'question' in request.form and 'answer' in request.form:
-
-# filename to answer
-        #filename = $('scratch_file').val().replace(/.*(\/|\\)/, '');
-        #filename = request.form['answer']
-
-
+    if request.method == 'POST':
+        if ('inputFile' in request.files) and ('hiddenfield_id' in request.form):
+            file = request.files['inputFile']
+            myQuestion = request.form['hiddenfield_id']
+            database_session.add(StudentAnswer(
+                    team_name=current_user.username,
+                    team_year=student_team.team_year,
+                    section=3,
+                    # TODO since the question was escaped we may need to unescape it here
+                    question=myQuestion,
+                    answer=file.filename,
+                    scratch_file=file.read()))
+        database_session.commit()
+        current_user.password = 'Deactivated'
+        database_session.commit()
+        logout_user()
+        flash('Your answers have been submitted. Thank you for participating!', 'info')
+        return redirect(url_for('index'))
 
     return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3, images = images)

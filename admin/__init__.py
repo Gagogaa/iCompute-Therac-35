@@ -495,6 +495,7 @@ def delete_question():
         database_session.commit()
     return "success"
 
+
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
 @required_user_type('Supervisor')
@@ -534,6 +535,7 @@ def edit_question():
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
+
     return "success"
 
 
