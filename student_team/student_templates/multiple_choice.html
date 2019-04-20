@@ -4,7 +4,7 @@
   <section id="content" style="margin-bottom: 2em">
     <form role="form" id="multChoice" action="" method="post">
       {% for question in exam_questions_s1 %}
-      {% if question['section'] == 1 %}
+
       <!-- TODO fetch images -->
       <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
         <div class="card-header bg-light">
@@ -19,7 +19,7 @@
           {% endfor %}
         </ul>
       </div>
-      {% endif %}
+
       {% endfor %}
       <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
     </form>
