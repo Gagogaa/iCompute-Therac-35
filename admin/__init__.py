@@ -63,7 +63,7 @@ def admin_test():
 
         return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select=test_name)
 
-    return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='Create New Test')
+    return render_template('test.html', questions=questions, tests=testNames, link=url_for('admin.admin_index'), active_select='New Test')
 
 
 @admin.route('test/add_question', methods=["POST"])

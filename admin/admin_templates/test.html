@@ -150,10 +150,10 @@
   <hr/>
   <form method="post" action="" id="testForm">
     <select class="form-control" onchange="getTest();" id="testSelect" name="test">
-      {% if active_select == "Create New Test" %}
-        <option value="New Test" selected="selected">Create New Test</option>
+      {% if active_select == "New Test" %}
+        <option value="New Test" selected="selected">New Test</option>
       {% else %}
-        <option value="New Test">Create New Test</option>
+        <option value="New Test">New Test</option>
       {% endif %}
       {% for test in tests %}
       {% if active_select == test %}
