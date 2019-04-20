@@ -5,7 +5,7 @@ from flask_login import login_required, current_user, logout_user
 from logon import required_user_type
 import datetime
 import random
-
+import base64
 
 student_team = Blueprint('student_team', __name__, template_folder='student_templates')
 
@@ -39,24 +39,26 @@ def grade_section_one(team):
 @required_user_type('Student')
 def student_team_index():
     student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
-    exam_questions = []
+    exam_questions_s1 = []
     question = {}
 
     # Build Dictionary for questions pulled from the db
     # TODO grab the correct exam for this team!
-    for counter, exam_question in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
+    for counter, exam_question_s1 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
         question['id'] = str(counter)
-        question['question'] = exam_question.question
+        question['question'] = exam_question_s1.question
         question['answers'] = []
-        for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question.question):
+        for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question_s1.question):
             question['answers'].append(escape(answer.answer))
             random.shuffle(question['answers'])
-        exam_questions.append(question)
+        for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s1.question):
+            question['section'] = section.section
+        exam_questions_s1.append(question)
         question = {}
 
     # Grab the Student submitted answers off the form and submit to database
     if request.method == 'POST':
-        for question in exam_questions:
+        for question in exam_questions_s1:
             form_response = request.form[question['id']] if question['id'] in request.form else None
 
             database_session.add(StudentAnswer(
@@ -77,7 +79,7 @@ def student_team_index():
         flash('Your answers have been submitted. Thank you for participating!', 'info')
         return redirect(url_for('index'))
 
-    return render_template('multiple_choice.html', exam_questions=exam_questions)
+    return render_template('multiple_choice.html', exam_questions_s1 = exam_questions_s1)
 
 
 @student_team.route('/sectionb')
@@ -85,3 +87,52 @@ def student_team_index():
 @required_user_type('Student')
 def section_b():
     return render_template('short_answer.html')
+
+
+@student_team.route('/sectionc', methods=('GET', 'POST'))
+@login_required
+@required_user_type('Student')
+def student_s3():
+    student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
+    exam_questions_s3 = []
+    images=[]
+    question = {}
+    fileData = {}
+    counter = 0
+    fileCounter = 0
+    # Build Dictionary for questions pulled from the db
+    # TODO grab the correct exam for this team!
+    for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == student_team.test_id).order_by(iComputeTest.orderId), start=1):
+        question['id'] = counter
+        question['question'] = exam_question_s3.question
+        for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
+            question['section'] = section.section
+        for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
+            fileData = {}
+            fileData['file_id'] = fileCounter
+            fileData['file_counter'] = counter
+            image = base64.encodestring(data.data)
+            image2 = image.decode("UTF8")
+            fileData['image'] = image2
+            images.append(fileData)
+            fileCounter +=1
+
+        exam_questions_s3.append(question)
+        counter += 1
+        question = {}
+
+
+
+        #sectionCQuestion = database_session.query(QuestionsImages.question)
+    #    sectionCImage = database_session.query(QuestionsImages.file_name)
+
+    #student_team = StudentTeam.query.filter_by(team_name=current_user.username).order_by(StudentTeam.team_year).first()
+    #    if 'team_name' in request.form and 'team_year' in request.form and 'section' in request.form and 'question' in request.form and 'answer' in request.form:
+
+# filename to answer
+        #filename = $('scratch_file').val().replace(/.*(\/|\\)/, '');
+        #filename = request.form['answer']
+
+
+
+    return render_template('scratch_submit.html', exam_questions_s3 = exam_questions_s3, images = images)

@@ -17,6 +17,7 @@ class StudentTeam(Base):
     test_id = Column(String)
 
 
+
 class StudentAnswer(Base):
     __tablename__ = 'StudentAnswers'
 
@@ -60,7 +61,7 @@ class Questions(Base):
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
     is_correct = Column(Boolean, nullable=False)
-    section = Column(Integer, nullable=False)
+    section = Column(Integer, nullable=False) #Sectiontypes 1, 2, 3
 
 
 class Users(UserMixin, Base):
