@@ -53,6 +53,29 @@
       </div>
     </div>
   <script>
+    var progressbar = document.getElementById("navbar-progress-bar");
+    function setCurrentSection(section) {
+      progressbar.innerHTML = section;
+
+      if(section === "Initial") {
+        progressbar.style.width = "0%";
+        progressbar.innerHTML = "";
+      } else if(section === "Section 1") {
+        progressbar.style.width = "25%";
+      } else if(section === "Section 2") {
+        progressbar.style.width = "50%";
+      } else if(section === "Section 3") {
+        progressbar.style.width = "75%";
+      } else if(section === "Complete") {
+        progressbar.style.width = "100%";
+      }
+
+      if(section === "Complete") {
+        progressbar.classList.add("bg-success");
+      } else {
+        progressbar.classList.remove("bg-success");
+      }
+    }
     setCurrentSection("Section 3");
 
     function checkFiles() {
