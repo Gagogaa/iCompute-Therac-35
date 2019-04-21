@@ -86,6 +86,7 @@
     testName = document.getElementById('test-name').value;
     question = document.getElementById(id).children[0].children[0].children[0].innerText;
     if($('#' + id).parent().parent().attr('id') == 'leftDiv') {
+      question = document.getElementById(id).classList.add("mr-2");
       if(section == 1){
         document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
@@ -108,6 +109,7 @@
         }
       });
     } else {
+      question = document.getElementById(id).classList.remove("mr-2");
       if(section == 1){
         document.getElementById('leftDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
@@ -257,7 +259,7 @@
     {% for question in questions %}
       {% if question['section'] == 1 %}
         {% if question['side'] == "right" %}
-          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 1)">
+          <div class="card mr-2" id="card{{question['id']}}" onclick="changeSides(this.id, 1)">
             <div class="container">
               <h4><b>{{question['question']}}</b></h4>
               {% for answer in question['answers'] %}
@@ -287,24 +289,9 @@
     {% for question in questions %}
       {% if question['section'] == 2 %}
         {% if question['side'] == "right" %}
-          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
+          <div class="card mr-2" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
             <div class="container">
               <h4><b>{{question['question']}}</b></h4>
-              {% for answer in question['answers'] %}
-              {% if answer['is_correct'] == "True" %}
-                <div class="input-group-prepend">
-                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
-                </div>
-                <br>
-                {% else %}
-                <div class="input-group-prepend">
-                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
-                </div>
-                <br>
-                {% endif %}
-              {% endfor %}
             </div>
           </div>
         {% endif %}
@@ -316,24 +303,9 @@
     {% for question in questions %}
       {% if question['section'] == 3 %}
         {% if question['side'] == "right" %}
-          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 3)">
+          <div class="card mr-2" id="card{{question['id']}}" onclick="changeSides(this.id, 3)">
             <div class="container">
               <h4><b>{{question['question']}}</b></h4>
-              {% for answer in question['answers'] %}
-              {% if answer['is_correct'] == "True" %}
-                <div class="input-group-prepend">
-                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
-                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
-                </div>
-                <br>
-                {% else %}
-                <div class="input-group-prepend">
-                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
-                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
-                </div>
-                <br>
-                {% endif %}
-              {% endfor %}
             </div>
           </div>
         {% endif %}

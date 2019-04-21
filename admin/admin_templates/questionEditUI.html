@@ -91,31 +91,36 @@
               {% if file['file_counter'] == question['id'] %}
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+                    <span class="input-group-text question-image-prepend question-edit-prepend"><i class="fas fa-file-image"></i></span>
                   </div>
 
                   <input class="form-control" type="text" id="{{file['file_id']}}" value="{{file['file']}}" disabled>
-                  <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                  <input class="hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
                   <div class="input-group-append">
-
                     <button class="btn btn-outline-secondary" type="button" onclick="delpictureDialog(this)"><i class="fas fa-trash-alt"></i></button>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text question-image-prepend"><i class="fas fa-file-image"></i></span>
+            <form method="POST" action="/admin/addImage" encType="multipart/form-data" class="form-control-append" value="">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-image-prepend question-edit-prepend"><i class="fas fa-file-image"></i></span>
+                </div>
+                <div class="custom-file">
+                  <input class="custom-file-input" type="file" id="file-upload-{{loop.index}}" name="inputFile" onchange="updateFileInputText(this)">
+                  <label class="custom-file-label" id="file-upload-{{loop.index}}-label" for="file-upload-{{loop.index}}">Choose file</label>
+                </div>
+
+                <input class="input-group-text" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
+                </div>
+
+
+
               </div>
-              <form method="POST" action="/admin/addImage" encType="multipart/form-data" class="form-control-append" value="">
-
-                <input type="file" name="inputFile">
-                <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
-                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
-
-              </form>
-
-            </div>
+            </form>
           </div>
         </li>
       {% endif %}
@@ -247,6 +252,13 @@
 </div>
 
 <script>
+// make file uploads update their labels
+function updateFileInputText(elem) {
+  console.log($(elem).val());
+  console.log($(elem).attr('id'));
+  $('label[for="' + $(elem).attr('id') + '"]').html($(elem).val());
+}
+
 // toggle a textfield to be edited or saved
 function toggleEditQuestion(elem) {
   var currentQuestion = elem.parentNode.parentNode.getElementsByClassName("hidden")[0].value;
