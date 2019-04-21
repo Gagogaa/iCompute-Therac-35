@@ -77,7 +77,7 @@ def grade_edit(team_name, team_year):
 @required_user_type('Grader')
 def download_scratch_question(team_name, team_year):
     # We should only have one answer per test
-    student_response = StudentAnswer.query.filter_by(team_name=team_name, team_year=team_year).first()
+    student_response = StudentAnswer.query.filter_by(team_name=team_name, team_year=team_year).filter(StudentAnswer.scratch_file!=None).first()
 
     if student_response:
         response = make_response(student_response.scratch_file)
