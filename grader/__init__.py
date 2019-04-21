@@ -39,40 +39,49 @@ def grader_index():
 
     return render_template('grader_home.html', teamsData=teamsData, tests=tests)
 
-@grader.route('/<team_name>/<team_year>')
+@grader.route('/<test_name>/<section>')
 @login_required
 @required_user_type('Grader')
-def grade_edit(team_name, team_year):
-    student_score = StudentScore.query.filter_by(team_name=team_name, team_year=team_year).first()
+def grade_edit(test_name, section):
+    student_scores = StudentScore.query.filter_by(test_name=test_name).all()
 
-    if not student_score:
-        return render_template('edit_grade.html', student_score=None, section_one_data=None, section_two_answers=None, section_three_answer=None)
+    if not student_scores:
+        return render_template('edit_grade.html', student_scores_data=None, test_name=test_name, section=section)
 
-    section_one_answers = StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=1)
-    section_one_data = None
+    student_scores_data = []
 
-    if section_one_answers:
-        section_one_data = []
-        for section_one_answer in section_one_answers:
-            answers = Questions.query.filter_by(question=section_one_answer.question).all()
-            question_grade = "not-answered"
-            for answer in answers:
-                if answer.answer == section_one_answer.answer:
-                    if answer.is_correct:
-                        question_grade = "correct"
-                    else:
-                        question_grade = "incorrect"
-            question_data = {
-                "selected_answer": section_one_answer,
-                "answers": answers,
-                "question_grade": question_grade
-            }
-            section_one_data.append(question_data)
+    for student_score in student_scores:
+        section_one_answers = StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=1)
+        section_one_data = None
 
-    section_two_answers = StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=2).all()
-    section_three_answer = StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=3).first()
+        if section_one_answers:
+            section_one_data = []
+            for section_one_answer in section_one_answers:
+                answers = Questions.query.filter_by(question=section_one_answer.question).all()
+                question_grade = "not-answered"
+                for answer in answers:
+                    if answer.answer == section_one_answer.answer:
+                        if answer.is_correct:
+                            question_grade = "correct"
+                        else:
+                            question_grade = "incorrect"
+                question_data = {
+                    "selected_answer": section_one_answer,
+                    "answers": answers,
+                    "question_grade": question_grade
+                }
+                section_one_data.append(question_data)
 
-    return render_template('edit_grade.html', student_score=student_score, section_one_data=section_one_data, section_two_answers=section_two_answers, section_three_answer=section_three_answer)
+        student_score_data = {
+            "student_score": student_score,
+            "section_one_data": section_one_data,
+            "section_two_answers": StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=2).all(),
+            "section_three_answer": StudentAnswer.query.filter_by(team_name=student_score.team_name, team_year=student_score.team_year, section=3).first()
+        }
+
+        student_scores_data.append(student_score_data)
+
+    return render_template('edit_grade.html', student_scores_data=student_scores_data, test_name=test_name, section=section)
 
 @grader.route('/download-submission/<team_name>/<team_year>')
 @login_required

@@ -3,142 +3,149 @@
 {% block content %}
 
   <div class="container">
-    <div id="team_data" data-team_name="{{student_score.team_name}}" data-team_year="{{student_score.team_year}}"></div>
-    <a class="btn btn-primary mt-3" href="{{url_for('grader.grader_index')}}" role="button">Return to team selection</a>
-    <h3 class="alert-heading mt-3">Grading {{student_score.team_name}} ({{student_score.team_year}})</h3>
+    <a class="btn btn-primary mt-3" href="{{url_for('grader.grader_index')}}" role="button">Return to test/section selection</a>
+    <h3 class="alert-heading mt-3">Grading test {{test_name}}, section {{section}}</h3>
 
-    <div class="card text-white bg-secondary mt-3">
-      <div class="card-header pseudo-link" style="display: flex" id="section-one-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-one-caret"></i>Section 1</h4>
-        <h5 class="mb-0"><span class="badge badge-primary"><span id="section-one-score">{{student_score.section_one_score}}</span>/10</span></h5>
-      </div>
-    </div>
+    {% for student_score_data in student_scores_data %}
+      {% if section == "section-one" %}
+        <div class="card text-white bg-secondary mt-3">
+          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-one-toggle-{{student_score_data.student_score.team_name}}">
+            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-one-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+            <h5 class="mb-0"><span class="badge badge-primary"><span id="section-one-score">{{student_score_data.student_score.section_one_score}}</span>/10</span></h5>
+          </div>
+        </div>
 
-    <div id="section-one" class="collapse show">
-      {% if section_one_data %}
-        {% for question_data in section_one_data %}
-          <div class="card">
-            <div class="card-header" style="display: flex; flex-wrap: nowrap">
-                <h2><span class="badge badge-primary mr-3">{{loop.index}}</span></h2>
-                <h5 style="align-self: center">{{question_data.selected_answer.question}}</h5>
-            </div>
-            <div class="card-body">
-              <div class="form-check form-check-inline">
-                {% for answer in question_data.answers %}
-                  {% if answer.answer == question_data.selected_answer.answer %}
-                    <input class="form-check-input" type="radio" disabled checked>
+        <div id="section-one-{{student_score_data.student_score.team_name}}" class="collapse show">
+          {% if student_score_data.section_one_data %}
+            {% for question_data in student_score_data.section_one_data %}
+              <div class="card">
+                <div class="card-header" style="display: flex; flex-wrap: nowrap">
+                    <h2><span class="badge badge-primary mr-3">{{loop.index}}</span></h2>
+                    <h5 style="align-self: center">{{question_data.selected_answer.question}}</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-check form-check-inline">
+                    {% for answer in question_data.answers %}
+                      {% if answer.answer == question_data.selected_answer.answer %}
+                        <input class="form-check-input" type="radio" disabled checked>
+                      {% else %}
+                        <input class="form-check-input" type="radio" disabled>
+                      {% endif %}
+                      <a class="mr-3">{{answer.answer}}</a>
+                    {% endfor %}
+                  </div>
+                  {% if question_data.question_grade == "correct" %}
+                    <span class="badge badge-success" style="float: right"><i class="fas fa-check mr-1"></i>Correct</span>
+                  {% elif question_data.question_grade == "incorrect" %}
+                    <span class="badge badge-danger" style="float: right"><i class="fas fa-times mr-1"></i>Incorrect</span>
                   {% else %}
-                    <input class="form-check-input" type="radio" disabled>
+                    <span class="badge badge-info" style="float: right">Not answered</span>
                   {% endif %}
-                  <a class="mr-3">{{answer.answer}}</a>
-                {% endfor %}
+                </div>
               </div>
-              {% if question_data.question_grade == "correct" %}
-                <span class="badge badge-success" style="float: right"><i class="fas fa-check mr-1"></i>Correct</span>
-              {% elif question_data.question_grade == "incorrect" %}
-                <span class="badge badge-danger" style="float: right"><i class="fas fa-times mr-1"></i>Incorrect</span>
-              {% else %}
-                <span class="badge badge-info" style="float: right">Not answered</span>
-              {% endif %}
+            {% endfor %}
+          {% else %}
+            <div class="card">
+              <div class="card-body">
+                <h5>No answers present in section 1!</h5>
+              </div>
             </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="card">
-          <div class="card-body">
-            <h5>No questions present in section A!</h5>
-          </div>
+          {% endif %}
         </div>
       {% endif %}
-    </div>
 
-    <div class="card text-white bg-secondary mt-3">
-      <div class="card-header pseudo-link" style="display: flex" id="section-two-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-two-caret"></i>Section 2</h4>
-        <h5 class="mb-0"><span class="badge badge-primary"><span id="section-two-score">{{student_score.section_two_score}}</span>/10</span></h5>
-      </div>
-    </div>
+      {% if section == "section-two" %}
+        <div class="card text-white bg-secondary mt-3">
+          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-two-toggle-{{student_score_data.student_score.team_name}}">
+            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-two-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+            <h5 class="mb-0"><span class="badge badge-primary"><span id="section-two-score">{{student_score_data.student_score.section_two_score}}</span>/10</span></h5>
+          </div>
+        </div>
 
-    <div id="section-two" class="collapse show">
-      {% if section_two_answers %}
-        {% for section_two_answer in section_two_answers %}
-          <div class="card">
-            <div class="card-header" style="display: flex; flex-wrap: nowrap">
-                <h2><span class="badge badge-primary mr-3">{{loop.index}}</span></h2>
-                <h5 class="section-two-question-text" style="align-self: center">{{section_two_answer.question}}</h5>
-            </div>
-            <div class="card-body">
-              <div class="form-group">
-                <textarea class="form-control fixed-width-text" rows="8" disabled>{{section_two_answer.answer}}</textarea>
+        <div id="section-two-{{student_score_data.student_score.team_name}}" class="collapse show">
+          {% if student_score_data.section_two_answers %}
+            {% for section_two_answer in student_score_data.section_two_answers %}
+              <div class="card">
+                <div class="card-header" style="display: flex; flex-wrap: nowrap">
+                    <h2><span class="badge badge-primary mr-3">{{loop.index}}</span></h2>
+                    <h5 class="section-two-question-text" style="align-self: center">{{section_two_answer.question}}</h5>
+                </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <textarea class="form-control fixed-width-text" rows="8" disabled>{{section_two_answer.answer}}</textarea>
+                  </div>
+                  <form class="form-inline" style="float: right">
+                    <label class="my-1 mr-2" for="section-two-grade-input-q1">Grade</label>
+                    <div class="input-group" id="section-two-grade-input-q1">
+                      <input type="text" class="form-control section-two-score-textbox" value="5" size="1" data-max="5" disabled>
+                      <div class="input-group-append">
+                        <span class="input-group-text">/5</span>
+                        <button class="btn btn-outline-secondary edit-button section-two-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
               </div>
-              <form class="form-inline" style="float: right">
-                <label class="my-1 mr-2" for="section-two-grade-input-q1">Grade</label>
-                <div class="input-group" id="section-two-grade-input-q1">
-                  <input type="text" class="form-control section-two-score-textbox" value="5" size="1" data-max="5" disabled>
-                  <div class="input-group-append">
-                    <span class="input-group-text">/5</span>
-                    <button class="btn btn-outline-secondary edit-button section-two-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+            {% endfor %}
+          {% else %}
+            <div class="card">
+              <div class="card-body">
+                <h5>No answers present in section 2!</h5>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section == "section-three" %}
+        <div class="card text-white bg-secondary mt-3">
+          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-three-toggle-{{student_score_data.student_score.team_name}}">
+            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-three-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+            <h5 class="mb-0"><span class="badge badge-primary"><span id="section-three-score">{{student_score_data.student_score.section_three_score}}</span>/30</span></h5>
+          </div>
+        </div>
+
+        <div id="section-three-{{student_score_data.student_score.team_name}}" class="collapse show">
+          {% if student_score_data.section_three_answer %}
+            <div class="card">
+              <div class="card-header" style="display: flex; flex-wrap: nowrap">
+                  <h2><span class="badge badge-primary mr-3">1</span></h2>
+                  <h5 style="align-self: center">{{student_score_data.section_three_answer.question}}</h5>
+              </div>
+              <div class="card-body">
+                <div style="display: flex">
+                  <div><h1><i class="far fa-file m-2 mr-4"></i></h1></div>
+                  <div class="form-group mt-2" style="flex-grow: 1">
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" value="{{student_score_data.section_three_answer.answer}}" id="scratch-file-textbox" disabled>
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" onClick="window.location.href = '/grader/download-submission/{{student_score_data.student_score.team_name}}/{{student_score_data.student_score.team_year}}';">Download<i class="fas fa-file-download ml-2"></i></button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </form>
-            </div>
-          </div>
-        {% endfor %}
-      {% else %}
-        <div class="card">
-          <div class="card-body">
-            <h5>No questions present in section B!</h5>
-          </div>
-        </div>
-      {% endif %}
-    </div>
-
-    <div class="card text-white bg-secondary mt-3">
-      <div class="card-header pseudo-link" style="display: flex" id="section-three-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-three-caret"></i>Section 3</h4>
-        <h5 class="mb-0"><span class="badge badge-primary"><span id="section-three-score">{{student_score.section_three_score}}</span>/30</span></h5>
-      </div>
-    </div>
-
-    <div id="section-three" class="collapse show">
-      {% if section_three_answer %}
-        <div class="card">
-          <div class="card-header" style="display: flex; flex-wrap: nowrap">
-              <h2><span class="badge badge-primary mr-3">1</span></h2>
-              <h5 style="align-self: center">{{section_three_answer.question}}</h5>
-          </div>
-          <div class="card-body">
-            <div style="display: flex">
-              <div><h1><i class="far fa-file m-2 mr-4"></i></h1></div>
-              <div class="form-group mt-2" style="flex-grow: 1">
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control" value="{{section_three_answer.answer}}" id="scratch-file-textbox" disabled>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="scratch-file-download" onClick="window.location.href = '/grader/download-submission/{{student_score.team_name}}/{{student_score.team_year}}';">Download<i class="fas fa-file-download ml-2"></i></button>
+                <form class="form-inline" style="float: right">
+                  <label class="my-1 mr-2" for="section-three-grade-input-q1">Grade</label>
+                  <div class="input-group" id="section-three-grade-input-q1">
+                    <input type="text" id="section-three-grade-textbox-{{student_score_data.student_score.team_name}}" class="form-control" value="{{student_score_data.student_score.section_three_score}}" size="1" data-max="30" disabled>
+                    <div class="input-group-append">
+                      <span class="input-group-text">/30</span>
+                      <button class="btn btn-outline-secondary edit-button section-three-edit-button-{{student_score_data.student_score.team_name}}" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
-            <form class="form-inline" style="float: right">
-              <label class="my-1 mr-2" for="section-three-grade-input-q1">Grade</label>
-              <div class="input-group" id="section-three-grade-input-q1">
-                <input type="text" if="section-three-grade-textbox" class="form-control" value="{{student_score.section_three_score}}" size="1" data-max="30" disabled>
-                <div class="input-group-append">
-                  <span class="input-group-text">/30</span>
-                  <button class="btn btn-outline-secondary edit-button section-three-edit-button" type="button" onclick="toggleEdit(this)"><i class="fas fa-edit"></i></button>
-                </div>
+          {% else %}
+            <div class="card">
+              <div class="card-body">
+                <h5>No answers present in section 3!</h5>
               </div>
-            </form>
-          </div>
-        </div>
-      {% else %}
-        <div class="card">
-          <div class="card-body">
-            <h5>No questions present in section C!</h5>
-          </div>
+            </div>
+          {% endif %}
         </div>
       {% endif %}
-    </div>
+    {% endfor %}
   </div>
 
   <style>
@@ -159,25 +166,18 @@
 
   <script>
     // add on click events to the section headers
-    $("#section-one-toggle").on("click", function() {
-      $("#section-one-caret").toggleClass("fa-caret-down");
-      $("#section-one-caret").toggleClass("fa-caret-right");
-      $("#section-one").collapse("toggle");
-    });
-
-    $("#section-two-toggle").on("click", function() {
-      $("#section-two-caret").toggleClass("fa-caret-down");
-      $("#section-two-caret").toggleClass("fa-caret-right");
-      $("#section-two").collapse("toggle");
-    });
-
-    $("#section-three-toggle").on("click", function() {
-      $("#section-three-caret").toggleClass("fa-caret-down");
-      $("#section-three-caret").toggleClass("fa-caret-right");
-      $("#section-three").collapse("toggle");
-    });
+    // TODO: finish this
+    var collapseTogglers = document.getElementsByClassName("collpse-toggler");
+    for(var i = 0; i < collapseTogglers.length; i++) {
+      $(collapseToggers[i]).on("click", function() {
+        $("#section-one-caret").toggleClass("fa-caret-down");
+        $("#section-one-caret").toggleClass("fa-caret-right");
+        $("#section-one").collapse("toggle");
+      });
+    }
 
     // toggle editing the grade
+    // TODO: finish modifying this to work with the changes to the grader UI
     function toggleEdit(elem) {
       var textField = elem.parentNode.parentNode.getElementsByClassName("form-control")[0];
       if(textField.disabled) {
@@ -233,6 +233,7 @@
     }
 
     // update section three grade in backend
+    // TODO: finish modifying this to work with the changes to the grader UI
     function updateSectionThreeGrade(score) {
       $.ajax({
         url: '/grader/editGrade',
