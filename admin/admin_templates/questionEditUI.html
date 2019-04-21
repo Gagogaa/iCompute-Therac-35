@@ -1,6 +1,7 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
+
 <div class="card mt-4">
   <ul class="list-group">
 
@@ -601,6 +602,26 @@ function checkQuestionText(text) {
   }
   return true;
 }
+
+// Check if a new cache is available on page load.
+// Fix for firefox not fully reloading the page
+// https://stackoverflow.com/questions/1922910/force-browser-to-clear-cache
+window.addEventListener('load', function(e) {
+
+  window.applicationCache.addEventListener('updateready', function(e) {
+    if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
+      // Browser downloaded a new app cache.
+      // Swap it in and reload the page to get the new hotness.
+      window.applicationCache.swapCache();
+      if (confirm('A new version of this site is available. Load it?')) {
+        window.location.reload();
+      }
+    } else {
+      // Manifest didn't changed. Nothing new to server.
+    }
+  }, false);
+
+}, false);
 </script>
 
 {% endblock %}
