@@ -4,20 +4,12 @@
 {% block content %}
   <!--Actual question area (Variables needed)-->
 
-<br><br>
-      <div>
-          <div align="center">
-            <a href="{{link2}}"  class="btn btn-outline-primary outline"
-             style="width: 90%; border-color:#337ab7; padding:14px 24px"; role="button">Create/Edit Tests</a>
-             <a href="{{link3}}"  class="btn btn-outline-primary outline"
-             style="width: 90%; border-color:#337ab7; padding:14px 24px"; role="button">Create/Edit Questions</a>
-             <a href="{{link4}}"  class="btn btn-outline-primary outline"
-             style="width: 90%; border-color:#337ab7; padding:14px 24px"; role="button">Create New Users</a>
-             <a href="{{link5}}"  class="btn btn-outline-primary outline"
-             style="width: 90%; border-color:#337ab7; padding:14px 24px"; role="button">View Previous Test Results</a>
-          </div>
-
-      </div>
+<div align="center">
+  <a class="btn btn-primary btn-lg btn-block mt-4" href="{{link2}}" style="width: 75%">Create/Edit tests</a>
+  <a class="btn btn-primary btn-lg btn-block mt-4" href="{{link3}}" style="width: 75%">Create/Edit Questions</a>
+  <a class="btn btn-primary btn-lg btn-block mt-4" href="{{link4}}" style="width: 75%">Create New Users</a>
+  <a class="btn btn-primary btn-lg btn-block mt-4" href="{{link5}}" style="width: 75%">View Previous Test Results</a>
+</div>
 
 
 {% endblock %}
