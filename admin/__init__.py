@@ -301,7 +301,12 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-    return render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' )
+    response = make_response(render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' ))
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate" # HTTP 1.1.
+    response.headers["Pragma"] = "no-cache" # HTTP 1.0.
+    response.headers["Expires"] = "0" # Proxies.
+
+    return response
 
 
 @admin.route('/individual-results/<test>')

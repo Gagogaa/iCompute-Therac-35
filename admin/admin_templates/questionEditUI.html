@@ -1,7 +1,6 @@
 {% extends 'head.html' %}
 {% block title %}Supervisor{% endblock %}
 {% block content %}
-
 <div class="card mt-4">
   <ul class="list-group">
 
@@ -603,10 +602,10 @@ function checkQuestionText(text) {
   return true;
 }
 
-// Check if a new cache is available on page load.
-// Fix for firefox not fully reloading the page
-// https://stackoverflow.com/questions/1922910/force-browser-to-clear-cache
-window.addEventListener('load', function(e) {
+  // Check if a new cache is available on page load.
+  // Fix for firefox not fully reloading the page
+  // https://stackoverflow.com/questions/1922910/force-browser-to-clear-cache
+  window.addEventListener('load', function(e) {
 
   window.applicationCache.addEventListener('updateready', function(e) {
     if (window.applicationCache.status == window.applicationCache.UPDATEREADY) {
