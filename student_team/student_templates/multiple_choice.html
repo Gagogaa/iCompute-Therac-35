@@ -4,7 +4,7 @@
   <section id="content" style="margin-bottom: 2em">
     <form role="form" id="multChoice" action="" method="post">
       {% for question in exam_questions_s1 %}
-      {% if question['section'] == 1 %}
+
       <!-- TODO fetch images -->
       <div class="card" style="margin-top: 1em; margin-bottom: 1em;">
         <div class="card-header bg-light">
@@ -19,9 +19,9 @@
           {% endfor %}
         </ul>
       </div>
-      {% endif %}
+
       {% endfor %}
-      <input type="button" name="btn" value="Submit" onClick="checkRadioButtons();" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
+      <input type="button" name="btn" value="Submit" onClick="checkRadioButtons()" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
     </form>
   </section>
 
@@ -46,10 +46,35 @@
   </div>
 
   <script>
+    var progressbar = document.getElementById("navbar-progress-bar");
+    function setCurrentSection(section) {
+      progressbar.innerHTML = section;
+
+      if(section === "Initial") {
+        progressbar.style.width = "0%";
+        progressbar.innerHTML = "";
+      } else if(section === "Section 1") {
+        progressbar.style.width = "25%";
+      } else if(section === "Section 2") {
+        progressbar.style.width = "50%";
+      } else if(section === "Section 3") {
+        progressbar.style.width = "75%";
+      } else if(section === "Complete") {
+        progressbar.style.width = "100%";
+      }
+
+      if(section === "Complete") {
+        progressbar.classList.add("bg-success");
+      } else {
+        progressbar.classList.remove("bg-success");
+      }
+    }
+    setCurrentSection("Section 1");
+
     function checkRadioButtons() {
       var hasUnansweredQuestions = true;
 
-      for(let i = 1; i < {{exam_questions|length}}+1; i++) {
+      for(let i = 1; i < {{exam_questions_s1|length}}+1; i++) {
         var ul_id = 'q' + i;
         var list = document.getElementById(ul_id);
 

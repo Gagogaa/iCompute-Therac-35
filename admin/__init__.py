@@ -323,7 +323,12 @@ def admin_edit_questions():
         counter += 1
         data = {}
 
-    return render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' )
+    response = make_response(render_template('questionEditUI.html', questions=questions, answers=answers, files=files, home_link='./' ))
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate" # HTTP 1.1.
+    response.headers["Pragma"] = "no-cache" # HTTP 1.0.
+    response.headers["Expires"] = "0" # Proxies.
+
+    return response
 
 
 @admin.route('/individual-results/<test>')
@@ -438,17 +443,9 @@ def add_question():
                                     section = 2)]
                     database_session.add_all(question)
                     database_session.commit()
-
-                else:
-                    myQuestion = request.form['question']
-
-                    question = [Questions(question = myQuestion,
-                                        answer = "this is a section 2 question",
-                                        is_correct = True,
-                                        section = 2)]
-                    database_session.add_all(question)
-                    database_session.commit()
                 return redirect(url_for('admin.admin_edit_questions'))
+
+
             elif mySection == "scratch-answer":
                 if 'question' in request.form:
                     myQuestion = request.form['question']
@@ -512,10 +509,15 @@ def delete_question():
         del_query.delete()
         database_session.commit()
 
+        del_query = database_session.query(iComputeTest).filter(iComputeTest.question==request.form['question'])
+        del_query.delete()
+        database_session.commit()
+
         del_query = database_session.query(QuestionsImages).filter(QuestionsImages.question==request.form['question'])
         del_query.delete()
         database_session.commit()
     return "success"
+
 
 @admin.route('/delAnswer', methods=['POST'])
 @login_required
@@ -556,6 +558,7 @@ def edit_question():
         for row in rows_to_update:
             row.question = request.form['new_question']
         database_session.commit()
+
     return "success"
 
 
@@ -568,7 +571,7 @@ def edit_answer():
         for row in rows_to_update:
             row.answer = request.form['new_answer']
         database_session.commit()
-    return "success"
+    return redirect(url_for('admin.admin_edit_questions'))
 
 
 # TODO is this used in the project?

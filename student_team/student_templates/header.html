@@ -34,8 +34,7 @@
   var navbarTeamName = document.getElementById("navbar-team-name");
   var teamNameTextBox = document.getElementById("team-name-textbox");
 
-  function setCurrentSection() {
-    var section = sectionSelector.options[sectionSelector.selectedIndex].text;
+  function setCurrentSection(section) {
     progressbar.innerHTML = section;
 
     if(section === "Initial") {
