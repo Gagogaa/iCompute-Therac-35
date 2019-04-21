@@ -4,18 +4,18 @@
 
   <div class="container">
     <a class="btn btn-primary mt-3" href="{{url_for('grader.grader_index')}}" role="button">Return to test/section selection</a>
-    <h3 class="alert-heading mt-3">Grading test {{test_name}}, section {{section}}</h3>
+    <h3 class="alert-heading mt-3">Grading {{test_name}}, Section {{section}}</h3>
 
     {% for student_score_data in student_scores_data %}
-      {% if section == "section-one" %}
+      {% if section == "1" %}
         <div class="card text-white bg-secondary mt-3">
-          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-one-toggle-{{student_score_data.student_score.team_name}}">
-            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-one-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+          <div class="card-header" style="display: flex" id="section-one-toggle-{{student_score_data.student_score.team_name}}">
+            <h4 class="mb-0" style="flex-grow: 1">{{student_score_data.student_score.team_name}}</h4>
             <h5 class="mb-0"><span class="badge badge-primary"><span id="section-one-score">{{student_score_data.student_score.section_one_score}}</span>/10</span></h5>
           </div>
         </div>
 
-        <div id="section-one-{{student_score_data.student_score.team_name}}" class="collapse show">
+        <div id="section-one-{{student_score_data.student_score.team_name}}">
           {% if student_score_data.section_one_data %}
             {% for question_data in student_score_data.section_one_data %}
               <div class="card">
@@ -54,15 +54,15 @@
         </div>
       {% endif %}
 
-      {% if section == "section-two" %}
+      {% if section == "2" %}
         <div class="card text-white bg-secondary mt-3">
-          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-two-toggle-{{student_score_data.student_score.team_name}}">
-            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-two-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+          <div class="card-header" style="display: flex">
+            <h4 class="mb-0" style="flex-grow: 1">{{student_score_data.student_score.team_name}}</h4>
             <h5 class="mb-0"><span class="badge badge-primary"><span id="section-two-score">{{student_score_data.student_score.section_two_score}}</span>/10</span></h5>
           </div>
         </div>
 
-        <div id="section-two-{{student_score_data.student_score.team_name}}" class="collapse show">
+        <div id="section-two-{{student_score_data.student_score.team_name}}">
           {% if student_score_data.section_two_answers %}
             {% for section_two_answer in student_score_data.section_two_answers %}
               <div class="card">
@@ -97,15 +97,15 @@
         </div>
       {% endif %}
 
-      {% if section == "section-three" %}
+      {% if section == "3" %}
         <div class="card text-white bg-secondary mt-3">
-          <div class="card-header pseudo-link collapse-toggler" style="display: flex" id="section-three-toggle-{{student_score_data.student_score.team_name}}">
-            <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-three-caret-{{student_score_data.student_score.team_name}}"></i>{{student_score_data.student_score.team_name}}</h4>
+          <div class="card-header" style="display: flex">
+            <h4 class="mb-0" style="flex-grow: 1">{{student_score_data.student_score.team_name}}</h4>
             <h5 class="mb-0"><span class="badge badge-primary"><span id="section-three-score">{{student_score_data.student_score.section_three_score}}</span>/30</span></h5>
           </div>
         </div>
 
-        <div id="section-three-{{student_score_data.student_score.team_name}}" class="collapse show">
+        <div id="section-three-{{student_score_data.student_score.team_name}}">
           {% if student_score_data.section_three_answer %}
             <div class="card">
               <div class="card-header" style="display: flex; flex-wrap: nowrap">
@@ -159,22 +159,9 @@
       min-width: 2.75em;
       text-align: center;
     }
-    .section-caret {
-      min-width: 0.5em;
-    }
   </style>
 
   <script>
-    // add on click events to the section headers
-    // TODO: finish this
-    var collapseTogglers = document.getElementsByClassName("collpse-toggler");
-    for(var i = 0; i < collapseTogglers.length; i++) {
-      $(collapseToggers[i]).on("click", function() {
-        $("#section-one-caret").toggleClass("fa-caret-down");
-        $("#section-one-caret").toggleClass("fa-caret-right");
-        $("#section-one").collapse("toggle");
-      });
-    }
 
     // toggle editing the grade
     // TODO: finish modifying this to work with the changes to the grader UI
