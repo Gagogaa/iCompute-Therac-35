@@ -434,10 +434,10 @@ def add_question():
                     database_session.commit()
                 return redirect(url_for('admin.admin_edit_questions'))
             elif mySection == "short-answer":
-                if 'question' in request.form and 'file' in request.form:
+                if 'question' in request.form:
                     myQuestion = request.form['question']
                     question = [Questions(question = myQuestion,
-                                    answer = "this is a section 2 question",
+                                    answer = "This is a section 2 question",
                                     is_correct = True,
                                     section = 2)]
                     database_session.add_all(question)
@@ -449,7 +449,7 @@ def add_question():
                 if 'question' in request.form:
                     myQuestion = request.form['question']
                     question = [Questions(question = myQuestion,
-                                    answer = "this is a section 3 question",
+                                    answer = "This is a section 3 question",
                                     is_correct = True,
                                     section = 3),
                             ]
