@@ -24,7 +24,7 @@ def grade_section_one(team):
     student_score = StudentScore(team_name=student_team.team_name,
                                  team_year=student_team.team_year,
                                  test_name=student_team.test_id,
-                                 total_score=0,  # This should probably be nullable but for now they get a 0 until the grader grades the exam
+                                 total_score=(correct_answers*2),
                                  # WESO Scoring says that each multiple choice question is worth 2 points
                                  section_one_score=(correct_answers*2),
                                  section_two_score=0,

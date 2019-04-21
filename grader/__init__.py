@@ -94,5 +94,6 @@ def edit_question():
             rows_to_update = database_session.query(StudentScore).filter(StudentScore.team_name == request.form['team_name'], StudentScore.team_year == request.form['team_year'])
             for row in rows_to_update:
                 row.section_three_score = request.form['score']
+                row.total_score = (row.section_one_score + (row.section_two_score if row.section_two_score else 0) + int(row.section_three_score))
             database_session.commit()
     return "success"
