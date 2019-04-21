@@ -1,0 +1,2 @@
+{% for response in all_scores %}{{response.team_name}},{{response.school_name}},{{response.sectionAScore}},{{response.sectionBScore}},{{response.sectionCScore}},{{response.totalScore}}
+{% endfor %}

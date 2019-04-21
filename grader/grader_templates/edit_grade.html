@@ -114,7 +114,7 @@
                 <div class="input-group mb-3">
                   <input type="text" class="form-control" value="{{section_three_answer.answer}}" id="scratch-file-textbox" disabled>
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="scratch-file-download">Download<i class="fas fa-file-download ml-2"></i></button>
+                    <button class="btn btn-outline-secondary" type="button" id="scratch-file-download" onClick="window.location.href = '/grader/download-submission/{{student_score.team_name}}/{{student_score.team_year}}';">Download<i class="fas fa-file-download ml-2"></i></button>
                   </div>
                 </div>
               </div>

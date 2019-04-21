@@ -29,7 +29,7 @@
     <a class="navbar-brand" href="#" style="padding-right: 10px">iCompute</a>
 
     <div>
-      <span class="navbar-text" id="navbar-grader-name" style="float: left; padding-left: 30px; font-weight: bold">Grader Name</span>
+      <span class="navbar-text" id="navbar-grader-name" style="float: left; padding-left: 30px; font-weight: bold">{{current_user.username}}</span>
       <a class="nav-link" id="logout-link" href="{{url_for('logout')}}" style="float: left">Logout</a>
     </div>
   </nav>

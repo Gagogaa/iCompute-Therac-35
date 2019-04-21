@@ -1,0 +1,344 @@
+{% extends 'head.html' %}
+{% block title %}Supervisor{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for catagory, message in messages %}
+        <div class="alert {{'alert-info' if catagory == 'info' else 'alert-danger'}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+<style>
+  .card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin-bottom: 5px;
+  }
+
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  /* Add some padding inside the card container */
+  .container {
+    padding: 2px 16px;
+  }
+
+  .split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.toppane {
+  width: 100%;
+  height: 100px;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.leftpane {
+    width: 40%;
+    height: 100%;
+    float: left;
+    border-collapse: collapse;
+    padding-right: 10px;
+}
+
+.rightpane {
+  width: 60%;
+  height: 100%;
+  position: relative;
+  float: right;
+  border-collapse: collapse;
+  padding-left: 10px;
+}
+</style>
+<script>
+  function changeSides(id, section) {
+    testName = document.getElementById('test-name').value;
+    question = document.getElementById(id).children[0].children[0].children[0].innerText;
+    if($('#' + id).parent().parent().attr('id') == 'leftDiv') {
+      if(section == 1){
+        document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
+        updateCount();
+      } else if(section == 2) {
+        document.getElementById('rightDiv').children[1].appendChild(document.getElementById(id));
+        updateCount();
+      } else {
+        document.getElementById('rightDiv').children[2].appendChild(document.getElementById(id));
+        updateCount();
+      }
+
+      $.ajax({
+        url: '/admin/test/add_question',
+        data: {testId: testName, question: question},
+        type: 'POST',
+        traditional: true,
+        success: function(response){},
+        error: function(error){
+          console.log(error);
+        }
+      });
+    } else {
+      if(section == 1){
+        document.getElementById('leftDiv').children[0].appendChild(document.getElementById(id));
+        updateCount();
+      } else if(section == 2) {
+        document.getElementById('leftDiv').children[1].appendChild(document.getElementById(id));
+        updateCount();
+      } else {
+        document.getElementById('leftDiv').children[2].appendChild(document.getElementById(id));
+        updateCount();
+      }
+
+      $.ajax({
+        url: '/admin/test/remove_question',
+        data: {testId: testName, question: question},
+        type: 'POST',
+        traditional: true,
+        success: function(response){},
+        error: function(error){
+          console.log(error);
+        }
+      });
+    }
+  }
+
+  function updateCount() {
+    var count = document.getElementById('rightDiv').children[0].children.length;
+    document.getElementById('secAHeader').innerHTML = 'Section A: ' + (count-1) + ' Questions';
+  }
+
+  function getTest(){
+    $('#testForm').submit();
+  }
+
+  $(document).ready(function() {
+    updateCount();
+  });
+</script>
+<div class="toppane">
+  <h1>Create or Edit Test</h1>
+  <hr/>
+  <form method="post" action="" id="testForm">
+    <select class="form-control" onchange="getTest();" id="testSelect" name="test">
+      {% if active_select == "New Test" %}
+        <option value="New Test" selected="selected">New Test</option>
+      {% else %}
+        <option value="New Test">New Test</option>
+      {% endif %}
+      {% for test in tests %}
+      {% if active_select == test %}
+        <option value="{{test}}" selected="selected">{{test}}</option>
+      {% else %}
+        <option value="{{test}}">{{test}}</option>
+      {% endif %}
+      {% endfor %}
+    </select>
+    <br>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+      </div>
+      <input {% if not (active_select == "New Test") %} disabled {% endif %} id="test-name" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
+    </div>
+  </form>
+  <hr/>
+  <div class="leftpane">
+    <h3>Question Bank</h3>
+    <hr/>
+  </div>
+  <div class="rightpane">
+    <h3>Test creation workspace</h3>
+    <hr/>
+  </div>
+</div>
+<div class="leftpane" id="leftDiv">
+  <!-- <div class="centered" id="leftDiv"> -->
+  <div>
+    <h3><strong>Section A Questions</strong></h3>
+    <hr />
+    {% for question in questions %}
+      {% if question['section'] == 1 %}
+        {% if question['side'] == "left" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 1)">
+            <div class="container">
+              <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+              {% if answer['is_correct'] == "True" %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% else %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div>
+    <h3><strong>Section B Questions</strong></h3>
+    <hr />
+    {% for question in questions %}
+      {% if question['section'] == 2 %}
+        {% if question['side'] == "left" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
+            <div class="container">
+            <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+                <p style="margin-left: 5px;">{{answer['answer']}}</p>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div>
+    <h3><strong>Section C Questions</strong></h3>
+    <hr />
+    {% for question in questions %}
+      {% if question['section'] == 3 %}
+        {% if question['side'] == "left" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 3)">
+            <div class="container">
+            <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+                <p style="margin-left: 5px;">{{answer['answer']}}</p>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+<div class="rightpane" id="rightDiv" style="background-color: #eaeaea;">
+  <!-- <div class="centered" id="rightDiv"> -->
+  <div>
+    <h2 id="secAHeader">Section A: 0 Questions</h2>
+    {% for question in questions %}
+      {% if question['section'] == 1 %}
+        {% if question['side'] == "right" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 1)">
+            <div class="container">
+              <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+              {% if answer['is_correct'] == "True" %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% else %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  <!-- </div> -->
+  </div>
+  <div>
+    <h2 id="secBHeader">Section B Questions</h2>
+    {% for question in questions %}
+      {% if question['section'] == 2 %}
+        {% if question['side'] == "right" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 2)">
+            <div class="container">
+              <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+              {% if answer['is_correct'] == "True" %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% else %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div>
+    <h2 id="secCHeader">Section C Question</h2>
+    {% for question in questions %}
+      {% if question['section'] == 3 %}
+        {% if question['side'] == "right" %}
+          <div class="card" id="card{{question['id']}}" onclick="changeSides(this.id, 3)">
+            <div class="container">
+              <h4><b>{{question['question']}}</b></h4>
+              {% for answer in question['answers'] %}
+              {% if answer['is_correct'] == "True" %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend correct-answer"><i class="fas fa-check"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% else %}
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-edit-prepend incorrect-answer"><i class="fas fa-times"></i></span>
+                  <p style="margin-left: 5px;">{{answer['answer']}}</p>
+                </div>
+                <br>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -23,18 +23,6 @@
 
   <!--For Testing Purposes Only until backend logic is implemented-->
   <div class="container">
-    <form>
-      <div class="form-group">
-        <label for="current-section-selector">Select current section</label>
-        <select class="form-control" id="current-section-selector" onchange="setCurrentSection()">
-          <option>Initial</option>
-          <option selected="selected">Section 1</option>
-          <option>Section 2</option>
-          <option>Section 3</option>
-          <option>Complete</option>
-        </select>
-      </div>
-    </form>
     {% block content %} {% endblock %}
   </div>
 </body>
@@ -46,8 +34,7 @@
   var navbarTeamName = document.getElementById("navbar-team-name");
   var teamNameTextBox = document.getElementById("team-name-textbox");
 
-  function setCurrentSection() {
-    var section = sectionSelector.options[sectionSelector.selectedIndex].text;
+  function setCurrentSection(section) {
     progressbar.innerHTML = section;
 
     if(section === "Initial") {

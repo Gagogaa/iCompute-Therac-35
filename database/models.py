@@ -17,6 +17,7 @@ class StudentTeam(Base):
     test_id = Column(String)
 
 
+
 class StudentAnswer(Base):
     __tablename__ = 'StudentAnswers'
 
@@ -25,6 +26,7 @@ class StudentAnswer(Base):
     section = Column(Integer, nullable=False)
     question = Column(String, primary_key=True)
     answer = Column(String)
+    scratch_file = Column(LargeBinary)
 
     __table_args__ = (
         ForeignKeyConstraint(['team_name', 'team_year'], ['StudentTeams.team_name', 'StudentTeams.team_year']),
@@ -46,6 +48,12 @@ class iComputeTest(Base):
         ForeignKeyConstraint(['question'], ['Questions.question']),
     )
 
+class QuestionsImages(Base):
+    __tablename__ = 'QuestionsImages'
+
+    question = Column(String, primary_key=True)
+    file_name = Column(String, primary_key=True)
+    data = Column(LargeBinary)
 
 class Questions(Base):
     __tablename__ = 'Questions'
@@ -53,7 +61,7 @@ class Questions(Base):
     question = Column(String, primary_key=True)
     answer = Column(String, primary_key=True)
     is_correct = Column(Boolean, nullable=False)
-    section = Column(Integer, nullable=False)
+    section = Column(Integer, nullable=False) #Sectiontypes 1, 2, 3
 
 
 class Users(UserMixin, Base):
