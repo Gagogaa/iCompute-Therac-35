@@ -44,10 +44,11 @@
 
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditAnswer(this)"><i class="fas fa-edit"></i></button>
-                      <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
-                      <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
                       <button class="btn btn-outline-secondary" type="button" disabled><i class="fas fa-trash-alt"></i></button>
                     </div>
+
+                    <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{answer['answer']}}" />
+                    <input class= "hidden2" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
                   </div>
                 {% else %}
                   <div class="input-group">
@@ -116,9 +117,6 @@
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
                 </div>
-
-
-
               </div>
             </form>
           </div>
@@ -254,8 +252,6 @@
 <script>
 // make file uploads update their labels
 function updateFileInputText(elem) {
-  console.log($(elem).val());
-  console.log($(elem).attr('id'));
   $('label[for="' + $(elem).attr('id') + '"]').html($(elem).val());
 }
 
@@ -300,11 +296,24 @@ function toggleEditAnswer(elem) {
     elem.innerHTML = "<i class=\"fas fa-save\"></i>";
     textField.focus();
   } else {
-    elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
-    textField.disabled = true;
     var newAnswer = elem.parentNode.parentNode.getElementsByClassName("form-control")[0].value;
 
-    // TODO: add code to update the text in the database
+    // check to see if another answer with the same text already exists
+    var otherAnswers = elem.parentNode.parentNode.parentNode.parentNode.getElementsByClassName("form-control");
+    var numberOfDuplicates = 0; // if this is greater than one, a duplicate exists
+    for(var i = 0; i < otherAnswers.length; i++) {
+      if(newAnswer === otherAnswers[i].value) {
+        numberOfDuplicates++;
+      }
+    }
+    if(numberOfDuplicates > 1) {
+      alert("Duplicate answer");
+      return;
+    }
+
+    elem.innerHTML = "<i class=\"fas fa-edit\"></i>";
+    textField.disabled = true;
+
     $.ajax({
       url: '/admin/editAnswer',
       data: {question:currentQuestion,answer:currentAnswer,new_answer:newAnswer},

@@ -4,91 +4,98 @@
 
 <h1>Section 3 Scratch</h1>
 
-
-      <form role="form" id="scratch" action="/student_team/sectionc" method="POST" encType="multipart/form-data">
-      {% for question in exam_questions_s3 %}
-
-      <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
-      <!-- TODO fetch images -->
-      <div class="card" style="margin-bottom: 1em;">
+<form role="form" id="scratch" action="/student_team/sectionc" method="POST" encType="multipart/form-data">
+  {% for question in exam_questions_s3 %}
+    <div class="card my-1">
+      <div class="card">
         <div class="card-header bg-light">
           {{question['id']}}. {{question['question']}}
 
         </div>
-
-      </div>
-      </div>
-        {% for image in images %}
-          {% if image['file_counter'] == question['id'] %}
-          <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}" class="img-fluid mb-2">
-          {% endif %}
-        {% endfor %}
-        <input type="file" name="inputFile" class="mb-2">
-        <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
-
-
-      {% endfor %}
-      <input type="button" name="btn" value="Submit" onClick="checkFiles()" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
-      </form>
-  <div>
-
-  </div>
-  <!--Modal for the submit button-->
-    <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header text-danger">
-            Confirm Submission
+        <div class="card-body">
+          <div align="center">
+            {% for image in images %}
+              {% if image['file_counter'] == question['id'] %}
+              <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}" class="img-fluid mb-2">
+              {% endif %}
+            {% endfor %}
           </div>
 
-          <div id="modal-body" class="modal-body">
-            Are you sure you want to submit this section? You will NOT be able to return to this section later.
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-            <a href="#" id="submit" class="btn btn-success success">Submit</a>
+          <div class="input-group">
+            <div class="custom-file">
+              <input class="custom-file-input" id="file-upload-{{loop.index}}" type="file" name="inputFile" class="mb-2" onchange="updateFileInputText(this)">
+              <label class="custom-file-label" id="file-upload-{{loop.index}}-label" for="file-upload-{{loop.index}}">Choose file</label>
+              <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+            </div>
           </div>
         </div>
       </div>
     </div>
-  <script>
-    var progressbar = document.getElementById("navbar-progress-bar");
-    function setCurrentSection(section) {
-      progressbar.innerHTML = section;
+  {% endfor %}
+  <input type="button" name="btn" value="Submit" onClick="checkFiles()" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-primary btn-lg btn-block"/>
+</form>
 
-      if(section === "Initial") {
-        progressbar.style.width = "0%";
-        progressbar.innerHTML = "";
-      } else if(section === "Section 1") {
-        progressbar.style.width = "25%";
-      } else if(section === "Section 2") {
-        progressbar.style.width = "50%";
-      } else if(section === "Section 3") {
-        progressbar.style.width = "75%";
-      } else if(section === "Complete") {
-        progressbar.style.width = "100%";
-      }
+<!--Modal for the submit button-->
+<div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header text-danger">
+        Confirm Submission
+      </div>
 
-      if(section === "Complete") {
-        progressbar.classList.add("bg-success");
-      } else {
-        progressbar.classList.remove("bg-success");
-      }
+      <div id="modal-body" class="modal-body">
+        Are you sure you want to submit this section? You will NOT be able to return to this section later.
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <a href="#" id="submit" class="btn btn-success success">Submit</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var progressbar = document.getElementById("navbar-progress-bar");
+  function setCurrentSection(section) {
+    progressbar.innerHTML = section;
+
+    if(section === "Initial") {
+      progressbar.style.width = "0%";
+      progressbar.innerHTML = "";
+    } else if(section === "Section 1") {
+      progressbar.style.width = "25%";
+    } else if(section === "Section 2") {
+      progressbar.style.width = "50%";
+    } else if(section === "Section 3") {
+      progressbar.style.width = "75%";
+    } else if(section === "Complete") {
+      progressbar.style.width = "100%";
     }
-    setCurrentSection("Section 3");
 
-    function checkFiles() {
-           document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.";
-         }
-         function getEventTarget(e) {
-           e = e || window.event;
-           return e.target || e.srcElement;
-         }
+    if(section === "Complete") {
+      progressbar.classList.add("bg-success");
+    } else {
+      progressbar.classList.remove("bg-success");
+    }
+  }
+  setCurrentSection("Section 3");
 
-         $('#submit').click(function(){
-           $('#scratch').submit();
-         });
+  function checkFiles() {
+    document.getElementById("modal-body").innerHTML = "Are you sure you want to submit this section? You will NOT be able to return to this section later.";
+  }
+  function getEventTarget(e) {
+    e = e || window.event;
+    return e.target || e.srcElement;
+  }
+
+  $('#submit').click(function(){
+    $('#scratch').submit();
+  });
+
+  function updateFileInputText(elem) {
+    $('label[for="' + $(elem).attr('id') + '"]').html($(elem).val());
+  }
 
 </script>
 {% endblock %}

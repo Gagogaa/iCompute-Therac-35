@@ -112,10 +112,17 @@
               <div><h1><i class="far fa-file m-2 mr-4"></i></h1></div>
               <div class="form-group mt-2" style="flex-grow: 1">
                 <div class="input-group mb-3">
-                  <input type="text" class="form-control" value="{{section_three_answer.answer}}" id="scratch-file-textbox" disabled>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="scratch-file-download" onClick="window.location.href = '/grader/download-submission/{{student_score.team_name}}/{{student_score.team_year}}';">Download<i class="fas fa-file-download ml-2"></i></button>
-                  </div>
+                  {% if section_three_answer.answer and section_three_answer.answer != "" %}
+                    <input type="text" class="form-control" value="{{section_three_answer.answer}}" id="scratch-file-textbox" disabled>
+                    <div class="input-group-append">
+                      <a class="btn btn-outline-secondary" id="scratch-file-download" href="/grader/download-submission/{{student_score.team_name}}/{{student_score.team_year}}">Download<i class="fas fa-file-download ml-2"></i></a>
+                    </div>
+                  {% else %}
+                    <input type="text" class="form-control" value="(No submission)" id="scratch-file-textbox" disabled>
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button" id="scratch-file-download" disabled>Download<i class="fas fa-file-download ml-2"></i></button>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
