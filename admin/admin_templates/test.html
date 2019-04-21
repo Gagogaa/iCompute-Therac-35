@@ -165,13 +165,13 @@
       {% endfor %}
     </select>
     <br>
-    <div class="input-group input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
-      </div>
-      <input {% if not (active_select == "New Test") %} disabled {% endif %} id="test-name" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
-    </div>
   </form>
+  <div class="input-group input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="inputGroup-sizing-lg">Test Name:</span>
+    </div>
+    <input {% if not (active_select == "New Test") %} disabled {% endif %} id="test-name" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm" value="{{active_select}}">
+  </div>
   <hr/>
   <div class="leftpane">
     <h3>Question Bank</h3>

@@ -64,21 +64,19 @@
     <h2 style="text-align: center;"><strong>Section C</strong></h2>
     <hr />
       {% for question in exam_questions_s3 %}
-        <div class = "card" style = "margin-top: lem; margin-bottom : lem;">
-        <!-- TODO fetch images -->
-        <div class="card" style="margin-bottom: 1em;">
+        <div class="card my-1">
           <div class="card-header bg-light">
             {{question['id']}}. {{question['question']}}
           </div>
+          <div class="card-body" align="center">
+            {% for image in images %}
+              {% if image['file_counter'] == question['id'] %}
+                <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}" class="img-fluid mb-2">
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
-        </div>
-          {% for image in images %}
-            {% if image['file_counter'] == question['id'] %}
-            <img src="data:;base64,{{image['image']}}" id="i{{image['file_id']}}" class="img-fluid mb-2">
-            {% endif %}
-          {% endfor %}
-          <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
-          <br />
+        <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
         {% endfor %}
       <div>
   {% endif %}
