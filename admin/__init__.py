@@ -14,7 +14,7 @@ from werkzeug.wrappers import Response
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from sqlalchemy import desc
-
+import base64
 
 admin = Blueprint('admin', __name__, template_folder='admin_templates')
 
@@ -117,27 +117,49 @@ def admin_view_test():
         test_names.append(test.test_name)
 
     if request.method == "POST":
-        questions = []
-        data = {}
-        counter = 1
-        ansNum = 1
+        exam_questions_s1 = []
+        question = {}
 
-        # Build Dictionary for questions pulled from the db
-        for question in database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test']):
-            data['id'] = counter
-            data['question'] = question.question
-            for answer in database_session.query(Questions.answer).filter(Questions.question == question.question):
-                ans = 'answer' + str(ansNum)
-                data[ans] = answer.answer
-                ansNum += 1
-            questions.append(data)
-            ansNum = 1
-            counter += 1
-            data = {}
+        for counter, exam_question_s1 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test']).order_by(iComputeTest.orderId), start=1):
+            question['id'] = str(counter)
+            question['question'] = exam_question_s1.question
+            question['answers'] = []
+            for answer in database_session.query(Questions.answer).filter(Questions.question == exam_question_s1.question):
+                question['answers'].append(escape(answer.answer))
+            for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s1.question):
+                question['section'] = section.section
+            exam_questions_s1.append(question)
+            question = {}
 
         test = database_session.query(iComputeTest).filter(iComputeTest.test_name == request.form['test']).first()
 
-        return render_template('test_view.html', questions=questions, name=test.test_name, year=test.year, grade=test.student_grade, is_chosen=True, tests=test_names)
+        exam_questions_s3 = []
+        images=[]
+        question = {}
+        fileData = {}
+        counter = 0
+        fileCounter = 0
+        # Build Dictionary for questions pulled from the db
+        # TODO grab the correct exam for this team!
+        for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test']).order_by(iComputeTest.orderId), start=1):
+            question['id'] = counter
+            question['question'] = exam_question_s3.question
+            for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
+                question['section'] = section.section
+            for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
+                fileData = {}
+                fileData['file_id'] = fileCounter
+                fileData['file_counter'] = counter
+                image = base64.encodestring(data.data)
+                image2 = image.decode("UTF8")
+                fileData['image'] = image2
+                images.append(fileData)
+                fileCounter +=1
+
+            exam_questions_s3.append(question)
+            counter += 1
+            question = {}
+        return render_template('test_view.html', name=test.test_name, year=test.year, grade=test.student_grade, is_chosen=True, tests=test_names, exam_questions_s1 = exam_questions_s1, exam_questions_s3 = exam_questions_s3, images = images)
 
     return render_template('test_view.html', is_chosen=False, tests=test_names)
 
