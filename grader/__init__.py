@@ -13,10 +13,12 @@ grader = Blueprint('grader', __name__, template_folder='grader_templates')
 @required_user_type('Grader')
 def grader_index():
     teamsData = []
+    testNames = []
     for team in database_session.query(StudentTeam):
         teamData = {
             "team_name": team.team_name,
             "team_year": team.team_year,
+            "test_name": "?",
             "sec_one_score": "?",
             "sec_two_score": "?",
             "sec_three_score": "?",
@@ -24,13 +26,16 @@ def grader_index():
         }
         student_scores = StudentScore.query.filter_by(team_name=team.team_name).order_by(StudentScore.team_year).first()
         if student_scores:
+            teamData["test_name"] = student_scores.test_name
             teamData["sec_one_score"] = student_scores.section_one_score
             teamData["sec_two_score"] = student_scores.section_two_score
             teamData["sec_three_score"] = student_scores.section_three_score
             teamData["total_score"] = student_scores.total_score
+            if student_scores.test_name not in testNames:
+                testNames.append(student_scores.test_name)
         teamsData.append(teamData)
 
-    return render_template('grader_home.html', teamsData=teamsData)
+    return render_template('grader_home.html', teamsData=teamsData, testNames=testNames)
 
 @grader.route('/<team_name>/<team_year>')
 @login_required
