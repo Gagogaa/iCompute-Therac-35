@@ -434,7 +434,7 @@ def add_question():
                     database_session.commit()
                 return redirect(url_for('admin.admin_edit_questions'))
             elif mySection == "short-answer":
-                if 'question' in request.form and 'file' in request.form:
+                if 'question' in request.form:
                     myQuestion = request.form['question']
                     question = [Questions(question = myQuestion,
                                     answer = "this is a section 2 question",
