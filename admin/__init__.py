@@ -141,11 +141,9 @@ def admin_view_test():
         fileCounter = 0
         # Build Dictionary for questions pulled from the db
         # TODO grab the correct exam for this team!
-        for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(iComputeTest.test_name == request.form['test']).order_by(iComputeTest.orderId), start=1):
+        for counter, exam_question_s3 in enumerate(database_session.query(iComputeTest.question).filter(and_(iComputeTest.test_name == request.form['test'], iComputeTest.section == 3)).order_by(iComputeTest.orderId), start=1):
             question['id'] = counter
             question['question'] = exam_question_s3.question
-            for section in database_session.query(Questions.section).filter(Questions.question == exam_question_s3.question):
-                question['section'] = section.section
             for data in database_session.query(QuestionsImages.data).filter(QuestionsImages.question == exam_question_s3.question):
                 fileData = {}
                 fileData['file_id'] = fileCounter
@@ -159,6 +157,7 @@ def admin_view_test():
             exam_questions_s3.append(question)
             counter += 1
             question = {}
+
         return render_template('test_view.html', name=test.test_name, year=test.year, grade=test.student_grade, is_chosen=True, tests=test_names, exam_questions_s1 = exam_questions_s1, exam_questions_s3 = exam_questions_s3, images = images)
 
     return render_template('test_view.html', is_chosen=False, tests=test_names)
