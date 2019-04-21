@@ -5,16 +5,16 @@
   <div class="container">
     <div id="team_data" data-team_name="{{student_score.team_name}}" data-team_year="{{student_score.team_year}}"></div>
     <a class="btn btn-primary mt-3" href="{{url_for('grader.grader_index')}}" role="button">Return to team selection</a>
-    <h3 class="alert-heading mt-3">Grading {{student_score.team_name}} ({{student_score.team_year}})</h3>
+    <h3 class="alert-heading mt-3">Grading {{student_score.team_name}} ({{student_score.test_name}})</h3>
 
     <div class="card text-white bg-secondary mt-3">
       <div class="card-header pseudo-link" style="display: flex" id="section-one-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-one-caret"></i>Section 1</h4>
+        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-right mr-3 section-caret" id="section-one-caret"></i>Section 1</h4>
         <h5 class="mb-0"><span class="badge badge-primary"><span id="section-one-score">{{student_score.section_one_score}}</span>/10</span></h5>
       </div>
     </div>
 
-    <div id="section-one" class="collapse show">
+    <div id="section-one" class="collapse">
       {% if section_one_data %}
         {% for question_data in section_one_data %}
           <div class="card">
@@ -54,12 +54,12 @@
 
     <div class="card text-white bg-secondary mt-3">
       <div class="card-header pseudo-link" style="display: flex" id="section-two-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-two-caret"></i>Section 2</h4>
+        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-right mr-3 section-caret" id="section-two-caret"></i>Section 2</h4>
         <h5 class="mb-0"><span class="badge badge-primary"><span id="section-two-score">{{student_score.section_two_score}}</span>/10</span></h5>
       </div>
     </div>
 
-    <div id="section-two" class="collapse show">
+    <div id="section-two" class="collapse">
       {% if section_two_answers %}
         {% for section_two_answer in section_two_answers %}
           <div class="card">
@@ -95,12 +95,12 @@
 
     <div class="card text-white bg-secondary mt-3">
       <div class="card-header pseudo-link" style="display: flex" id="section-three-toggle">
-        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-down mr-3 section-caret" id="section-three-caret"></i>Section 3</h4>
+        <h4 class="mb-0" style="flex-grow: 1"><i class="fas fa-caret-right mr-3 section-caret" id="section-three-caret"></i>Section 3</h4>
         <h5 class="mb-0"><span class="badge badge-primary"><span id="section-three-score">{{student_score.section_three_score}}</span>/30</span></h5>
       </div>
     </div>
 
-    <div id="section-three" class="collapse show">
+    <div id="section-three" class="collapse">
       {% if section_three_answer %}
         <div class="card">
           <div class="card-header" style="display: flex; flex-wrap: nowrap">
@@ -167,20 +167,20 @@
   <script>
     // add on click events to the section headers
     $("#section-one-toggle").on("click", function() {
-      $("#section-one-caret").toggleClass("fa-caret-down");
       $("#section-one-caret").toggleClass("fa-caret-right");
+      $("#section-one-caret").toggleClass("fa-caret-down");
       $("#section-one").collapse("toggle");
     });
 
     $("#section-two-toggle").on("click", function() {
-      $("#section-two-caret").toggleClass("fa-caret-down");
       $("#section-two-caret").toggleClass("fa-caret-right");
+      $("#section-two-caret").toggleClass("fa-caret-down");
       $("#section-two").collapse("toggle");
     });
 
     $("#section-three-toggle").on("click", function() {
-      $("#section-three-caret").toggleClass("fa-caret-down");
       $("#section-three-caret").toggleClass("fa-caret-right");
+      $("#section-three-caret").toggleClass("fa-caret-down");
       $("#section-three").collapse("toggle");
     });
 
