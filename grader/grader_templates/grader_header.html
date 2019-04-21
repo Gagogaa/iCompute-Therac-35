@@ -41,7 +41,10 @@
       document.location = $(this).data("href");
     });
 
-    
+
+    $('#section-select-submit').on('click', function() {
+      document.location = "./" + $('#test-selection').val() + "/" + $('#section-selection').val();
+    });
   </script>
 
 </body>

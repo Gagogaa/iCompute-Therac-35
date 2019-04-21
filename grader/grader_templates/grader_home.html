@@ -3,56 +3,25 @@
 {% block content %}
 
 <div class="container">
-  <h3 class="mt-3 ml-2">Select a team to grade</h3>
+  <h3 class="mt-3">Select a test and section to grade</h3>
+  <div class="form-row">
 
-  <select class="form-control mb-3 mt-3" id="test-selection">
-    <option>Show all</option>
-    {% for testName in testNames %}
-      <option>{{testName}}</option>
-    {% endfor %}
-  </select>
-
-  <table class="table table-hover">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Team</th>
-        <th scope="col" class="table-mid">Section A</th>
-        <th scope="col" class="table-mid">Section B</th>
-        <th scope="col" class="table-mid">Section C</th>
-        <th scope="col" class="table-mid">Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for teamData in teamsData %}
-      <tr data-href="./{{teamData['team_name']}}/{{teamData['team_year']}}" data-test_name="{{teamData['test_name']}}" class="pseudo-link test-score-row">
-        <th scope="row">{{teamData["team_name"]}}</th>
-        <td class="table-mid">{{teamData["sec_one_score"]}}/10</td>
-        <td class="table-mid">{{teamData["sec_two_score"]}}/10</td>
-        <td class="table-mid">{{teamData["sec_three_score"]}}/30</td>
-        <td class="table-mid">{{teamData["total_score"]}}/50</td>
-      </tr>
+    <select class="form-control my-3 col-md-4" id="test-selection">
+      {% for test in tests %}
+        <option value="{{test.test_id}}">{{test.test_name}}</option>
       {% endfor %}
-    </tbody>
-  </table>
+    </select>
+
+    <select class="form-control my-3 ml-1 col-md-4" id="section-selection">
+      <option value="section-one">Section 1</option>
+      <option value="section-two">Section 2</option>
+      <option value="section-three">Section 3</option>
+    </select>
+
+    <button class="btn btn-primary my-3 ml-1" id="section-select-submit">Go</button>
+  </div>
 </div>
 
 <script>
-  // show/hide rows when the selector is changed
-  $("#test-selection").change(function() {
-    var rows = document.getElementsByClassName("test-score-row");
-    if($("#test-selection option:selected").text() === "Show all") {
-      for(var i = 0; i < rows.length; i++) {
-        rows[i].style.display = "";
-      }
-    } else {
-      for(var i = 0; i < rows.length; i++) {
-        if($(rows[i]).data("test_name") == $("#test-selection option:selected").text()) {
-          rows[i].style.display = "";
-        } else {
-          rows[i].style.display = "none";
-        }
-      }
-    }
-  });
 </script>
 {% endblock %}
