@@ -72,7 +72,6 @@ def student_team_index():
 
         # For now when the team is done taking the test the application will destroy the password and log the team out.
 
-        flash('Your answers have been submitted!', 'info')
         return redirect(url_for('student_team.student_s3'))
 
     return render_template('multiple_choice.html', exam_questions_s1 = exam_questions_s1)

@@ -28,7 +28,7 @@
       <a class="nav-link" href="{{url_for('admin.admin_view_results')}}">Test Results</a>
     </div>
     <div class="ml-auto">
-      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">Supervisor</span>
+      <span class="navbar-text" id="navbar-team-name" style="float: left; padding-left: 30px; font-weight: bold">{{current_user.username}}</span>
       <a class="nav-link" id="logout-link" href="{{url_for('logout')}}" style="float: left">Logout</a>
     </div>
   </nav>
