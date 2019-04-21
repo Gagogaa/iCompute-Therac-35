@@ -44,5 +44,5 @@ First access environment set up above.
 Then use flask command.
 
 ```bash
-flask add-testing-data
+flask add-demo-data
 ```
