@@ -87,6 +87,7 @@
     question = document.getElementById(id).children[0].children[0].innerText;
 
     if($('#' + id).parent().parent().attr('id') == 'leftDiv') {
+      document.getElementById(id).classList.add("mr-2");
       if(section == 1){
         document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
@@ -109,6 +110,7 @@
         }
       });
     } else {
+      document.getElementById(id).classList.remove("mr-2");
       if(section == 1){
         document.getElementById('leftDiv').children[0].appendChild(document.getElementById(id));
         updateCount();
