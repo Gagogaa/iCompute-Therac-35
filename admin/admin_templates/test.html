@@ -86,24 +86,28 @@
     testName = document.getElementById('test-name').value;
     question = document.getElementById(id).children[0].children[0].innerText;
 
-    if($('#' + id).parent().parent().attr('id') == 'leftDiv') {
-      if(section == 1){
-        document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
-        updateCount();
-      } else if(section == 2) {
-        document.getElementById('rightDiv').children[1].appendChild(document.getElementById(id));
-        updateCount();
-      } else {
-        document.getElementById('rightDiv').children[2].appendChild(document.getElementById(id));
-        updateCount();
-      }
-
+    if ($('#' + id).parent().parent().attr('id') == 'leftDiv') {
       $.ajax({
         url: '/admin/test/add_question',
         data: {testId: testName, question: question},
         type: 'POST',
         traditional: true,
-        success: function(response){},
+        success: function(response){
+          if (response == 'success') {
+            if(section == 1){
+              document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
+              updateCount();
+            } else if(section == 2) {
+              document.getElementById('rightDiv').children[1].appendChild(document.getElementById(id));
+              updateCount();
+            } else {
+              document.getElementById('rightDiv').children[2].appendChild(document.getElementById(id));
+              updateCount();
+            }
+          } else {
+              alert('Tests can only have one scratch question')
+          }
+        },
         error: function(error){
           console.log(error);
         }
