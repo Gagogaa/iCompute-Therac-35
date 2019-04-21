@@ -5,7 +5,7 @@
   <div class="container">
     <div id="team_data" data-team_name="{{student_score.team_name}}" data-team_year="{{student_score.team_year}}"></div>
     <a class="btn btn-primary mt-3" href="{{url_for('grader.grader_index')}}" role="button">Return to team selection</a>
-    <h3 class="alert-heading mt-3">Grading {{student_score.team_name}} ({{student_score.team_year}})</h3>
+    <h3 class="alert-heading mt-3">Grading {{student_score.team_name}} ({{student_score.test_name}})</h3>
 
     <div class="card text-white bg-secondary mt-3">
       <div class="card-header pseudo-link" style="display: flex" id="section-one-toggle">
