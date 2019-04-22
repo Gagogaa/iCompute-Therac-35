@@ -74,13 +74,16 @@ def test_add_question():
         existing_question = iComputeTest.query.filter_by(test_name=request.form['testId'], question=request.form['question']).first()
         question_section = Questions.query.filter_by(question=request.form['question']).first()
 
-        # Check if this test already has a section three question
-        if question_section.section == 3:
-            section_three_question = iComputeTest.query.filter_by(test_name=request.form['testId'], section=3).first()
-            if section_three_question:
-                return "error"
-
         if (not existing_question) and question_section:
+
+            # Check if this test already has a section three question
+            section_question_count = iComputeTest.query.filter_by(test_name=request.form['testId'], section=question_section.section).count()
+
+            if (question_section.section == 3) and (section_question_count == 1)\
+                or (question_section.section == 2) and (section_question_count == 2)\
+                or (question_section.section == 1) and (section_question_count == 5):
+                    return 'too many questions'
+
             test = iComputeTest.query.filter_by(test_name=request.form['testId']).order_by(desc(iComputeTest.orderId)).first()
 
             test_question = iComputeTest(orderId=(test.orderId + 1 if test else 1),
@@ -94,9 +97,9 @@ def test_add_question():
             database_session.add(test_question)
             database_session.commit()
 
-            return "success"
+            return 'success'
 
-    return "error"
+    return 'error'
 
 
 @admin.route('test/remove_question', methods=["POST"])
@@ -108,9 +111,9 @@ def test_remove_question():
         if question:
             database_session.delete(question)
             database_session.commit()
-            return "success"
+            return 'success'
 
-    return "error"
+    return 'error'
 
 
 @admin.route('test/test_view', methods=("GET", "POST"))

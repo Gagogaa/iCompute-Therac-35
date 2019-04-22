@@ -92,20 +92,29 @@
         data: {testId: testName, question: question},
         type: 'POST',
         traditional: true,
-        success: function(response){
+        success: function(response) {
           if (response == 'success') {
-            if(section == 1){
+            if (section == 1) {
               document.getElementById('rightDiv').children[0].appendChild(document.getElementById(id));
               updateCount();
-            } else if(section == 2) {
+            } else if (section == 2) {
               document.getElementById('rightDiv').children[1].appendChild(document.getElementById(id));
               updateCount();
             } else {
               document.getElementById('rightDiv').children[2].appendChild(document.getElementById(id));
               updateCount();
             }
+          } else if (response == 'too many questions') {
+              if (section == 3)
+                alert('Tests can only have one scratch question');
+              else if (section == 2)
+                alert('Tests can only have two short answer questions');
+              else if(section == 1)
+                alert('Tests can only have five multiple choice questions');
+              else
+                alert('Unknown error');
           } else {
-              alert('Tests can only have one scratch question')
+            alert('Unknown server error')
           }
         },
         error: function(error){
