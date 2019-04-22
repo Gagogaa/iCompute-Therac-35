@@ -113,6 +113,7 @@
         }
       });
     } else {
+      document.getElementById(id).classList.remove("mr-2");
       if(section == 1){
         document.getElementById('leftDiv').children[0].appendChild(document.getElementById(id));
         updateCount();

@@ -73,7 +73,7 @@
             <button type="button" class="btn btn-outline-secondary question-edit-prepend" onclick="addAnswerDialog(this)"><i class="fas fa-plus"></i></button>
           </div>
         </li>
-      {% else %}  <!-- end section one questions -->
+      {% elif question['section'] ==  2 %}  <!-- end section one questions -->
         <li class="list-group-item" id="question{{question['id']}}">
           <div class="input-group">
             <div class="input-group-prepend">
@@ -121,7 +121,55 @@
             </form>
           </div>
         </li>
-      {% endif %}
+      {% else %}
+      <li class="list-group-item" id="question{{question['id']}}">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary question-edit-prepend" type="button" onclick="toggleCollapse(this)"><i class="fas fa-caret-right"></i></button>
+            <span class="input-group-text question-edit-prepend"><i class="fas fa-file-alt"></i></span>
+          </div>
+          <input class="form-control" type="text" id="question-name{{question['id']}}" value="{{question['question']}}" disabled>
+          <input class= "hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary question-edit-button" type="button" onclick="toggleEditQuestion(this)"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-outline-secondary" type="button" onclick="addDelQuestionDialog(this)"><i class="fas fa-trash-alt"></i></button>
+          </div>
+        </div>
+        <div class="question-edit-answers collapse is-collapsed">
+          {% for file in files %}
+            {% if file['file_counter'] == question['id'] %}
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text question-image-prepend question-edit-prepend"><i class="fas fa-file-image"></i></span>
+                </div>
+
+                <input class="form-control" type="text" id="{{file['file_id']}}" value="{{file['file']}}" disabled>
+                <input class="hidden" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+                <div class="input-group-append">
+                  <button class="btn btn-outline-secondary" type="button" onclick="delpictureDialog(this)"><i class="fas fa-trash-alt"></i></button>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          <form method="POST" action="/admin/addImage" encType="multipart/form-data" class="form-control-append" value="">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text question-image-prepend question-edit-prepend"><i class="fas fa-file-image"></i></span>
+              </div>
+              <div class="custom-file">
+                <input class="custom-file-input" type="file" id="file-upload-{{loop.index}}" name="inputFile" onchange="updateFileInputText(this)">
+                <label class="custom-file-label" id="file-upload-{{loop.index}}-label" for="file-upload-{{loop.index}}">Choose file</label>
+              </div>
+
+              <input class="input-group-text" type="hidden" name="hiddenfield_id" id="hiddenfield_idMulti" value="{{question['question']}}" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-save"></i></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+      {% endif%}
     {% endfor %}
     <!-- button for adding/removing questions -->
   </ul>
@@ -450,7 +498,6 @@ function addQuestionDialog(elem) {
   // clear existing text from the textboxes
   $("#new-question-question-textbox").val("");
   $("#new-question-answer-textbox").val("");
-  $("#fileupload").val("");
   // clear any error message from the textboxes
   $("#new-question-question-textbox").removeClass("is-invalid");
   $("#new-question-submit").attr("disabled", false);
